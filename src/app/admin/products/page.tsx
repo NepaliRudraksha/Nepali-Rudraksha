@@ -243,7 +243,7 @@ export default function AdminProducts() {
                             }
                             alt={product.name}
                             fill
-                            className="object-contain p-1"
+                            className="object-cover"
                           />
                         </div>
                         <div>

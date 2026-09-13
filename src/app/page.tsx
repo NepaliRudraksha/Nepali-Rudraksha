@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getProducts } from '@/lib/api';
 import { PlayCircle, ShieldCheck, Star, ArrowRight, Check } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
+import TestimonialCarousel from '@/components/TestimonialCarousel';
 import { MotionHeroWrapper, MotionHeroContent, MotionHeroImage, MotionSection } from '@/components/animations/MotionWrappers';
 
 export default async function Home() {
@@ -103,8 +104,8 @@ export default async function Home() {
             { name: 'Special Beads', img: '/images/rudraksha_bead_close_1789219796219.jpg', href: '/shop?category=special' },
           ].map((cat, i) => (
             <Link key={i} href={cat.href} className="flex flex-col items-center group cursor-pointer">
-              <div className="w-24 h-24 rounded-2xl bg-brand-light overflow-hidden mb-3 border border-brand-border group-hover:border-brand-accent transition-colors flex items-center justify-center p-2 relative shadow-sm">
-                <Image src={cat.img} alt={cat.name} fill className="object-cover rounded-xl" />
+              <div className="w-32 h-32 rounded-2xl bg-brand-light overflow-hidden mb-3 border border-brand-border group-hover:border-brand-accent transition-colors relative shadow-sm">
+                <Image src={cat.img} alt={cat.name} fill className="object-cover" />
               </div>
               <span className="text-xs font-semibold text-center text-brand-primary group-hover:text-brand-accent transition-colors">{cat.name}</span>
             </Link>
@@ -165,18 +166,18 @@ export default async function Home() {
           {featuredProducts.map((product) => (
             <div key={product.id} className="bg-white border border-brand-border rounded-xl overflow-hidden group hover:shadow-xl transition-all duration-300">
               <Link href={`/shop/${product.id}`}>
-                <div className="relative h-64 bg-brand-light p-6 flex items-center justify-center">
+                <div className="relative h-64 bg-brand-light">
                   {product.isBestseller && (
-                    <span className="absolute top-3 left-3 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded">Bestseller</span>
+                    <span className="absolute z-10 top-3 left-3 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded">Bestseller</span>
                   )}
                   {product.isNew && (
-                    <span className="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">New</span>
+                    <span className="absolute z-10 top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">New</span>
                   )}
                   <Image 
                     src={product.image || "/images/rudraksha_bead_close_1789219796219.jpg"} 
                     alt={product.name} 
                     fill 
-                    className="object-contain p-8 group-hover:scale-110 transition-transform duration-500" 
+                    className="object-cover group-hover:scale-110 transition-transform duration-500" 
                   />
                 </div>
               </Link>
@@ -240,26 +241,17 @@ export default async function Home() {
           <p className="text-brand-muted text-xs tracking-[0.2em] uppercase font-bold mb-2">What Our Customers Say</p>
           <h2 className="text-3xl font-serif font-bold text-brand-primary">Testimonials</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
+        <TestimonialCarousel
+          reviews={[
             { name: 'Rahul Sharma', location: 'Delhi', rating: 5, text: 'I have been wearing the 5 Mukhi Rudraksha for 6 months. My stress levels have reduced dramatically and I feel more peaceful than ever. Highly authentic beads!', product: '5 Mukhi Rudraksha' },
             { name: 'Priya Patel', location: 'Mumbai', rating: 5, text: 'Ordered the Gaurishankar Rudraksha as a wedding anniversary gift. The quality is exceptional and it came beautifully packaged with the lab certificate. Very happy!', product: 'Gaurishankar Rudraksha' },
             { name: 'Suresh Kumar', location: 'Bangalore', rating: 5, text: 'The 7 Mukhi Rudraksha has been a game changer for my business. Things have been looking up ever since I started wearing it. Truly a divine bead!', product: '7 Mukhi Rudraksha' },
-          ].map((review, i) => (
-            <div key={i} className="bg-white border border-brand-border rounded-xl p-6 hover:shadow-lg transition-all">
-              <div className="flex items-center mb-4">
-                {[1,2,3,4,5].map(s => (
-                  <Star key={s} size={16} className={s <= review.rating ? 'fill-brand-accent text-brand-accent' : 'text-gray-300'} />
-                ))}
-              </div>
-              <p className="text-brand-text text-sm italic mb-4">"{review.text}"</p>
-              <div className="border-t border-brand-border pt-4">
-                <p className="font-bold text-brand-primary text-sm">{review.name}</p>
-                <p className="text-xs text-brand-muted">{review.location} · Purchased: {review.product}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+            { name: 'Ananya Mehta', location: 'Pune', rating: 5, text: 'My 4 Mukhi Rudraksha arrived quickly and the certification gave me complete confidence. It is beautiful, genuine, and has become part of my daily prayer.', product: '4 Mukhi Rudraksha' },
+            { name: 'Vikram Singh', location: 'Jaipur', rating: 5, text: 'Excellent guidance before purchase and a very premium mala. The beads are perfectly selected and the packaging made it feel truly special.', product: '5 Mukhi Rudraksha Mala' },
+            { name: 'Neha Verma', location: 'Chandigarh', rating: 5, text: 'I bought this as a gift for my mother and she loved it. The authenticity certificate and thoughtful presentation were both outstanding.', product: 'Gauri Shankar Rudraksha' },
+            { name: 'Arjun Nair', location: 'Kochi', rating: 5, text: 'The whole experience was seamless—from choosing the right bead to delivery. The quality is exactly as described and I would happily recommend it.', product: '7 Mukhi Rudraksha' },
+          ]}
+        />
       </MotionSection>
 
     </div>

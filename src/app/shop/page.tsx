@@ -86,12 +86,12 @@ export default function Shop() {
               {filteredProducts.map((product) => (
               <div key={product.id} className="bg-white border border-brand-border rounded-xl overflow-hidden group hover:shadow-xl transition-all">
                 <Link href={`/shop/${product.id}`}>
-                  <div className="relative h-56 bg-brand-light p-6 flex items-center justify-center">
+                  <div className="relative h-56 bg-brand-light">
                     <Image 
                       src={product.image || "/images/rudraksha_bead_close_1789219796219.jpg"} 
                       alt={product.name} 
                       fill 
-                      className="object-contain p-6 group-hover:scale-110 transition-transform duration-500" 
+                      className="object-cover group-hover:scale-110 transition-transform duration-500" 
                     />
                   </div>
                 </Link>

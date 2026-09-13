@@ -64,15 +64,15 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
         {/* Product Image */}
-        <div className="bg-brand-light rounded-2xl p-8 md:p-16 flex items-center justify-center relative aspect-square border border-brand-border shadow-sm">
+        <div className="bg-brand-light rounded-2xl overflow-hidden relative aspect-square border border-brand-border shadow-sm">
           {product.isBestseller && (
-            <span className="absolute top-6 left-6 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded">Bestseller</span>
+            <span className="absolute z-10 top-6 left-6 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded">Bestseller</span>
           )}
           <Image 
             src={product.image || "/images/rudraksha_bead_close_1789219796219.jpg"} 
             alt={product.name} 
             fill 
-            className="object-contain p-8 md:p-12 drop-shadow-xl mix-blend-multiply" 
+            className="object-cover" 
           />
         </div>
 

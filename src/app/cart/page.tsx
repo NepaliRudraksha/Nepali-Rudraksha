@@ -39,12 +39,12 @@ export default function Cart() {
             {cart.map((item) => (
               <div key={item.product.id} className="flex flex-col md:flex-row items-start md:items-center py-6 border-b border-brand-border gap-4 md:gap-0">
                 <div className="flex items-center w-full md:w-2/3 gap-6">
-                  <div className="relative w-24 h-24 bg-brand-light rounded-lg overflow-hidden border border-brand-border flex-shrink-0 flex items-center justify-center p-2">
+                  <div className="relative w-24 h-24 bg-brand-light rounded-lg overflow-hidden border border-brand-border flex-shrink-0">
                     <Image 
                       src={item.product.image || "https://images.unsplash.com/photo-1620857908861-1c3905007328?q=80&w=200&auto=format&fit=crop"} 
                       alt={item.product.name} 
                       fill 
-                      className="object-contain" 
+                      className="object-cover" 
                     />
                   </div>
                   <div className="flex flex-col">

@@ -355,7 +355,7 @@ export default function Checkout() {
                           src={item.product.image || 'https://images.unsplash.com/photo-1620857908861-1c3905007328?q=80&w=100&auto=format&fit=crop'}
                           alt={item.product.name}
                           fill
-                          className="object-contain p-1"
+                          className="object-cover"
                         />
                         <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-primary text-white rounded-full text-[10px] font-bold flex items-center justify-center">
                           {item.quantity}

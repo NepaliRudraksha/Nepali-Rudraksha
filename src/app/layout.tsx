@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -7,11 +7,6 @@ import { Providers } from "@/components/Providers";
 
 const inter = Inter({
   variable: "--font-sans",
-  subsets: ["latin"],
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-serif",
   subsets: ["latin"],
 });
 
@@ -27,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} antialiased flex flex-col min-h-screen`}>
+      <body className={`${inter.variable} antialiased flex flex-col min-h-screen`}>
         <Providers>
           <Header />
           <main className="flex-grow">{children}</main>
