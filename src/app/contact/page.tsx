@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import Image from '@/components/ImageKitImage';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
 
 export default function Contact() {

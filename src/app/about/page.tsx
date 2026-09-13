@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
 import { Shield, Award, Heart, Globe, Star, Check } from 'lucide-react';
 

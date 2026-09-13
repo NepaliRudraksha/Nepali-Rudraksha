@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/components/ImageKitImage';
 import { ArrowRight } from 'lucide-react';
 
 export default function AccessoriesPage() {

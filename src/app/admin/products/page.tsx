@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import Image from 'next/image';
+import Image from '@/components/ImageKitImage';
 import { Product } from '@/data/products';
 import { getProducts, createProduct, updateProduct, deleteProduct, isSupabaseConfigured } from '@/lib/api';
 import { PlusCircle, Pencil, Trash2, Search, Filter, ChevronDown, X, Save, Loader2, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';

@@ -4,7 +4,7 @@ import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Lock, Mail, Eye, EyeOff, Sparkles, ShieldCheck, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { Lock, Mail, Eye, EyeOff, Sparkles, ShieldCheck, ArrowRight, Loader2, CheckCircle2, CircleAlert } from 'lucide-react';
 
 function LoginForm() {
   const router = useRouter();
@@ -63,7 +63,7 @@ function LoginForm() {
       {/* Status Messages */}
       {errorMsg && (
         <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start space-x-2">
-          <span className="text-base leading-none">⚠️</span>
+          <CircleAlert size={18} className="shrink-0" aria-hidden="true" />
           <span>{errorMsg}</span>
         </div>
       )}

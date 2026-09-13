@@ -1,7 +1,7 @@
-import Image from 'next/image';
+import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
 import { getProducts } from '@/lib/api';
-import { PlayCircle, ShieldCheck, Star, ArrowRight, Check } from 'lucide-react';
+import { Award, Brain, Check, Heart, Mountain, PlayCircle, RotateCcw, ShieldCheck, Sparkles, Star, ArrowRight, Truck } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
 import TestimonialCarousel from '@/components/TestimonialCarousel';
 import { MotionHeroWrapper, MotionHeroContent, MotionHeroImage, MotionSection } from '@/components/animations/MotionWrappers';
@@ -67,14 +67,14 @@ export default async function Home() {
       <MotionSection className="w-full bg-brand-light border-y border-brand-border py-4 px-4 md:px-8">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-center md:justify-between items-center gap-4 text-sm font-medium text-brand-primary">
           {[
-            { label: '100% Authentic', icon: '🔮' },
-            { label: 'Lab Certified', icon: '🏆' },
-            { label: 'Direct from Nepal', icon: '🏔️' },
-            { label: 'Free Shipping in India', icon: '🚚' },
-            { label: 'Easy Returns', icon: '🔄' },
+            { label: '100% Authentic', icon: ShieldCheck },
+            { label: 'Lab Certified', icon: Award },
+            { label: 'Direct from Nepal', icon: Mountain },
+            { label: 'Free Shipping in India', icon: Truck },
+            { label: 'Easy Returns', icon: RotateCcw },
           ].map((badge, i) => (
             <div key={i} className="flex items-center gap-2">
-              <span className="text-xl">{badge.icon}</span>
+              <badge.icon size={20} className="text-brand-accent" aria-hidden="true" />
               <span>{badge.label}</span>
             </div>
           ))}
@@ -131,14 +131,14 @@ export default async function Home() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {[
-              { title: 'Enhances Focus & Clarity', desc: 'Activates the mind, sharpens concentration and improves decision-making abilities.', icon: '🧠' },
-              { title: 'Brings Positivity & Peace', desc: 'Creates a positive aura around the wearer, repelling negativity and promoting inner peace.', icon: '☮️' },
-              { title: 'Supports Health & Well-being', desc: 'Known to regulate blood pressure, reduce stress and boost overall physical health.', icon: '💚' },
-              { title: 'Attracts Prosperity & Success', desc: 'Opens the doors to financial growth, career success and abundant living.', icon: '✨' },
+              { title: 'Enhances Focus & Clarity', desc: 'Activates the mind, sharpens concentration and improves decision-making abilities.', icon: Brain },
+              { title: 'Brings Positivity & Peace', desc: 'Creates a positive aura around the wearer, repelling negativity and promoting inner peace.', icon: ShieldCheck },
+              { title: 'Supports Health & Well-being', desc: 'Known to regulate blood pressure, reduce stress and boost overall physical health.', icon: Heart },
+              { title: 'Attracts Prosperity & Success', desc: 'Opens the doors to financial growth, career success and abundant living.', icon: Sparkles },
             ].map((benefit, i) => (
               <div key={i} className="flex items-start space-x-4 bg-white/5 p-4 rounded-xl backdrop-blur-sm border border-white/10 hover:border-brand-accent/50 transition-colors">
                 <div className="w-10 h-10 rounded-full bg-brand-accent/20 flex items-center justify-center text-xl flex-shrink-0">
-                  {benefit.icon}
+                  <benefit.icon size={20} aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-sm font-bold mb-1">{benefit.title}</p>

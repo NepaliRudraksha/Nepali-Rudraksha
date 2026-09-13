@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, Package, ShoppingBag, Settings, LogOut, 
-  ShieldCheck, ShieldAlert, Lock, ArrowLeft, Loader2, ArrowRight, Users 
+  ShieldCheck, ShieldAlert, Lock, ArrowLeft, Loader2, ArrowRight, Users, CircleAlert 
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
@@ -74,7 +74,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           {authError && (
             <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs">
-              ⚠️ {authError}
+              <span className="flex items-center gap-1"><CircleAlert size={14} aria-hidden="true" /> {authError}</span>
             </div>
           )}
 

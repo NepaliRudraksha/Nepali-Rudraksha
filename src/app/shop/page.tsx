@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
 import { Product } from '@/data/products';
 import { getProducts } from '@/lib/api';

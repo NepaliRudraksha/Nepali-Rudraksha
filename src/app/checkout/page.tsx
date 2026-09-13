@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { createOrder } from '@/lib/api';
-import { ShieldCheck, ChevronRight, CheckCircle, Loader2, ArrowLeft, Sparkles, UserCheck } from 'lucide-react';
+import { ShieldCheck, ChevronRight, CheckCircle, Loader2, ArrowLeft, Sparkles, UserCheck, Heart } from 'lucide-react';
 
 type Step = 'shipping' | 'payment' | 'confirmation';
 
@@ -145,7 +145,7 @@ export default function Checkout() {
             <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle size={48} className="text-green-600" />
             </div>
-            <h1 className="text-4xl font-serif font-bold text-brand-primary mb-3">Order Placed! 🙏</h1>
+            <h1 className="text-4xl font-serif font-bold text-brand-primary mb-3 flex items-center justify-center gap-2">Order Placed! <Heart size={30} className="text-brand-accent" aria-hidden="true" /></h1>
             <p className="text-brand-muted mb-2">Your order has been confirmed and is being prepared.</p>
             <p className="text-brand-secondary font-bold text-lg mb-8">Order ID: {orderId}</p>
             
