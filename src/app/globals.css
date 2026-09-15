@@ -16,6 +16,15 @@
 }
 
 @layer base {
+  /* Hide scrollbar globally */
+  * {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  *::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+
   body {
     background-color: var(--color-brand-bg);
     color: var(--color-brand-text);

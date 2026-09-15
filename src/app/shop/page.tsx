@@ -1,14 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
 import { Product } from '@/data/products';
 import { getProducts } from '@/lib/api';
-import { Star, ShoppingCart, Filter, Loader2 } from 'lucide-react';
+import { Star, ShoppingCart, Filter, Loader2, Search } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { useSearchParams } from 'next/navigation';
 
-export default function Shop() {
+function ShopContent() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get('q')?.toLowerCase() || '';
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,9 +26,13 @@ export default function Shop() {
     loadProducts();
   }, []);
 
-  const filteredProducts = activeCategory === 'all' 
-    ? products 
-    : products.filter(p => p.category === activeCategory);
+  const filteredProducts = products.filter(p => {
+    const matchesCategory = activeCategory === 'all' || p.category === activeCategory;
+    const matchesSearch = !query || 
+      p.name.toLowerCase().includes(query) || 
+      (p.description && p.description.toLowerCase().includes(query));
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -74,19 +81,45 @@ export default function Shop() {
         {/* Product Grid */}
         <div className="flex-1">
           <div className="mb-6 flex justify-between items-center text-sm text-brand-muted">
-            <p>Showing {filteredProducts.length} products</p>
+            <p>
+              Showing {filteredProducts.length} products
+              {query && <span className="ml-2 font-bold text-brand-primary">for "{query}"</span>}
+            </p>
           </div>
 
           {isLoading ? (
             <div className="w-full flex justify-center py-20">
               <Loader2 className="animate-spin text-brand-accent w-12 h-12" />
             </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="w-full flex flex-col items-center justify-center py-20 text-center">
+              <Search className="w-16 h-16 text-brand-border mb-4" />
+              <h3 className="text-xl font-serif font-bold text-brand-primary mb-2">No products found</h3>
+              <p className="text-brand-muted">Try adjusting your search or filter criteria.</p>
+              <button 
+                onClick={() => {
+                  setActiveCategory('all');
+                  // To clear query, they can use header search again, or we can just clear active category
+                }}
+                className="mt-6 px-6 py-2 bg-brand-primary text-white rounded-full hover:bg-brand-secondary transition-colors"
+              >
+                Clear Filters
+              </button>
+            </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
               {filteredProducts.map((product) => (
               <div key={product.id} className="bg-white border border-brand-border rounded-xl overflow-hidden group hover:shadow-xl transition-all">
                 <Link href={`/shop/${product.id}`}>
-                  <div className="relative h-56 bg-brand-light">
+                  <div className="relative h-40 md:h-56 bg-brand-light">
+                    <div className="absolute z-10 top-2 left-2 md:top-3 md:left-3 flex flex-col gap-1 items-start">
+                      {product.isBestseller && (
+                        <span className="bg-green-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">Bestseller</span>
+                      )}
+                      {product.isNew && (
+                        <span className="bg-red-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">New</span>
+                      )}
+                    </div>
                     <Image 
                       src={product.image || "/images/rudraksha_bead_close_1789219796219.jpg"} 
                       alt={product.name} 
@@ -95,26 +128,26 @@ export default function Shop() {
                     />
                   </div>
                 </Link>
-                <div className="p-5 flex flex-col h-[180px] justify-between">
+                <div className="p-3 md:p-5 flex flex-col h-[140px] md:h-[180px] justify-between">
                   <Link href={`/shop/${product.id}`}>
-                    <h3 className="font-bold text-brand-primary leading-tight mb-2 hover:text-brand-accent transition-colors line-clamp-2">{product.name}</h3>
-                    <div className="flex items-center space-x-1 mb-2">
+                    <h3 className="font-bold text-brand-primary text-xs md:text-base leading-tight mb-1 md:mb-2 hover:text-brand-accent transition-colors line-clamp-2">{product.name}</h3>
+                    <div className="flex items-center space-x-1 mb-1 md:mb-2">
                       {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} size={14} className={star <= (product.rating || 5) ? "fill-brand-accent text-brand-accent" : "text-gray-300"} />
+                        <Star key={star} size={10} className={`md:w-3.5 md:h-3.5 ${star <= (product.rating || 5) ? "fill-brand-accent text-brand-accent" : "text-gray-300"}`} />
                       ))}
-                      <span className="text-xs text-brand-muted ml-1">({product.reviewsCount || Math.floor(Math.random() * 50) + 10})</span>
+                      <span className="text-[10px] md:text-xs text-brand-muted ml-1">({product.reviewsCount || 0})</span>
                     </div>
                   </Link>
                   <div className="flex items-center justify-between mt-auto">
-                    <span className="font-serif font-bold text-xl text-brand-secondary">
+                    <span className="font-serif font-bold text-sm md:text-xl text-brand-secondary">
                       {product.price > 0 ? `₹ ${product.price.toLocaleString()}` : 'Enquire'}
                     </span>
                     <button 
                       onClick={() => addToCart(product, 1)}
-                      className="bg-brand-primary text-white p-2 rounded-full hover:bg-brand-accent hover:text-brand-primary transition-colors focus:ring-2 focus:ring-brand-accent focus:outline-none"
+                      className="bg-brand-primary text-white p-1.5 md:p-2 rounded-full hover:bg-brand-accent hover:text-brand-primary transition-colors focus:ring-2 focus:ring-brand-accent focus:outline-none"
                       aria-label="Add to cart"
                     >
-                      <ShoppingCart size={18} />
+                      <ShoppingCart size={14} className="md:w-[18px] md:h-[18px]" />
                     </button>
                   </div>
                 </div>
@@ -125,5 +158,17 @@ export default function Shop() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Shop() {
+  return (
+    <Suspense fallback={
+      <div className="w-full flex justify-center py-32">
+        <Loader2 className="animate-spin text-brand-accent w-12 h-12" />
+      </div>
+    }>
+      <ShopContent />
+    </Suspense>
   );
 }

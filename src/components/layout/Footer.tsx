@@ -26,7 +26,7 @@ export default async function Footer() {
             className="px-4 py-2 text-brand-text bg-white outline-none w-full md:w-64"
           />
           <button className="bg-brand-accent text-brand-primary font-semibold px-4 py-2 hover:bg-brand-accent-hover transition-colors">
-            Subscribe &rarr;
+            Subscribe
           </button>
         </div>
         <div className="hidden lg:block font-serif text-brand-accent italic ml-8">
@@ -72,7 +72,6 @@ export default async function Footer() {
             <li><Link href="/shop" className="hover:text-brand-accent transition-colors">Shop</Link></li>
             <li><Link href="/types" className="hover:text-brand-accent transition-colors">Rudraksha Types</Link></li>
             <li><Link href="/accessories" className="hover:text-brand-accent transition-colors">Accessories</Link></li>
-            <li><Link href="/blog" className="hover:text-brand-accent transition-colors">Blog</Link></li>
             <li><Link href="/contact" className="hover:text-brand-accent transition-colors">Contact</Link></li>
           </ul>
         </div>

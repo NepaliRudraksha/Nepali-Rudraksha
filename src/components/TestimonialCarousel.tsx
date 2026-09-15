@@ -46,10 +46,21 @@ export default function TestimonialCarousel({ reviews }: { reviews: Review[] }) 
   }, [startAutoplay, stopAutoplay]);
 
   return (
-    <div className="relative">
+    <div className="flex items-center gap-2 md:gap-4 relative group">
+      <button
+        type="button"
+        onClick={() => move(-1)}
+        onMouseEnter={stopAutoplay}
+        onMouseLeave={startAutoplay}
+        className="flex-shrink-0 z-10 flex items-center justify-center rounded-full border border-brand-border bg-white p-2 md:p-2.5 text-brand-primary shadow-md transition-colors hover:border-brand-accent hover:text-brand-accent"
+        aria-label="Show previous testimonials"
+      >
+        <ChevronLeft size={20} />
+      </button>
+
       <div
         ref={carouselRef}
-        className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex-1 flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-3 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         aria-label="Customer testimonials"
         onMouseEnter={stopAutoplay}
         onMouseLeave={startAutoplay}
@@ -59,7 +70,7 @@ export default function TestimonialCarousel({ reviews }: { reviews: Review[] }) 
         {reviews.map((review) => (
           <article
             key={review.name}
-            className="w-full shrink-0 snap-start bg-white border border-brand-border rounded-xl p-6 hover:shadow-lg transition-all md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
+            className="w-full shrink-0 snap-center md:snap-start bg-white border border-brand-border rounded-xl p-6 hover:shadow-lg transition-all md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
           >
             <div className="flex items-center mb-4" aria-label={`${review.rating} out of 5 stars`}>
               {[1, 2, 3, 4, 5].map((star) => (
@@ -77,20 +88,10 @@ export default function TestimonialCarousel({ reviews }: { reviews: Review[] }) 
 
       <button
         type="button"
-        onClick={() => move(-1)}
-        onMouseEnter={stopAutoplay}
-        onMouseLeave={startAutoplay}
-        className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-brand-border bg-white p-2.5 text-brand-primary shadow-md transition-colors hover:border-brand-accent hover:text-brand-accent md:-left-5"
-        aria-label="Show previous testimonials"
-      >
-        <ChevronLeft size={20} />
-      </button>
-      <button
-        type="button"
         onClick={() => move(1)}
         onMouseEnter={stopAutoplay}
         onMouseLeave={startAutoplay}
-        className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-brand-border bg-white p-2.5 text-brand-primary shadow-md transition-colors hover:border-brand-accent hover:text-brand-accent md:-right-5"
+        className="flex-shrink-0 z-10 flex items-center justify-center rounded-full border border-brand-border bg-white p-2 md:p-2.5 text-brand-primary shadow-md transition-colors hover:border-brand-accent hover:text-brand-accent"
         aria-label="Show next testimonials"
       >
         <ChevronRight size={20} />

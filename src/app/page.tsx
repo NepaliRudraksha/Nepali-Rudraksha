@@ -47,12 +47,8 @@ export default async function Home() {
             </p>
             <div className="flex items-center space-x-4 pt-4">
               <Link href="/shop" className="bg-brand-accent hover:bg-brand-accent-hover text-brand-primary font-bold px-8 py-3 rounded-md transition-colors shadow-lg hover:scale-105 active:scale-95 transform duration-200">
-                Shop Now &rarr;
+                Shop Now
               </Link>
-              <button className="flex items-center space-x-2 text-white hover:text-brand-accent transition-colors">
-                <PlayCircle size={24} />
-                <span className="font-medium">Watch Video</span>
-              </button>
             </div>
           </MotionHeroContent>
           <MotionHeroImage>
@@ -63,12 +59,6 @@ export default async function Home() {
               fill
               className="object-cover rounded-full shadow-2xl border-4 border-brand-accent/30 drop-shadow-2xl mix-blend-luminosity hover:mix-blend-normal hover:scale-105 transition-all duration-700"
             />
-            <div className="absolute -right-8 top-1/4 transform rotate-12 text-brand-accent font-serif italic text-2xl drop-shadow-md">
-              Faith.<br/>Peace.<br/>Protection.<br/>Prosperity.
-            </div>
-            <div className="absolute -bottom-4 -left-4 text-brand-accent opacity-50 animate-pulse">
-              <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
-            </div>
           </MotionHeroImage>
         </div>
       </MotionHeroWrapper>
@@ -99,7 +89,7 @@ export default async function Home() {
             <h2 className="text-3xl font-serif font-bold text-brand-primary">Shop by Category</h2>
           </div>
           <Link href="/shop" className="text-sm font-semibold text-brand-secondary hover:text-brand-accent flex items-center">
-            View All <ArrowRight size={16} className="ml-1" />
+            View All
           </Link>
         </div>
         
@@ -136,7 +126,7 @@ export default async function Home() {
               Rudraksha is not just a bead; it is a symbol of inner peace, protection and higher consciousness. Let its divine energy guide you towards a healthier, happier and more balanced life.
             </p>
             <Link href="/about" className="inline-block bg-brand-accent hover:bg-brand-accent-hover text-brand-primary font-bold px-8 py-3 rounded-md transition-colors">
-              Discover More &rarr;
+              Discover More
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -168,21 +158,23 @@ export default async function Home() {
             <h2 className="text-3xl font-serif font-bold text-brand-primary">Handpicked for Your Spiritual Journey</h2>
           </div>
           <Link href="/shop" className="hidden md:flex text-sm font-semibold text-brand-secondary hover:text-brand-accent items-center">
-            View All Products <ArrowRight size={16} className="ml-1" />
+            View All Products
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           {featuredProducts.map((product) => (
             <div key={product.id} className="bg-white border border-brand-border rounded-xl overflow-hidden group hover:shadow-xl transition-all duration-300">
               <Link href={`/shop/${product.id}`}>
-                <div className="relative h-64 bg-brand-light">
-                  {product.isBestseller && (
-                    <span className="absolute z-10 top-3 left-3 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded">Bestseller</span>
-                  )}
-                  {product.isNew && (
-                    <span className="absolute z-10 top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">New</span>
-                  )}
+                <div className="relative h-40 md:h-64 bg-brand-light">
+                  <div className="absolute z-10 top-2 left-2 md:top-3 md:left-3 flex flex-col gap-1 items-start">
+                    {product.isBestseller && (
+                      <span className="bg-green-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">Bestseller</span>
+                    )}
+                    {product.isNew && (
+                      <span className="bg-red-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">New</span>
+                    )}
+                  </div>
                   <Image 
                     src={product.image || "/images/rudraksha_bead_close_1789219796219.jpg"} 
                     alt={product.name} 
@@ -191,20 +183,20 @@ export default async function Home() {
                   />
                 </div>
               </Link>
-              <div className="p-5 flex flex-col h-[180px] justify-between">
+              <div className="p-3 md:p-5 flex flex-col h-[140px] md:h-[180px] justify-between">
                 <div>
                   <Link href={`/shop/${product.id}`}>
-                    <h3 className="font-bold text-brand-primary leading-tight mb-2 h-10 hover:text-brand-accent transition-colors line-clamp-2">{product.name}</h3>
+                    <h3 className="font-bold text-brand-primary text-xs md:text-base leading-tight mb-1 md:mb-2 h-8 md:h-10 hover:text-brand-accent transition-colors line-clamp-2">{product.name}</h3>
                   </Link>
-                  <div className="flex items-center space-x-1 mb-2">
+                  <div className="flex items-center space-x-1 mb-1 md:mb-2">
                     {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} size={14} className={star <= (product.rating || 5) ? "fill-brand-accent text-brand-accent" : "text-gray-300"} />
+                      <Star key={star} size={10} className={`md:w-3.5 md:h-3.5 ${star <= (product.rating || 5) ? "fill-brand-accent text-brand-accent" : "text-gray-300"}`} />
                     ))}
-                    <span className="text-xs text-brand-muted ml-1">({product.reviewsCount || 10})</span>
+                    <span className="text-[10px] md:text-xs text-brand-muted ml-1">({product.reviewsCount || 10})</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="font-serif font-bold text-xl text-brand-secondary">₹ {product.price > 0 ? product.price.toLocaleString() : 'Enquire'}</span>
+                  <span className="font-serif font-bold text-sm md:text-xl text-brand-secondary">₹ {product.price > 0 ? product.price.toLocaleString() : 'Enquire'}</span>
                   <AddToCartButton product={product} iconOnly={true} />
                 </div>
               </div>
@@ -239,7 +231,7 @@ export default async function Home() {
               ))}
             </div>
             <Link href="/shop" className="inline-block bg-brand-accent hover:bg-brand-accent-hover text-brand-primary font-bold px-8 py-3 rounded-md transition-colors">
-              Shop Now &rarr;
+              Shop Now
             </Link>
           </div>
         </div>

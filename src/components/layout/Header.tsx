@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Search, CheckCircle2, Truck, RefreshCcw, Phone, Mail } from 'lucide-react';
 import HeaderCartIcon from '@/components/HeaderCartIcon';
 import UserNav from '@/components/layout/UserNav';
+import HeaderSearch from '@/components/layout/HeaderSearch';
 import MotionHeader from '@/components/MotionHeader';
 import { getSettings } from '@/lib/api';
 
@@ -12,7 +13,7 @@ export default async function Header() {
     <MotionHeader>
       {/* Top Bar */}
       <div className="bg-brand-primary text-white text-xs border-b border-brand-accent/20">
-        <div className="max-w-7xl mx-auto py-2 px-4 md:px-10 lg:px-20 flex justify-between items-center overflow-x-auto">
+        <div className="max-w-7xl mx-auto py-2 px-4 md:px-10 lg:px-20 flex justify-between items-center overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <div className="flex items-center space-x-6 min-w-max">
           <div className="flex items-center space-x-1">
             <CheckCircle2 size={14} className="text-brand-accent" />
@@ -76,9 +77,6 @@ export default async function Header() {
           <Link href="/about" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
             About Us
           </Link>
-          <Link href="/blog" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
-            Blog
-          </Link>
           <Link href="/contact" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
             Contact
           </Link>
@@ -86,17 +84,7 @@ export default async function Header() {
 
         {/* Icons & Search */}
         <div className="flex items-center space-x-4">
-          <div className="hidden md:flex items-center bg-brand-bg rounded-full px-3 py-1.5 border border-brand-border">
-            <Search size={16} className="text-brand-muted mr-2" />
-            <input
-              type="text"
-              placeholder="Search Rudraksha..."
-              className="bg-transparent border-none outline-none text-sm w-32 xl:w-48 placeholder:text-brand-muted"
-            />
-          </div>
-          <button className="md:hidden text-brand-primary">
-            <Search size={20} />
-          </button>
+          <HeaderSearch />
           <UserNav />
           <HeaderCartIcon />
         </div>

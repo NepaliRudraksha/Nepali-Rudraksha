@@ -199,6 +199,20 @@ export default function Contact() {
             </div>
           </div>
         </div>
+
+        {/* Map Section */}
+        <div className="w-full mt-16 rounded-2xl overflow-hidden border border-brand-border h-[400px] shadow-sm bg-brand-light">
+          <iframe 
+            src="https://maps.google.com/maps?q=Kathmandu,Nepal&t=&z=13&ie=UTF8&iwloc=&output=embed" 
+            width="100%" 
+            height="100%" 
+            style={{ border: 0 }} 
+            allowFullScreen 
+            loading="lazy" 
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Location Map - Kathmandu, Nepal"
+          ></iframe>
+        </div>
       </section>
 
       {/* FAQ Section */}
