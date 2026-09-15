@@ -57,14 +57,28 @@ export default async function Header() {
         </Link>
 
         {/* Navigation */}
-        <nav className="hidden lg:flex items-center space-x-6 font-medium text-sm text-brand-text">
-          <Link href="/" className="text-brand-secondary border-b-2 border-brand-accent pb-1">Home</Link>
-          <Link href="/shop" className="hover:text-brand-secondary transition-colors">Shop</Link>
-          <Link href="/types" className="hover:text-brand-secondary transition-colors">Rudraksha Types</Link>
-          <Link href="/accessories" className="hover:text-brand-secondary transition-colors">Accessories</Link>
-          <Link href="/about" className="hover:text-brand-secondary transition-colors">About Us</Link>
-          <Link href="/blog" className="hover:text-brand-secondary transition-colors">Blog</Link>
-          <Link href="/contact" className="hover:text-brand-secondary transition-colors">Contact</Link>
+        <nav className="group/nav hidden lg:flex items-center space-x-6 font-medium text-sm text-brand-text">
+          <Link href="/" className="relative pb-1 text-brand-secondary transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-100 after:bg-brand-accent after:transition-transform group-hover/nav:after:scale-x-0 hover:after:scale-x-100">
+            Home
+          </Link>
+          <Link href="/shop" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
+            Shop
+          </Link>
+          <Link href="/types" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
+            Rudraksha Types
+          </Link>
+          <Link href="/accessories" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
+            Accessories
+          </Link>
+          <Link href="/about" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
+            About Us
+          </Link>
+          <Link href="/blog" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
+            Blog
+          </Link>
+          <Link href="/contact" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
+            Contact
+          </Link>
         </nav>
 
         {/* Icons & Search */}

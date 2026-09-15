@@ -15,7 +15,7 @@ const blogPosts = [
     category: 'Product Guide',
     readTime: '6 min read',
     date: 'September 8, 2026',
-    image: 'https://images.unsplash.com/photo-1620857908861-1c3905007328?q=80&w=600&auto=format&fit=crop',
+    image: '/images/rudraksha_bead_close_1789219796219.jpg',
     featured: true,
   },
   {

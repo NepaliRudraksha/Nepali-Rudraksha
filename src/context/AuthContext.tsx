@@ -169,13 +169,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = async (email: string, password: string): Promise<{ error: string | null; role?: 'customer' | 'admin' }> => {
     setIsLoading(true);
 
-    // Check for demo shortcuts
-    if (email === 'admin@nepalirudraksha.com' || email === 'admin') {
+    // Demo accounts have no Supabase access token. Keep them available only
+    // when the app is running without a configured backend; otherwise, product
+    // writes would correctly be rejected by Supabase RLS as anonymous requests.
+    if (!isSupabaseConfigured() && (email === 'admin@nepalirudraksha.com' || email === 'admin')) {
       demoLogin('admin');
       setIsLoading(false);
       return { error: null, role: 'admin' };
     }
-    if (email === 'bhakt@nepalirudraksha.com' || email === 'demo@example.com') {
+    if (!isSupabaseConfigured() && (email === 'bhakt@nepalirudraksha.com' || email === 'demo@example.com')) {
       demoLogin('customer');
       setIsLoading(false);
       return { error: null, role: 'customer' };
@@ -258,7 +260,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   ): Promise<{ error: string | null; needsEmailConfirmation?: boolean }> => {
     setIsLoading(true);
 
-    const initialRole: 'customer' | 'admin' = email.toLowerCase().includes('admin') ? 'admin' : 'customer';
+    // New public registrations must never be able to grant themselves admin
+    // access by choosing a particular email address. Admin access is assigned
+    // only by the seeded profile migration or directly in Supabase.
+    const initialRole: 'customer' = 'customer';
 
     if (!isSupabaseConfigured()) {
       const mockUser: AuthUser = {

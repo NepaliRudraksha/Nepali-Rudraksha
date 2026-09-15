@@ -17,7 +17,8 @@ const emptyForm: EditableProduct = {
   rating: 5,
   reviewsCount: 0,
   isBestseller: false,
-  isNew: false,
+  // New catalog entries should be visible on the homepage immediately.
+  isNew: true,
   image: '',
   description: '',
   benefits: '',
@@ -239,7 +240,7 @@ export default function AdminProducts() {
                           <Image
                             src={
                               product.image ||
-                              'https://images.unsplash.com/photo-1620857908861-1c3905007328?q=80&w=80&auto=format&fit=crop'
+                              '/images/rudraksha_bead_close_1789219796219.jpg'
                             }
                             alt={product.name}
                             fill

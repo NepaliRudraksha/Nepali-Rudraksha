@@ -8,7 +8,17 @@ import { MotionHeroWrapper, MotionHeroContent, MotionHeroImage, MotionSection } 
 
 export default async function Home() {
   const products = await getProducts();
-  const featuredProducts = products.filter(p => p.rating === 5).slice(0, 4);
+  // Admin-added products are marked as New by default. Show marked products
+  // first, then fill the remaining homepage slots with highly rated products.
+  const highlightedProducts = products.filter((product) => product.isNew || product.isBestseller);
+  const featuredProducts = [
+    ...highlightedProducts,
+    ...products.filter(
+      (product) =>
+        product.rating === 5 &&
+        !highlightedProducts.some((highlighted) => highlighted.id === product.id)
+    ),
+  ].slice(0, 4);
 
   return (
     <div className="w-full flex flex-col items-center">

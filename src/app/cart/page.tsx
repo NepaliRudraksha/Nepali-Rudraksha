@@ -41,7 +41,7 @@ export default function Cart() {
                 <div className="flex items-center w-full md:w-2/3 gap-6">
                   <div className="relative w-24 h-24 bg-brand-light rounded-lg overflow-hidden border border-brand-border flex-shrink-0">
                     <Image 
-                      src={item.product.image || "https://images.unsplash.com/photo-1620857908861-1c3905007328?q=80&w=200&auto=format&fit=crop"} 
+                      src={item.product.image || "/images/rudraksha_bead_close_1789219796219.jpg"} 
                       alt={item.product.name} 
                       fill 
                       className="object-cover" 
