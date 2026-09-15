@@ -120,7 +120,7 @@ function AccountDashboard() {
   // Unauthenticated View
   if (!user) {
     return (
-      <div className="w-full max-w-4xl mx-auto py-16 px-4 md:px-8">
+      <div className="w-full max-w-4xl mx-auto py-16 px-4 md:px-10 lg:px-20">
         <div className="bg-white rounded-3xl border border-brand-border p-8 md:p-12 shadow-sm text-center">
           <div className="w-16 h-16 bg-brand-light rounded-3xl flex items-center justify-center mx-auto mb-6 text-brand-primary border border-brand-border">
             <Sparkles size={32} className="text-brand-accent" />
@@ -202,7 +202,7 @@ function AccountDashboard() {
   const isAdmin = user.role === 'admin' || user.email.includes('admin');
 
   return (
-    <div className="w-full max-w-7xl mx-auto py-12 px-4 md:px-8">
+    <div className="w-full max-w-7xl mx-auto py-12 px-4 md:px-10 lg:px-20">
       <div className="flex flex-col lg:flex-row gap-8">
         
         {/* Left Sidebar */}

@@ -97,7 +97,7 @@ export default function Blog() {
 
       {/* Category Filters (visual only — categories shown as badges on posts) */}
       <section className="w-full border-b border-brand-border bg-white sticky top-[0] z-10">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex gap-3 overflow-x-auto scrollbar-hide">
+        <div className="max-w-7xl mx-auto px-4 md:px-10 lg:px-20 py-4 flex gap-3 overflow-x-auto scrollbar-hide">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -109,7 +109,7 @@ export default function Blog() {
         </div>
       </section>
 
-      <div className="w-full max-w-7xl mx-auto py-12 px-4 md:px-8">
+      <div className="w-full max-w-7xl mx-auto py-12 px-4 md:px-10 lg:px-20">
         {/* Featured Posts */}
         <div className="mb-16">
           <p className="text-brand-muted text-xs tracking-[0.2em] uppercase font-bold mb-6">Featured Articles</p>

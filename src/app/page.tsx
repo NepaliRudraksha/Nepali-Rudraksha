@@ -35,7 +35,7 @@ export default async function Home() {
           />
         </div>
         
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row justify-between items-center">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-10 lg:px-20 flex flex-col md:flex-row justify-between items-center">
           <MotionHeroContent>
             <p className="text-brand-accent tracking-[0.2em] text-xs font-bold uppercase">Sacred by Nature. Blessed for Life.</p>
             <h1 className="text-5xl md:text-7xl font-serif font-medium leading-tight">
@@ -74,7 +74,7 @@ export default async function Home() {
       </MotionHeroWrapper>
 
       {/* 2. Trust Badges */}
-      <MotionSection className="w-full bg-brand-light border-y border-brand-border py-4 px-4 md:px-8">
+      <MotionSection className="w-full bg-brand-light border-y border-brand-border py-4 px-4 md:px-10 lg:px-20">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-center md:justify-between items-center gap-4 text-sm font-medium text-brand-primary">
           {[
             { label: '100% Authentic', icon: ShieldCheck },
@@ -92,7 +92,7 @@ export default async function Home() {
       </MotionSection>
 
       {/* 3. Shop by Category */}
-      <MotionSection className="w-full max-w-7xl mx-auto py-16 px-4 md:px-8">
+      <MotionSection className="w-full max-w-7xl mx-auto py-16 px-4 md:px-10 lg:px-20">
         <div className="flex justify-between items-end mb-8">
           <div>
             <p className="text-brand-muted text-xs tracking-[0.2em] uppercase font-bold mb-2">Explore Our Collections</p>
@@ -128,7 +128,7 @@ export default async function Home() {
         <div className="absolute inset-0 opacity-20">
            <Image src="/images/meditating_sadhu_mountains_1789219782503.jpg" alt="Meditating" fill className="object-cover" />
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="relative max-w-7xl mx-auto px-4 md:px-10 lg:px-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <p className="text-brand-accent text-xs tracking-[0.2em] font-bold uppercase mb-4">The Power of Rudraksha</p>
             <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">Ancient Wisdom<br/>Modern Life</h2>
@@ -161,7 +161,7 @@ export default async function Home() {
       </MotionSection>
 
       {/* 5. Featured Products */}
-      <MotionSection className="w-full max-w-7xl mx-auto py-16 px-4 md:px-8">
+      <MotionSection className="w-full max-w-7xl mx-auto py-16 px-4 md:px-10 lg:px-20">
         <div className="flex justify-between items-end mb-10">
           <div>
             <p className="text-brand-muted text-xs tracking-[0.2em] uppercase font-bold mb-2">Featured Products</p>
@@ -214,7 +214,7 @@ export default async function Home() {
       </MotionSection>
 
       {/* 6. A Small Bead A Bigger Purpose */}
-      <MotionSection className="w-full bg-[#19251D] py-16 px-4 md:px-8 text-white relative">
+      <MotionSection className="w-full bg-[#19251D] py-16 px-4 md:px-10 lg:px-20 text-white relative">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
           <div className="lg:w-1/2 relative h-80 w-full rounded-2xl overflow-hidden border-2 border-brand-accent/30">
             <Image src="/images/rudraksha_pendant_1789219809886.jpg" alt="Small Bead" fill className="object-cover" />
@@ -246,7 +246,7 @@ export default async function Home() {
       </MotionSection>
 
       {/* 7. Testimonials */}
-      <MotionSection className="w-full max-w-7xl mx-auto py-16 px-4 md:px-8">
+      <MotionSection className="w-full max-w-7xl mx-auto py-16 px-4 md:px-10 lg:px-20">
         <div className="text-center mb-12">
           <p className="text-brand-muted text-xs tracking-[0.2em] uppercase font-bold mb-2">What Our Customers Say</p>
           <h2 className="text-3xl font-serif font-bold text-brand-primary">Testimonials</h2>

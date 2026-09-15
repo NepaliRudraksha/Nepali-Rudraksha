@@ -31,7 +31,7 @@ export default function TypesPage() {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto py-16 px-4 md:px-8">
+      <div className="max-w-7xl mx-auto py-16 px-4 md:px-10 lg:px-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {types.map((type, i) => (
             <div key={i} className="bg-white border border-brand-border rounded-xl overflow-hidden group hover:shadow-xl transition-all duration-300 flex flex-col">

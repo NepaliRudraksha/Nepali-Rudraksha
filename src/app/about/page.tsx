@@ -16,7 +16,7 @@ export default function About() {
         <div className="absolute inset-0 opacity-20">
           <Image src="/images/hero_rudraksha_himalayas_1789219738482.jpg" alt="Himalayan background" fill className="object-cover" />
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 md:px-8 text-center">
+        <div className="relative max-w-7xl mx-auto px-4 md:px-10 lg:px-20 text-center">
           <p className="text-brand-accent tracking-[0.2em] text-xs font-bold uppercase mb-4">Our Story</p>
           <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6">Where Divinity<br/>Meets Authenticity</h1>
           <p className="text-gray-300 max-w-2xl mx-auto text-lg">
@@ -26,7 +26,7 @@ export default function About() {
       </section>
 
       {/* Our Story */}
-      <section className="w-full max-w-7xl mx-auto py-20 px-4 md:px-8">
+      <section className="w-full max-w-7xl mx-auto py-20 px-4 md:px-10 lg:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="relative h-[450px] rounded-2xl overflow-hidden border-2 border-brand-accent/20 shadow-xl">
             <Image 
@@ -55,7 +55,7 @@ export default function About() {
       </section>
 
       {/* Values */}
-      <section className="w-full bg-brand-light py-20 px-4 md:px-8">
+      <section className="w-full bg-brand-light py-20 px-4 md:px-10 lg:px-20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
             <p className="text-brand-muted text-xs tracking-[0.2em] uppercase font-bold mb-2">What We Stand For</p>
@@ -79,7 +79,7 @@ export default function About() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="w-full max-w-7xl mx-auto py-20 px-4 md:px-8">
+      <section className="w-full max-w-7xl mx-auto py-20 px-4 md:px-10 lg:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
             <p className="text-brand-accent text-xs tracking-[0.2em] font-bold uppercase mb-4">Why Choose Us</p>
@@ -116,7 +116,7 @@ export default function About() {
       </section>
 
       {/* Stats */}
-      <section className="w-full bg-brand-primary text-white py-16 px-4 md:px-8">
+      <section className="w-full bg-brand-primary text-white py-16 px-4 md:px-10 lg:px-20">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
             { value: '10,000+', label: 'Happy Customers' },
@@ -133,7 +133,7 @@ export default function About() {
       </section>
 
       {/* Testimonials preview */}
-      <section className="w-full max-w-7xl mx-auto py-16 px-4 md:px-8">
+      <section className="w-full max-w-7xl mx-auto py-16 px-4 md:px-10 lg:px-20">
         <div className="text-center mb-12">
           <p className="text-brand-muted text-xs tracking-[0.2em] uppercase font-bold mb-2">Customer Love</p>
           <h2 className="text-3xl font-serif font-bold text-brand-primary">What People Say About Us</h2>

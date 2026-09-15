@@ -9,7 +9,7 @@ export default function Cart() {
   const { cart, removeFromCart, updateQuantity, cartTotal, cartCount } = useCart();
 
   return (
-    <div className="w-full max-w-7xl mx-auto py-12 px-4 md:px-8">
+    <div className="w-full max-w-7xl mx-auto py-12 px-4 md:px-10 lg:px-20">
       <div className="mb-10 text-center">
         <h1 className="text-4xl font-serif font-bold text-brand-primary mb-4">Your Shopping Cart</h1>
         <div className="w-24 h-1 bg-brand-accent mx-auto"></div>

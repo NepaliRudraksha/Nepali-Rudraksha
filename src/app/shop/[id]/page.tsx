@@ -57,7 +57,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto py-12 px-4 md:px-8">
+    <div className="w-full max-w-7xl mx-auto py-12 px-4 md:px-10 lg:px-20">
       <Link href="/shop" className="inline-flex items-center text-brand-muted hover:text-brand-accent transition-colors mb-8 text-sm font-medium">
         <ArrowLeft size={16} className="mr-2" /> Back to Shop
       </Link>

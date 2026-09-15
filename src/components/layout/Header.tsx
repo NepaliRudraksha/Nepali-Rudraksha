@@ -11,8 +11,9 @@ export default async function Header() {
   return (
     <MotionHeader>
       {/* Top Bar */}
-      <div className="bg-brand-primary text-white text-xs py-2 px-4 md:px-8 flex justify-between items-center overflow-x-auto">
-        <div className="flex items-center space-x-6 min-w-max">
+      <div className="bg-brand-primary text-white text-xs border-b border-brand-accent/20">
+        <div className="max-w-7xl mx-auto py-2 px-4 md:px-10 lg:px-20 flex justify-between items-center overflow-x-auto">
+          <div className="flex items-center space-x-6 min-w-max">
           <div className="flex items-center space-x-1">
             <CheckCircle2 size={14} className="text-brand-accent" />
             <span>100% Authentic</span>
@@ -41,11 +42,13 @@ export default async function Header() {
           </div>
         </div>
       </div>
+      </div>
 
       {/* Main Navbar */}
-      <div className="flex items-center justify-between px-4 md:px-8 py-4 bg-white">
-        {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
+      <div className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-10 lg:px-20 py-4">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2">
           <div className="w-10 h-10 bg-brand-primary rounded-full flex items-center justify-center text-brand-accent font-serif font-bold text-xl">
             NR
           </div>
@@ -57,7 +60,7 @@ export default async function Header() {
         </Link>
 
         {/* Navigation */}
-        <nav className="group/nav hidden lg:flex items-center space-x-6 font-medium text-sm text-brand-text">
+        <nav className="group/nav hidden lg:flex items-center space-x-4 font-medium text-sm text-brand-text">
           <Link href="/" className="relative pb-1 text-brand-secondary transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-100 after:bg-brand-accent after:transition-transform group-hover/nav:after:scale-x-0 hover:after:scale-x-100">
             Home
           </Link>
@@ -96,6 +99,7 @@ export default async function Header() {
           </button>
           <UserNav />
           <HeaderCartIcon />
+        </div>
         </div>
       </div>
     </MotionHeader>

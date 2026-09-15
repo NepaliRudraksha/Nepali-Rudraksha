@@ -40,7 +40,7 @@ export default function Shop() {
         </div>
       </div>
 
-      <div className="w-full max-w-7xl mx-auto py-12 px-4 md:px-8 flex flex-col md:flex-row gap-8">
+      <div className="w-full max-w-7xl mx-auto py-12 px-4 md:px-10 lg:px-20 flex flex-col md:flex-row gap-8">
         
         {/* Sidebar Filters */}
         <aside className="w-full md:w-64 flex-shrink-0">

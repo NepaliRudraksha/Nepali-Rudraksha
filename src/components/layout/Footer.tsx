@@ -8,8 +8,9 @@ export default async function Footer() {
   return (
     <footer className="bg-brand-primary text-brand-light font-sans mt-auto">
       {/* Top Banner */}
-      <div className="bg-[#19251D] py-4 px-4 md:px-8 flex flex-col md:flex-row justify-between items-center text-sm">
-        <div className="flex items-center space-x-4 mb-4 md:mb-0">
+      <div className="bg-[#19251D]">
+        <div className="max-w-7xl mx-auto py-4 px-4 md:px-10 lg:px-20 flex flex-col md:flex-row justify-between items-center text-sm">
+          <div className="flex items-center space-x-4 mb-4 md:mb-0">
           <div className="w-8 h-8 rounded-full bg-brand-accent flex items-center justify-center text-brand-primary">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
@@ -31,10 +32,11 @@ export default async function Footer() {
         <div className="hidden lg:block font-serif text-brand-accent italic ml-8">
           "Good Things Take Faith"
         </div>
+        </div>
       </div>
 
       {/* Main Footer */}
-      <div className="max-w-7xl mx-auto py-12 px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto py-12 px-4 md:px-10 lg:px-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         
         {/* Brand Info */}
         <div className="space-y-4">
@@ -115,11 +117,13 @@ export default async function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="bg-[#151f18] py-4 px-4 md:px-8 flex flex-col md:flex-row justify-between items-center text-xs text-brand-border">
-        <p>&copy; 2026 Nepali Rudraksha. All Rights Reserved.</p>
+      <div className="bg-[#151f18]">
+        <div className="max-w-7xl mx-auto py-4 px-4 md:px-10 lg:px-20 flex flex-col md:flex-row justify-between items-center text-xs text-brand-border">
+          <p>&copy; 2026 Nepali Rudraksha. All Rights Reserved.</p>
         <div className="flex space-x-4 mt-2 md:mt-0">
           <Link href="/privacy" className="hover:text-brand-accent transition-colors">Privacy Policy</Link>
           <Link href="/terms" className="hover:text-brand-accent transition-colors">Terms & Conditions</Link>
+        </div>
         </div>
       </div>
     </footer>
