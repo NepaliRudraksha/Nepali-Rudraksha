@@ -4,6 +4,7 @@ import HeaderCartIcon from '@/components/HeaderCartIcon';
 import UserNav from '@/components/layout/UserNav';
 import HeaderSearch from '@/components/layout/HeaderSearch';
 import MotionHeader from '@/components/MotionHeader';
+import MobileMenu from '@/components/layout/MobileMenu';
 import { getSettings } from '@/lib/api';
 
 export default async function Header() {
@@ -68,17 +69,23 @@ export default async function Header() {
       {/* Main Navbar */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-10 lg:px-20 py-4">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-          <div className="w-10 h-10 bg-brand-primary rounded-full flex items-center justify-center text-brand-accent font-serif font-bold text-xl">
-            NR
+          
+          <div className="flex items-center">
+            {/* Mobile Menu */}
+            <MobileMenu />
+            
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-2">
+              <div className="w-10 h-10 bg-brand-primary rounded-full flex items-center justify-center text-brand-accent font-serif font-bold text-xl">
+                NR
+              </div>
+              <div>
+                <h1 className="font-serif font-bold text-xl text-brand-primary leading-tight">NEPALI</h1>
+                <h1 className="font-serif font-bold text-xl text-brand-primary leading-tight">RUDRAKSHA</h1>
+                <p className="text-[10px] text-brand-muted tracking-widest hidden md:block">DIVINE BEADS. BETTER LIFE.</p>
+              </div>
+            </Link>
           </div>
-          <div>
-            <h1 className="font-serif font-bold text-xl text-brand-primary leading-tight">NEPALI</h1>
-            <h1 className="font-serif font-bold text-xl text-brand-primary leading-tight">RUDRAKSHA</h1>
-            <p className="text-[10px] text-brand-muted tracking-widest">DIVINE BEADS. BETTER LIFE.</p>
-          </div>
-        </Link>
 
         {/* Navigation */}
         <nav className="group/nav hidden lg:flex items-center space-x-4 font-medium text-sm text-brand-text">
