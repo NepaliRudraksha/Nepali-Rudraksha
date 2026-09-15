@@ -164,9 +164,9 @@ export default async function Home() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           {featuredProducts.map((product) => (
-            <div key={product.id} className="bg-white border border-brand-border rounded-xl overflow-hidden group hover:shadow-xl transition-all duration-300">
+            <div key={product.id} className="bg-white border border-brand-border rounded-xl overflow-hidden group hover:shadow-xl transition-all duration-300 flex flex-col h-full">
               <Link href={`/shop/${product.id}`}>
-                <div className="relative h-40 md:h-64 bg-brand-light">
+                <div className="relative h-40 md:h-48 bg-brand-light flex-shrink-0">
                   <div className="absolute z-10 top-2 left-2 md:top-3 md:left-3 flex flex-col gap-1 items-start">
                     {product.isBestseller && (
                       <span className="bg-green-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">Bestseller</span>
@@ -183,16 +183,16 @@ export default async function Home() {
                   />
                 </div>
               </Link>
-              <div className="p-3 md:p-5 flex flex-col h-[140px] md:h-[180px] justify-between">
+              <div className="p-3 md:p-5 flex flex-col flex-grow justify-between gap-3">
                 <div>
                   <Link href={`/shop/${product.id}`}>
                     <h3 className="font-bold text-brand-primary text-xs md:text-base leading-tight mb-1 md:mb-2 h-8 md:h-10 hover:text-brand-accent transition-colors line-clamp-2">{product.name}</h3>
                   </Link>
                   <div className="flex items-center space-x-1 mb-1 md:mb-2">
                     {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} size={10} className={`md:w-3.5 md:h-3.5 ${star <= (product.rating || 5) ? "fill-brand-accent text-brand-accent" : "text-gray-300"}`} />
+                      <Star key={star} size={10} className={`md:w-3.5 md:h-3.5 ${star <= Math.round(product.rating ?? 0) ? "fill-brand-accent text-brand-accent" : "text-gray-300"}`} />
                     ))}
-                    <span className="text-[10px] md:text-xs text-brand-muted ml-1">({product.reviewsCount || 10})</span>
+                    <span className="text-[10px] md:text-xs text-brand-muted ml-1">({product.reviewsCount ?? 0})</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">

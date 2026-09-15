@@ -13,36 +13,56 @@ export default async function Header() {
     <MotionHeader>
       {/* Top Bar */}
       <div className="bg-brand-primary text-white text-xs border-b border-brand-accent/20">
-        <div className="max-w-7xl mx-auto py-2 px-4 md:px-10 lg:px-20 flex justify-between items-center overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          <div className="flex items-center space-x-6 min-w-max">
-          <div className="flex items-center space-x-1">
-            <CheckCircle2 size={14} className="text-brand-accent" />
-            <span>100% Authentic</span>
+        <div className="max-w-7xl mx-auto py-2 px-4 md:px-10 lg:px-20 flex justify-between items-center overflow-hidden">
+          <div className="flex flex-1 overflow-hidden relative group mr-4 md:mr-8">
+            <div className="flex items-center space-x-6 min-w-max animate-marquee group-hover:[animation-play-state:paused]">
+              {/* First Set */}
+              <div className="flex items-center space-x-1">
+                <CheckCircle2 size={14} className="text-brand-accent" />
+                <span>100% Authentic</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <CheckCircle2 size={14} className="text-brand-accent" />
+                <span>Lab Tested</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Truck size={14} className="text-brand-accent" />
+                <span>Free Shipping Across India</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <RefreshCcw size={14} className="text-brand-accent" />
+                <span>Easy Returns</span>
+              </div>
+              {/* Duplicate Set for Seamless Loop */}
+              <div className="flex items-center space-x-1">
+                <CheckCircle2 size={14} className="text-brand-accent" />
+                <span>100% Authentic</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <CheckCircle2 size={14} className="text-brand-accent" />
+                <span>Lab Tested</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Truck size={14} className="text-brand-accent" />
+                <span>Free Shipping Across India</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <RefreshCcw size={14} className="text-brand-accent" />
+                <span>Easy Returns</span>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center space-x-1">
-            <CheckCircle2 size={14} className="text-brand-accent" />
-            <span>Lab Tested</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <Truck size={14} className="text-brand-accent" />
-            <span>Free Shipping Across India</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <RefreshCcw size={14} className="text-brand-accent" />
-            <span>Easy Returns</span>
+          <div className="hidden md:flex items-center space-x-6 flex-shrink-0">
+            <div className="flex items-center space-x-2">
+              <Phone size={14} className="text-brand-accent" />
+              <span>{settings.store_phone}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Mail size={14} className="text-brand-accent" />
+              <span>{settings.store_email}</span>
+            </div>
           </div>
         </div>
-        <div className="hidden md:flex items-center space-x-6 min-w-max">
-          <div className="flex items-center space-x-2">
-            <Phone size={14} className="text-brand-accent" />
-            <span>{settings.store_phone}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Mail size={14} className="text-brand-accent" />
-            <span>{settings.store_email}</span>
-          </div>
-        </div>
-      </div>
       </div>
 
       {/* Main Navbar */}

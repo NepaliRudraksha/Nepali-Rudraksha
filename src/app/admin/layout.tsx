@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, Package, ShoppingBag, Settings, LogOut, 
-  ShieldCheck, ShieldAlert, Lock, ArrowLeft, Loader2, ArrowRight, Users, CircleAlert 
+  ShieldCheck, ShieldAlert, Lock, ArrowLeft, Loader2, ArrowRight, Users, CircleAlert, Star
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
@@ -208,6 +208,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Products', href: '/admin/products', icon: <Package size={20} /> },
     { name: 'Orders', href: '/admin/orders', icon: <ShoppingBag size={20} /> },
     { name: 'Customers', href: '/admin/customers', icon: <Users size={20} /> },
+    { name: 'Reviews', href: '/admin/reviews', icon: <Star size={20} /> },
     { name: 'Settings', href: '/admin/settings', icon: <Settings size={20} /> },
   ];
 

@@ -50,14 +50,25 @@ export const isSupabaseConfigured = (): boolean =>
 
 /** Map a raw Supabase DB row → Product type */
 function rowToProduct(item: Record<string, unknown>): Product {
+  let dynamicRating = 0;
+  let dynamicReviewsCount = 0;
+  
+  if (item.reviews && Array.isArray(item.reviews)) {
+    const approvedReviews = item.reviews.filter((r: any) => r.is_approved === true);
+    dynamicReviewsCount = approvedReviews.length;
+    if (dynamicReviewsCount > 0) {
+      dynamicRating = approvedReviews.reduce((sum: number, r: any) => sum + r.rating, 0) / dynamicReviewsCount;
+    }
+  }
+
   return {
     id: item.id as string,
     name: item.name as string,
     price: item.price as number,
     category: item.category as Product['category'],
     origin: (item.origin as Product['origin']) ?? undefined,
-    rating: (item.rating as number) ?? undefined,
-    reviewsCount: (item.reviews_count as number) ?? undefined,
+    rating: item.reviews ? dynamicRating : 0, // Fallback to 0 instead of database hardcoded value
+    reviewsCount: item.reviews ? dynamicReviewsCount : 0,
     isBestseller: (item.is_bestseller as boolean) ?? false,
     isNew: (item.is_new as boolean) ?? false,
     image: (item.image as string) ?? undefined,
@@ -76,7 +87,7 @@ export async function getProducts(): Promise<Product[]> {
       return mockProducts;
     }
 
-    const { data, error } = await supabase.from('products').select('*').order('name');
+    const { data, error } = await supabase.from('products').select('*, reviews(rating, is_approved)').order('name');
     if (error) {
       console.error('Error fetching products from Supabase:', error);
       return mockProducts;
@@ -96,7 +107,7 @@ export async function getProductById(id: string): Promise<Product | undefined> {
 
     const { data, error } = await supabase
       .from('products')
-      .select('*')
+      .select('*, reviews(rating, is_approved)')
       .eq('id', id)
       .single();
 
@@ -455,3 +466,130 @@ export async function getAllProfiles(): Promise<UserProfile[]> {
     return [];
   }
 }
+
+// ─── Reviews ───────────────────────────────────────────────────────────────
+
+export interface Review {
+  id: string;
+  product_id: string;
+  name: string;
+  rating: number;
+  comment: string;
+  is_approved: boolean;
+  created_at: string;
+}
+
+export interface ReviewSubmission {
+  product_id: string;
+  name: string;
+  rating: number;
+  comment: string;
+}
+
+export async function getApprovedReviews(productId: string): Promise<Review[]> {
+  try {
+    if (!isSupabaseConfigured()) return [];
+
+    const { data, error } = await supabase
+      .from('reviews')
+      .select('*')
+      .eq('product_id', productId)
+      .eq('is_approved', true)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching reviews:', error);
+      return [];
+    }
+    return (data as Review[]) ?? [];
+  } catch (error) {
+    console.error('Failed to fetch reviews:', error);
+    return [];
+  }
+}
+
+export async function submitReview(review: ReviewSubmission): Promise<{ error: string | null }> {
+  try {
+    if (!isSupabaseConfigured()) return { error: 'Supabase not configured' };
+
+    const { error } = await supabase
+      .from('reviews')
+      .insert([
+        {
+          product_id: review.product_id,
+          name: review.name,
+          rating: review.rating,
+          comment: review.comment,
+          is_approved: false
+        }
+      ]);
+
+    if (error) {
+      console.error('Error submitting review:', error);
+      return { error: error.message };
+    }
+    return { error: null };
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function getPendingReviews(): Promise<Review[]> {
+  try {
+    if (!isSupabaseConfigured()) return [];
+
+    const { data, error } = await supabase
+      .from('reviews')
+      .select('*')
+      .eq('is_approved', false)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching pending reviews:', error);
+      return [];
+    }
+    return (data as Review[]) ?? [];
+  } catch (error) {
+    console.error('Failed to fetch pending reviews:', error);
+    return [];
+  }
+}
+
+export async function approveReview(id: string): Promise<{ error: string | null }> {
+  try {
+    if (!isSupabaseConfigured()) return { error: 'Supabase not configured' };
+
+    const { error } = await supabase
+      .from('reviews')
+      .update({ is_approved: true })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error approving review:', error);
+      return { error: error.message };
+    }
+    return { error: null };
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function deleteReview(id: string): Promise<{ error: string | null }> {
+  try {
+    if (!isSupabaseConfigured()) return { error: 'Supabase not configured' };
+
+    const { error } = await supabase
+      .from('reviews')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting review:', error);
+      return { error: error.message };
+    }
+    return { error: null };
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+

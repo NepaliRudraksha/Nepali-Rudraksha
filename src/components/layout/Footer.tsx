@@ -7,31 +7,30 @@ export default async function Footer() {
 
   return (
     <footer className="bg-brand-primary text-brand-light font-sans mt-auto">
-      {/* Top Banner */}
-      <div className="bg-[#19251D]">
-        <div className="max-w-7xl mx-auto py-4 px-4 md:px-10 lg:px-20 flex flex-col md:flex-row justify-between items-center text-sm">
-          <div className="flex items-center space-x-4 mb-4 md:mb-0">
-          <div className="w-8 h-8 rounded-full bg-brand-accent flex items-center justify-center text-brand-primary">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      {/* Scrolling Text Banner */}
+      <div className="bg-[#19251D] border-y border-brand-accent/20 overflow-hidden py-3">
+        <div className="flex overflow-hidden relative group w-full">
+          <div className="flex items-center space-x-12 min-w-max animate-marquee group-hover:[animation-play-state:paused]">
+            {/* First Set */}
+            <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">"Good Things Take Faith"</span>
+            <span className="text-brand-accent/40 text-xs">✦</span>
+            <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">100% Authentic & Lab Certified</span>
+            <span className="text-brand-accent/40 text-xs">✦</span>
+            <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">Empowering Your Spiritual Journey</span>
+            <span className="text-brand-accent/40 text-xs">✦</span>
+            <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">Directly Sourced from the Himalayas</span>
+            <span className="text-brand-accent/40 text-xs">✦</span>
+            
+            {/* Duplicate Set for Seamless Loop */}
+            <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">"Good Things Take Faith"</span>
+            <span className="text-brand-accent/40 text-xs">✦</span>
+            <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">100% Authentic & Lab Certified</span>
+            <span className="text-brand-accent/40 text-xs">✦</span>
+            <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">Empowering Your Spiritual Journey</span>
+            <span className="text-brand-accent/40 text-xs">✦</span>
+            <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">Directly Sourced from the Himalayas</span>
+            <span className="text-brand-accent/40 text-xs">✦</span>
           </div>
-          <div>
-            <h3 className="font-serif text-brand-accent font-semibold text-base">Join Our Spiritual Community</h3>
-            <p className="text-xs text-brand-border">Get updates on new arrivals, exclusive offers and spiritual insights.</p>
-          </div>
-        </div>
-        <div className="flex w-full md:w-auto">
-          <input 
-            type="email" 
-            placeholder="Enter your email address" 
-            className="px-4 py-2 text-brand-text bg-white outline-none w-full md:w-64"
-          />
-          <button className="bg-brand-accent text-brand-primary font-semibold px-4 py-2 hover:bg-brand-accent-hover transition-colors">
-            Subscribe
-          </button>
-        </div>
-        <div className="hidden lg:block font-serif text-brand-accent italic ml-8">
-          "Good Things Take Faith"
-        </div>
         </div>
       </div>
 

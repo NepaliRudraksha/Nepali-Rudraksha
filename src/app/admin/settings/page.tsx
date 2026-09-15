@@ -233,39 +233,7 @@ export default function AdminSettings() {
         </div>
       </div>
 
-      {/* Supabase Configuration Info */}
-      <div className="bg-white border border-gray-200 rounded-xl p-6">
-        <h2 className="text-lg font-bold text-gray-800 mb-2 pb-3 border-b border-gray-100">
-          Supabase Configuration
-        </h2>
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-5">
-          <p className="text-sm text-blue-800">
-            <strong>Note:</strong> Set these environment variables in your{' '}
-            <code className="bg-blue-100 px-1 rounded">.env.local</code> file for security.
-            These fields are for reference only.
-          </p>
-        </div>
-        <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <p className="text-xs text-gray-500 font-mono">
-            <span className="text-gray-400"># Add to .env.local:</span>
-            <br />
-            NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-            <br />
-            NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-          </p>
-        </div>
-        <div className="mt-4 flex items-center gap-2">
-          <div
-            className={`w-2.5 h-2.5 rounded-full ${supabaseReady ? 'bg-green-500' : 'bg-red-400'}`}
-          />
-          <span className="text-sm font-medium text-gray-700">
-            Supabase:{' '}
-            <span className={supabaseReady ? 'text-green-600' : 'text-red-500'}>
-              {supabaseReady ? 'Connected' : 'Not configured'}
-            </span>
-          </span>
-        </div>
-      </div>
+
 
       {/* Save Button */}
       <div className="flex items-center justify-end gap-4">

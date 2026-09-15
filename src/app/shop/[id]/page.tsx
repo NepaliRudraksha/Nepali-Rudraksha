@@ -5,16 +5,18 @@ import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Product } from '@/data/products';
-import { getProductById, getProducts } from '@/lib/api';
+import { getProductById, getProducts, getApprovedReviews, submitReview, Review } from '@/lib/api';
 import { useCart } from '@/context/CartContext';
 import { Star, ShieldCheck, Truck, Check, ArrowLeft, Minus, Plus, ShoppingCart, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import AddToCartButton from '@/components/AddToCartButton';
+import { useAuth } from '@/context/AuthContext';
 
 export default function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const router = useRouter();
   const { addToCart } = useCart();
+  const { user } = useAuth();
   
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<Product | null>(null);
@@ -24,23 +26,29 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
   // Review Form State
   const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, text: '' });
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   
   useEffect(() => {
     async function fetchData() {
-      const data = await getProductById(resolvedParams.id);
+      const [data, fetchedReviews] = await Promise.all([
+        getProductById(resolvedParams.id),
+        getApprovedReviews(resolvedParams.id)
+      ]);
       setProduct(data || null);
+      setReviews(fetchedReviews);
       
       if (data) {
         // Fetch related products
         const allProducts = await getProducts();
         const related = allProducts
           .filter(p => p.category === data.category && p.id !== data.id)
-          .slice(0, 4);
+          .slice(0, 3);
           
         // Fill with bestsellers if not enough related products
-        if (related.length < 4) {
+        if (related.length < 3) {
           const bestsellers = allProducts.filter(p => p.isBestseller && p.id !== data.id && !related.some(r => r.id === p.id));
-          related.push(...bestsellers.slice(0, 4 - related.length));
+          related.push(...bestsellers.slice(0, 3 - related.length));
         }
         setRelatedProducts(related);
       }
@@ -70,19 +78,52 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
     );
   }
 
+  const averageRating = reviews.length > 0 
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length 
+    : 0;
+  const totalReviewsCount = reviews.length;
+
   const handleAddToCart = () => {
+    if (!user) {
+      router.push('/login');
+      return;
+    }
     addToCart(product, quantity);
   };
 
   const handleBuyNow = () => {
+    if (!user) {
+      router.push('/login');
+      return;
+    }
     addToCart(product, quantity);
     router.push('/cart');
   };
 
-  const handleReviewSubmit = (e: React.FormEvent) => {
+  const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setReviewSubmitted(true);
-    setReviewForm({ name: '', rating: 5, text: '' });
+    if (!product) return;
+    
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    
+    setIsSubmittingReview(true);
+    const res = await submitReview({
+      product_id: product.id,
+      name: reviewForm.name,
+      rating: reviewForm.rating,
+      comment: reviewForm.text
+    });
+    
+    setIsSubmittingReview(false);
+    if (!res.error) {
+      setReviewSubmitted(true);
+      setReviewForm({ name: '', rating: 5, text: '' });
+    } else {
+      alert('Failed to submit review: ' + res.error);
+    }
   };
 
   return (
@@ -120,10 +161,10 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
           <div className="flex items-center space-x-2 mb-6">
             <div className="flex">
               {[1, 2, 3, 4, 5].map((star) => (
-                <Star key={star} size={18} className={star <= (product.rating || 0) ? "fill-brand-accent text-brand-accent" : "text-gray-300"} />
+                <Star key={star} size={18} className={star <= Math.round(averageRating) ? "fill-brand-accent text-brand-accent" : "text-gray-300"} />
               ))}
             </div>
-            <span className="text-sm text-brand-muted">({product.reviewsCount || 0} customer reviews)</span>
+            <span className="text-sm text-brand-muted">({totalReviewsCount} customer {totalReviewsCount === 1 ? 'review' : 'reviews'})</span>
           </div>
 
           <div className="text-3xl font-serif font-bold text-brand-secondary mb-8 pb-8 border-b border-brand-border">
@@ -203,24 +244,26 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Reviews List */}
           <div className="lg:col-span-2 space-y-8">
-            {[
-              { id: 1, name: 'Sanjay Kumar', rating: 5, date: 'October 12, 2025', text: 'Very authentic product. I received the lab certificate along with the bead. It has brought a lot of peace to my daily life.' },
-              { id: 2, name: 'Priya Sharma', rating: 4, date: 'September 28, 2025', text: 'Good quality Rudraksha. Packaging was excellent and customer service helped me choose the right mukhi for my needs.' },
-              { id: 3, name: 'Amit Desai', rating: 5, date: 'August 15, 2025', text: 'I have been buying from Nepali Rudraksha for years. The energy of these beads is unmatched. Highly recommended to all spiritual seekers.' }
-            ].map(review => (
-              <div key={review.id} className="border-b border-brand-border pb-8 last:border-0">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-bold text-brand-primary">{review.name}</span>
-                  <span className="text-xs text-brand-muted">{review.date}</span>
-                </div>
-                <div className="flex mb-3">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} size={14} className={star <= review.rating ? "fill-brand-accent text-brand-accent" : "text-gray-300"} />
-                  ))}
-                </div>
-                <p className="text-sm text-brand-text italic">&ldquo;{review.text}&rdquo;</p>
+            {reviews.length === 0 ? (
+              <div className="text-brand-muted text-sm italic py-8 text-center bg-brand-light/50 rounded-xl border border-brand-border border-dashed">
+                No reviews yet. Be the first to review this product!
               </div>
-            ))}
+            ) : (
+              reviews.map(review => (
+                <div key={review.id} className="border-b border-brand-border pb-8 last:border-0">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-brand-primary">{review.name}</span>
+                    <span className="text-xs text-brand-muted">{new Date(review.created_at).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex mb-3">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} size={14} className={star <= review.rating ? "fill-brand-accent text-brand-accent" : "text-gray-300"} />
+                    ))}
+                  </div>
+                  <p className="text-sm text-brand-text italic">&ldquo;{review.comment}&rdquo;</p>
+                </div>
+              ))
+            )}
           </div>
 
           {/* Write a Review Form */}
@@ -281,9 +324,11 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
                 <button
                   type="submit"
-                  className="w-full bg-brand-primary hover:bg-[#1a251d] text-white font-bold py-3 rounded-lg transition-colors mt-2"
+                  disabled={isSubmittingReview}
+                  className="w-full flex justify-center items-center bg-brand-primary hover:bg-[#1a251d] text-white font-bold py-3 rounded-lg transition-colors mt-2 disabled:opacity-70"
                 >
-                  Submit Review
+                  {isSubmittingReview ? <Loader2 size={20} className="animate-spin mr-2" /> : null}
+                  {isSubmittingReview ? 'Submitting...' : 'Submit Review'}
                 </button>
               </form>
             )}
@@ -304,11 +349,11 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
             </Link>
           </div>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
             {relatedProducts.map((relatedProduct) => (
-              <div key={relatedProduct.id} className="bg-white border border-brand-border rounded-xl overflow-hidden group hover:shadow-xl transition-all duration-300">
+              <div key={relatedProduct.id} className="bg-white border border-brand-border rounded-xl overflow-hidden group hover:shadow-xl transition-all flex flex-col h-full">
                 <Link href={`/shop/${relatedProduct.id}`}>
-                  <div className="relative h-40 md:h-64 bg-brand-light">
+                  <div className="relative h-40 md:h-48 bg-brand-light flex-shrink-0">
                     <div className="absolute z-10 top-2 left-2 md:top-3 md:left-3 flex flex-col gap-1 items-start">
                       {relatedProduct.isBestseller && (
                         <span className="bg-green-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">Bestseller</span>
@@ -325,16 +370,16 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                     />
                   </div>
                 </Link>
-                <div className="p-3 md:p-5 flex flex-col h-[140px] md:h-[180px] justify-between">
+                <div className="p-3 md:p-5 flex flex-col flex-grow justify-between gap-3">
                   <div>
                     <Link href={`/shop/${relatedProduct.id}`}>
                       <h3 className="font-bold text-brand-primary text-xs md:text-base leading-tight mb-1 md:mb-2 h-8 md:h-10 hover:text-brand-accent transition-colors line-clamp-2">{relatedProduct.name}</h3>
                     </Link>
                     <div className="flex items-center space-x-1 mb-1 md:mb-2">
                       {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} size={10} className={`md:w-3.5 md:h-3.5 ${star <= (relatedProduct.rating || 5) ? "fill-brand-accent text-brand-accent" : "text-gray-300"}`} />
+                        <Star key={star} size={10} className={`md:w-3.5 md:h-3.5 ${star <= Math.round(relatedProduct.rating ?? 0) ? "fill-brand-accent text-brand-accent" : "text-gray-300"}`} />
                       ))}
-                      <span className="text-[10px] md:text-xs text-brand-muted ml-1">({relatedProduct.reviewsCount || 0})</span>
+                      <span className="text-[10px] md:text-xs text-brand-muted ml-1">({relatedProduct.reviewsCount ?? 0})</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">

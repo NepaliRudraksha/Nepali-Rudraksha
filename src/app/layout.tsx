@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { ClientHeaderWrapper, ClientFooterWrapper } from "@/components/layout/ClientLayoutWrappers";
 import { Providers } from "@/components/Providers";
 
 const inter = Inter({
@@ -22,11 +23,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased flex flex-col min-h-screen [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]`}>
+      <body className={`${inter.variable} antialiased flex flex-col min-h-screen`}>
         <Providers>
-          <Header />
+          <ClientHeaderWrapper>
+            <Header />
+          </ClientHeaderWrapper>
           <main className="flex-grow">{children}</main>
-          <Footer />
+          <ClientFooterWrapper>
+            <Footer />
+          </ClientFooterWrapper>
         </Providers>
       </body>
     </html>

@@ -263,8 +263,8 @@ export default function AdminProducts() {
                       {product.price > 0 ? `₹${product.price.toLocaleString()}` : 'On Enquiry'}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-brand-accent font-bold">★ {product.rating || 5}</span>
-                      <span className="text-gray-400 text-xs ml-1">({product.reviewsCount || 0})</span>
+                      <span className="text-brand-accent font-bold">★ {product.rating ?? 0}</span>
+                      <span className="text-gray-400 text-xs ml-1">({product.reviewsCount ?? 0})</span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">

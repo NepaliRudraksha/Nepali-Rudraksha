@@ -1,6 +1,8 @@
 'use client';
 
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 import { Product } from '@/data/products';
 import { ShoppingCart } from 'lucide-react';
 
@@ -13,10 +15,20 @@ interface AddToCartButtonProps {
 
 export default function AddToCartButton({ product, quantity = 1, className, iconOnly = false }: AddToCartButtonProps) {
   const { addToCart } = useCart();
+  const { user } = useAuth();
+  const router = useRouter();
+
+  const handleAdd = () => {
+    if (!user) {
+      router.push('/login?redirect=/cart');
+      return;
+    }
+    addToCart(product, quantity);
+  };
 
   return (
     <button
-      onClick={() => addToCart(product, quantity)}
+      onClick={handleAdd}
       className={className || 'bg-brand-primary text-white p-2 rounded-full hover:bg-brand-accent hover:text-brand-primary transition-colors'}
       aria-label={`Add ${product.name} to cart`}
     >
