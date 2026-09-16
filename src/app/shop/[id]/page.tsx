@@ -5,7 +5,7 @@ import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Product } from '@/data/products';
-import { getProductById, getProducts, getApprovedReviews, submitReview, Review } from '@/lib/api';
+import { getProductById, getProducts, getApprovedReviews, submitReview, Review, getSettings, SiteSettings } from '@/lib/api';
 import { useCart } from '@/context/CartContext';
 import { Star, ShieldCheck, Truck, Check, ArrowLeft, Minus, Plus, ShoppingCart, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -22,6 +22,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
   
   // Review Form State
   const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, text: '' });
@@ -31,12 +32,14 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
   
   useEffect(() => {
     async function fetchData() {
-      const [data, fetchedReviews] = await Promise.all([
+      const [data, fetchedReviews, settingsData] = await Promise.all([
         getProductById(resolvedParams.id),
-        getApprovedReviews(resolvedParams.id)
+        getApprovedReviews(resolvedParams.id),
+        getSettings()
       ]);
       setProduct(data || null);
       setReviews(fetchedReviews);
+      setSettings(settingsData);
       
       if (data) {
         // Fetch related products
@@ -112,7 +115,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
     setIsSubmittingReview(true);
     const res = await submitReview({
       product_id: product.id,
-      name: reviewForm.name,
+      name: user.fullName || user.email.split('@')[0] || 'Anonymous',
       rating: reviewForm.rating,
       comment: reviewForm.text
     });
@@ -136,10 +139,10 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
         {/* Product Image */}
         <div className="bg-brand-light rounded-2xl overflow-hidden relative aspect-square border border-brand-border shadow-sm">
           <div className="absolute z-10 top-4 left-4 md:top-6 md:left-6 flex flex-col gap-2 items-start">
-            {product.isBestseller && (
+            {settings?.show_bestseller === 'true' && product.isBestseller && (
               <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded shadow-sm">Bestseller</span>
             )}
-            {product.isNew && (
+            {settings?.show_new_arrivals === 'true' && product.isNew && (
               <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded shadow-sm">New</span>
             )}
           </div>
@@ -278,21 +281,15 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                 <h4 className="font-bold text-green-800 mb-2">Thank you!</h4>
                 <p className="text-sm text-green-700">Your review has been submitted successfully and is awaiting admin approval.</p>
               </div>
+            ) : !user ? (
+              <div className="text-center py-8">
+                <p className="text-brand-muted mb-4">You must be logged in to write a review.</p>
+                <Link href="/login" className="inline-flex items-center justify-center bg-brand-primary hover:bg-[#1a251d] text-white font-bold py-2.5 px-6 rounded-lg transition-colors">
+                  Log In to Review
+                </Link>
+              </div>
             ) : (
               <form onSubmit={handleReviewSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="review-name">Your Name</label>
-                  <input
-                    id="review-name"
-                    type="text"
-                    required
-                    value={reviewForm.name}
-                    onChange={(e) => setReviewForm({...reviewForm, name: e.target.value})}
-                    className="w-full border border-brand-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent bg-white"
-                    placeholder="Enter your name"
-                  />
-                </div>
-                
                 <div>
                   <label className="block text-sm font-bold text-brand-primary mb-1.5">Rating</label>
                   <div className="flex space-x-2">
@@ -355,10 +352,10 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                 <Link href={`/shop/${relatedProduct.id}`}>
                   <div className="relative h-40 md:h-48 bg-brand-light flex-shrink-0">
                     <div className="absolute z-10 top-2 left-2 md:top-3 md:left-3 flex flex-col gap-1 items-start">
-                      {relatedProduct.isBestseller && (
+                      {settings?.show_bestseller === 'true' && relatedProduct.isBestseller && (
                         <span className="bg-green-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">Bestseller</span>
                       )}
-                      {relatedProduct.isNew && (
+                      {settings?.show_new_arrivals === 'true' && relatedProduct.isNew && (
                         <span className="bg-red-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">New</span>
                       )}
                     </div>

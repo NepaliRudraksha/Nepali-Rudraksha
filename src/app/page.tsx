@@ -1,13 +1,13 @@
 import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
-import { getProducts } from '@/lib/api';
+import { getProducts, getSettings } from '@/lib/api';
 import { Award, Brain, Check, Heart, Mountain, PlayCircle, RotateCcw, ShieldCheck, Sparkles, Star, ArrowRight, Truck } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
 import TestimonialCarousel from '@/components/TestimonialCarousel';
 import { MotionHeroWrapper, MotionHeroContent, MotionHeroImage, MotionSection } from '@/components/animations/MotionWrappers';
 
 export default async function Home() {
-  const products = await getProducts();
+  const [products, settings] = await Promise.all([getProducts(), getSettings()]);
   // Admin-added products are marked as New by default. Show marked products
   // first, then fill the remaining homepage slots with highly rated products.
   const highlightedProducts = products.filter((product) => product.isNew || product.isBestseller);
@@ -168,10 +168,10 @@ export default async function Home() {
               <Link href={`/shop/${product.id}`}>
                 <div className="relative h-40 md:h-48 bg-brand-light flex-shrink-0">
                   <div className="absolute z-10 top-2 left-2 md:top-3 md:left-3 flex flex-col gap-1 items-start">
-                    {product.isBestseller && (
+                    {settings.show_bestseller === 'true' && product.isBestseller && (
                       <span className="bg-green-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">Bestseller</span>
                     )}
-                    {product.isNew && (
+                    {settings.show_new_arrivals === 'true' && product.isNew && (
                       <span className="bg-red-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">New</span>
                     )}
                   </div>

@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { ClientHeaderWrapper, ClientFooterWrapper } from "@/components/layout/ClientLayoutWrappers";
+import MaintenanceGuard from "@/components/MaintenanceGuard";
 import { Providers } from "@/components/Providers";
 
 const inter = Inter({
@@ -25,13 +26,15 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} antialiased flex flex-col min-h-screen`}>
         <Providers>
-          <ClientHeaderWrapper>
-            <Header />
-          </ClientHeaderWrapper>
-          <main className="flex-grow">{children}</main>
-          <ClientFooterWrapper>
-            <Footer />
-          </ClientFooterWrapper>
+          <MaintenanceGuard>
+            <ClientHeaderWrapper>
+              <Header />
+            </ClientHeaderWrapper>
+            <main className="flex-grow">{children}</main>
+            <ClientFooterWrapper>
+              <Footer />
+            </ClientFooterWrapper>
+          </MaintenanceGuard>
         </Providers>
       </body>
     </html>

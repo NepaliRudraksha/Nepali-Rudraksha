@@ -146,19 +146,6 @@ function LoginForm() {
         </button>
       </form>
 
-      {/* Quick Demo Access for Devotees */}
-      <div className="mt-8 pt-6 border-t border-brand-border text-center">
-        <p className="text-xs font-semibold text-brand-muted uppercase tracking-wider mb-3">
-          Quick Devotee Preview
-        </p>
-        <button
-          type="button"
-          onClick={() => handleDemoSignIn('customer')}
-          className="w-full py-2.5 px-4 rounded-xl border border-brand-border bg-brand-light/60 hover:bg-brand-light text-brand-primary text-xs font-semibold transition-all text-center"
-        >
-          ⚡ One-Click Customer Demo Sign-In
-        </button>
-      </div>
 
       {/* Link to Signup */}
       <div className="mt-6 text-center text-xs text-brand-muted">

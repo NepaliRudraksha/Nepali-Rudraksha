@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
 import { Product } from '@/data/products';
-import { getProducts } from '@/lib/api';
+import { getProducts, getSettings, SiteSettings } from '@/lib/api';
 import { Star, ShoppingCart, Filter, Loader2, Search } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useSearchParams } from 'next/navigation';
@@ -14,16 +14,18 @@ function ShopContent() {
   const query = searchParams.get('q')?.toLowerCase() || '';
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [products, setProducts] = useState<Product[]>([]);
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { addToCart } = useCart();
 
   useEffect(() => {
-    async function loadProducts() {
-      const data = await getProducts();
-      setProducts(data);
+    async function loadData() {
+      const [productsData, settingsData] = await Promise.all([getProducts(), getSettings()]);
+      setProducts(productsData);
+      setSettings(settingsData);
       setIsLoading(false);
     }
-    loadProducts();
+    loadData();
   }, []);
 
   const filteredProducts = products.filter(p => {
@@ -113,10 +115,10 @@ function ShopContent() {
                 <Link href={`/shop/${product.id}`}>
                   <div className="relative h-40 md:h-48 bg-brand-light flex-shrink-0">
                     <div className="absolute z-10 top-2 left-2 md:top-3 md:left-3 flex flex-col gap-1 items-start">
-                      {product.isBestseller && (
+                      {settings?.show_bestseller === 'true' && product.isBestseller && (
                         <span className="bg-green-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">Bestseller</span>
                       )}
-                      {product.isNew && (
+                      {settings?.show_new_arrivals === 'true' && product.isNew && (
                         <span className="bg-red-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">New</span>
                       )}
                     </div>

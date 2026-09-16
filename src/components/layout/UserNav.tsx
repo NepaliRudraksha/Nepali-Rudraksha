@@ -174,17 +174,7 @@ export default function UserNav() {
                 </Link>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-brand-border/60 text-center">
-                <button
-                  onClick={() => {
-                    demoLogin('customer');
-                    setIsOpen(false);
-                  }}
-                  className="w-full text-xs py-2 px-3 bg-brand-bg hover:bg-brand-light rounded-lg border border-brand-border text-brand-text font-medium transition-colors"
-                >
-                  ⚡ Quick Devotee Demo
-                </button>
-              </div>
+
             </div>
           )}
         </div>

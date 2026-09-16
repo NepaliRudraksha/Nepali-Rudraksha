@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import Image from '@/components/ImageKitImage';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
+import { submitContactMessage } from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
+import Link from 'next/link';
 
 export default function Contact() {
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
     subject: '',
     message: '',
   });
@@ -21,11 +22,25 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setSubmitted(true);
+    
+    const messageData = {
+      name: user.fullName || user.email.split('@')[0] || 'Seeker',
+      email: user.email,
+      phone: user.phone || '',
+      subject: formData.subject,
+      message: formData.message,
+    };
+
+    const { error } = await submitContactMessage(messageData);
+    
     setIsLoading(false);
+    if (!error) {
+      setSubmitted(true);
+    } else {
+      alert('Failed to send message: ' + error);
+    }
   };
 
   return (
@@ -90,59 +105,28 @@ export default function Contact() {
                     <CheckCircle size={40} className="text-green-600" />
                   </div>
                   <h3 className="text-2xl font-serif font-bold text-brand-primary mb-3">Message Sent!</h3>
-                  <p className="text-brand-muted max-w-md">Thank you for reaching out, {formData.name}! Our spiritual advisors will get back to you within 24 hours.</p>
+                  <p className="text-brand-muted max-w-md">Thank you for reaching out! Our spiritual advisors will get back to you within 24 hours.</p>
                   <button 
-                    onClick={() => { setSubmitted(false); setFormData({ name: '', email: '', phone: '', subject: '', message: '' }); }}
+                    onClick={() => { setSubmitted(false); setFormData({ subject: '', message: '' }); }}
                     className="mt-8 bg-brand-accent text-brand-primary font-bold px-6 py-2.5 rounded-md hover:bg-brand-accent-hover transition-colors"
                   >
                     Send Another Message
                   </button>
                 </div>
+              ) : !user ? (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <h3 className="text-2xl font-serif font-bold text-brand-primary mb-3">Login Required</h3>
+                  <p className="text-brand-muted mb-8 max-w-md">You must be logged in to send us a message through the website.</p>
+                  <Link href="/login" className="bg-brand-primary text-white font-bold px-8 py-3 rounded-md hover:bg-[#1a251d] transition-colors">
+                    Log In to Send Message
+                  </Link>
+                </div>
               ) : (
                 <>
-                  <h2 className="text-2xl font-serif font-bold text-brand-primary mb-6">Send Us a Message</h2>
+                  <h2 className="text-2xl font-serif font-bold text-brand-primary mb-2">Send Us a Message</h2>
+                  <p className="text-brand-muted text-sm mb-6">Sending as <strong className="text-brand-primary">{user.fullName || user.email}</strong></p>
                   <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-name">Full Name *</label>
-                        <input
-                          id="contact-name"
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          required
-                          placeholder="Your full name"
-                          className="w-full border border-brand-border rounded-lg px-4 py-3 text-sm outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-colors bg-brand-bg"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-email">Email Address *</label>
-                        <input
-                          id="contact-email"
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          placeholder="your@email.com"
-                          className="w-full border border-brand-border rounded-lg px-4 py-3 text-sm outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-colors bg-brand-bg"
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-phone">Phone Number</label>
-                        <input
-                          id="contact-phone"
-                          type="tel"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleChange}
-                          placeholder="+91 xxxxx xxxxx"
-                          className="w-full border border-brand-border rounded-lg px-4 py-3 text-sm outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-colors bg-brand-bg"
-                        />
-                      </div>
+                    <div className="grid grid-cols-1 gap-5">
                       <div>
                         <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-subject">Subject *</label>
                         <select

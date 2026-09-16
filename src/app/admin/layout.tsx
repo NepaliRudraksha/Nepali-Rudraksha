@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, Package, ShoppingBag, Settings, LogOut, 
-  ShieldCheck, ShieldAlert, Lock, ArrowLeft, Loader2, ArrowRight, Users, CircleAlert, Star
+  ShieldCheck, ShieldAlert, Lock, ArrowLeft, Loader2, ArrowRight, Users, CircleAlert, Star, Mail
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
@@ -18,6 +18,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [adminPassword, setAdminPassword] = useState('');
   const [authError, setAuthError] = useState<string | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // If on the /admin/login route itself, allow it to render directly without wrapping in admin dashboard layout
   if (pathname === '/admin/login') {
@@ -209,6 +210,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Orders', href: '/admin/orders', icon: <ShoppingBag size={20} /> },
     { name: 'Customers', href: '/admin/customers', icon: <Users size={20} /> },
     { name: 'Reviews', href: '/admin/reviews', icon: <Star size={20} /> },
+    { name: 'Messages', href: '/admin/messages', icon: <Mail size={20} /> },
     { name: 'Settings', href: '/admin/settings', icon: <Settings size={20} /> },
   ];
 
@@ -232,7 +234,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
         </div>
         
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = pathname === item.href || (pathname.startsWith(item.href) && item.href !== '/admin');
             return (
@@ -250,28 +252,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        {/* Admin Profile & Sign Out in Sidebar */}
-        <div className="p-4 border-t border-white/10 space-y-3">
-          <div className="flex items-center space-x-2 px-2">
-            <div className="w-8 h-8 rounded-full bg-brand-accent text-brand-primary font-bold text-xs flex items-center justify-center">
-              {adminInitials}
-            </div>
-            <div className="overflow-hidden">
-              <p className="text-xs font-bold text-white truncate">{user.fullName || 'Admin'}</p>
-              <p className="text-[10px] text-white/60 truncate">{user.email}</p>
-            </div>
-          </div>
-          <button
-            onClick={async () => {
-              await signOut();
-              router.push('/');
-            }}
-            className="flex items-center space-x-3 px-4 py-2.5 w-full text-left text-red-300 hover:bg-red-500/20 hover:text-red-200 rounded-xl transition-colors text-xs font-semibold"
-          >
-            <LogOut size={16} />
-            <span>Sign Out Console</span>
-          </button>
-        </div>
       </aside>
 
       {/* Main Content */}
@@ -285,7 +265,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               {pathname.split('/').pop() === 'admin' ? 'Dashboard' : pathname.split('/').pop()}
             </h1>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 relative">
             <Link
               href="/"
               target="_blank"
@@ -293,9 +273,34 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             >
               View Public Website ↗
             </Link>
-            <div className="w-8 h-8 bg-brand-primary text-brand-accent rounded-full flex items-center justify-center text-xs font-bold shadow-sm">
+            
+            <button 
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="w-8 h-8 bg-brand-primary text-brand-accent rounded-full flex items-center justify-center text-xs font-bold shadow-sm hover:ring-2 hover:ring-brand-accent/50 transition-all focus:outline-none"
+            >
               {adminInitials}
-            </div>
+            </button>
+
+            {isDropdownOpen && (
+              <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50 animate-in fade-in slide-in-from-top-2">
+                <div className="px-4 py-3 border-b border-gray-100">
+                  <p className="text-sm font-bold text-brand-primary truncate">{user.fullName || 'Admin'}</p>
+                  <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                </div>
+                <div className="px-2 py-2">
+                  <button
+                    onClick={async () => {
+                      await signOut();
+                      router.push('/');
+                    }}
+                    className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg transition-colors flex items-center space-x-2 font-semibold"
+                  >
+                    <LogOut size={16} />
+                    <span>Sign Out Console</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </header>
         <div className="p-8">

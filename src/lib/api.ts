@@ -595,3 +595,78 @@ export async function deleteReview(id: string): Promise<{ error: string | null }
   }
 }
 
+// ─── Contact Messages ────────────────────────────────────────────────────────
+
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+  status: 'unread' | 'read' | 'replied';
+  created_at: string;
+}
+
+export type MessageSubmission = Omit<ContactMessage, 'id' | 'status' | 'created_at'>;
+
+export async function submitContactMessage(message: MessageSubmission): Promise<{ error: string | null }> {
+  try {
+    if (!isSupabaseConfigured()) {
+      console.log('Supabase not configured – simulating message submission:', message);
+      return { error: null };
+    }
+
+    const { error } = await supabase
+      .from('contact_messages')
+      .insert([message]);
+
+    if (error) {
+      console.error('Error submitting message:', error);
+      return { error: error.message };
+    }
+    return { error: null };
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function getContactMessages(): Promise<ContactMessage[]> {
+  try {
+    if (!isSupabaseConfigured()) return [];
+
+    const { data, error } = await supabase
+      .from('contact_messages')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching messages:', error);
+      return [];
+    }
+    return (data as ContactMessage[]) ?? [];
+  } catch (error) {
+    console.error('Failed to fetch messages:', error);
+    return [];
+  }
+}
+
+export async function updateMessageStatus(id: string, status: 'unread' | 'read' | 'replied'): Promise<{ error: string | null }> {
+  try {
+    if (!isSupabaseConfigured()) return { error: 'Supabase not configured' };
+
+    const { error } = await supabase
+      .from('contact_messages')
+      .update({ status })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error updating message status:', error);
+      return { error: error.message };
+    }
+    return { error: null };
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+

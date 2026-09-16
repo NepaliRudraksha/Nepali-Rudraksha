@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getProducts, getOrders, isSupabaseConfigured, Order } from '@/lib/api';
 import { Product } from '@/data/products';
-import { Package, DollarSign, TrendingUp, Users, Loader2, RefreshCw, CheckCircle, Clock, Truck, XCircle } from 'lucide-react';
+import { Package, DollarSign, TrendingUp, Users, Loader2, RefreshCw, CheckCircle, Clock, Truck, XCircle, Eye, X, User, MapPin } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-800',
@@ -24,6 +24,7 @@ const statusIcons: Record<string, React.ReactNode> = {
 export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const supabaseReady = isSupabaseConfigured();
 
@@ -165,6 +166,9 @@ export default function AdminDashboard() {
                   <th className="text-left py-2 text-xs text-gray-500 font-semibold uppercase tracking-wide">
                     Date
                   </th>
+                  <th className="text-right py-2 text-xs text-gray-500 font-semibold uppercase tracking-wide">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -189,6 +193,15 @@ export default function AdminDashboard() {
                     <td className="py-3 text-gray-500 text-xs">
                       {new Date(order.created_at).toLocaleDateString('en-IN')}
                     </td>
+                    <td className="py-3 text-right">
+                      <button
+                        onClick={() => setSelectedOrder(order)}
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-brand-light text-brand-primary hover:bg-brand-accent hover:text-white transition-colors shadow-sm border border-brand-border"
+                        title="View Details"
+                      >
+                        <Eye size={16} />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -209,6 +222,137 @@ export default function AdminDashboard() {
           </div>
         )}
       </div>
+      {/* Order Details Modal */}
+      {selectedOrder && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden border border-brand-border relative animate-in fade-in zoom-in-95 duration-200">
+            <div className="sticky top-0 bg-white border-b border-gray-100 p-5 px-6 flex items-center justify-between z-10 shadow-sm">
+              <div>
+                <h2 className="text-xl font-serif font-bold text-brand-primary">Order Details</h2>
+                <p className="text-xs text-gray-500 font-mono mt-1">{selectedOrder.id}</p>
+              </div>
+              <button 
+                onClick={() => setSelectedOrder(null)}
+                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100">
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Order Date</p>
+                  <p className="font-semibold text-gray-800">{new Date(selectedOrder.created_at).toLocaleString('en-IN')}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm text-gray-500 mb-1">Status</p>
+                  <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm ${statusColors[selectedOrder.status]}`}>
+                    {statusIcons[selectedOrder.status]}
+                    {selectedOrder.status.charAt(0).toUpperCase() + selectedOrder.status.slice(1)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                {/* Customer Info */}
+                <div className="bg-brand-light/50 rounded-xl p-5 border border-brand-border">
+                  <h3 className="text-xs font-bold text-brand-primary uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <User size={16} className="text-brand-accent" /> Customer Info
+                  </h3>
+                  <div className="space-y-4 text-sm">
+                    <div>
+                      <p className="text-brand-muted text-xs mb-1">Name</p>
+                      <p className="font-medium text-gray-800">{selectedOrder.customer_name}</p>
+                    </div>
+                    <div>
+                      <p className="text-brand-muted text-xs mb-1">Email</p>
+                      <a href={`mailto:${selectedOrder.email}`} className="font-medium text-brand-secondary hover:underline break-all">{selectedOrder.email}</a>
+                    </div>
+                    {selectedOrder.phone && (
+                      <div>
+                        <p className="text-brand-muted text-xs mb-1">Phone</p>
+                        <a href={`tel:${selectedOrder.phone}`} className="font-medium text-gray-800 hover:underline">{selectedOrder.phone}</a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Shipping Info */}
+                <div className="bg-brand-light/50 rounded-xl p-5 border border-brand-border">
+                  <h3 className="text-xs font-bold text-brand-primary uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <MapPin size={16} className="text-brand-accent" /> Shipping Address
+                  </h3>
+                  <div className="space-y-4 text-sm">
+                    {selectedOrder.address ? (
+                      <div>
+                        <p className="text-brand-muted text-xs mb-1">Street Address</p>
+                        <p className="font-medium text-gray-800">{selectedOrder.address}</p>
+                      </div>
+                    ) : (
+                      <p className="text-gray-400 italic">No address provided</p>
+                    )}
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      {selectedOrder.city && (
+                        <div>
+                          <p className="text-brand-muted text-xs mb-1">City</p>
+                          <p className="font-medium text-gray-800">{selectedOrder.city}</p>
+                        </div>
+                      )}
+                      {selectedOrder.state && (
+                        <div>
+                          <p className="text-brand-muted text-xs mb-1">State</p>
+                          <p className="font-medium text-gray-800">{selectedOrder.state}</p>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      {selectedOrder.pincode && (
+                        <div>
+                          <p className="text-brand-muted text-xs mb-1">PIN / ZIP</p>
+                          <p className="font-medium text-gray-800">{selectedOrder.pincode}</p>
+                        </div>
+                      )}
+                      {selectedOrder.country && (
+                        <div>
+                          <p className="text-brand-muted text-xs mb-1">Country</p>
+                          <p className="font-medium text-gray-800">{selectedOrder.country}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Order Items */}
+              <div className="bg-brand-light/50 rounded-xl p-5 border border-brand-border mb-8">
+                <h3 className="text-xs font-bold text-brand-primary uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Package size={16} className="text-brand-accent" /> Products Ordered
+                </h3>
+                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                  <p className="text-sm text-gray-800 whitespace-pre-line leading-relaxed font-medium">
+                    {selectedOrder.product_description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Payment Info */}
+              <div className="flex flex-col sm:flex-row justify-between items-center bg-brand-primary text-white rounded-xl p-6 shadow-lg">
+                <div>
+                  <p className="text-brand-light/70 text-xs mb-1 uppercase tracking-wider font-bold">Payment Method</p>
+                  <p className="font-medium capitalize text-brand-accent">{selectedOrder.payment_method || 'UPI / Online'}</p>
+                </div>
+                <div className="text-right mt-4 sm:mt-0">
+                  <p className="text-brand-light/70 text-xs mb-1 uppercase tracking-wider font-bold">Total Amount</p>
+                  <p className="text-3xl font-serif font-bold text-white">₹{selectedOrder.amount.toLocaleString()}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
