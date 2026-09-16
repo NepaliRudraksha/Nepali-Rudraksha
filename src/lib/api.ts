@@ -1,6 +1,8 @@
 import { supabase } from './supabaseClient';
 import { Product, products as mockProducts } from '@/data/products';
 
+export type { Product };
+
 // ─── Types ─────────────────────────────────────────────────────────────────
 
 export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
