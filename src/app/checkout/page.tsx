@@ -5,6 +5,7 @@ import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 import { createOrder } from '@/lib/api';
 import { ShieldCheck, ChevronRight, CheckCircle, Loader2, ArrowLeft, Sparkles, UserCheck, Heart } from 'lucide-react';
 
@@ -12,10 +13,17 @@ type Step = 'shipping' | 'payment' | 'confirmation';
 
 export default function Checkout() {
   const { cart, cartTotal, cartCount } = useCart();
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
   const [step, setStep] = useState<Step>('shipping');
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderId, setOrderId] = useState(`NR-${Date.now().toString().slice(-6)}`);
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/login?redirect=/checkout');
+    }
+  }, [user, isLoading, router]);
 
   const [shippingData, setShippingData] = useState({
     firstName: '', lastName: '', email: '', phone: '',
@@ -97,6 +105,15 @@ export default function Checkout() {
 
   const inputClass = "w-full border border-brand-border rounded-lg px-3.5 py-3 text-sm outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-colors bg-brand-bg";
   const labelClass = "block text-sm font-bold text-brand-primary mb-1.5";
+
+  if (isLoading || (!user && step !== 'confirmation')) {
+    return (
+      <div className="w-full min-h-[60vh] flex flex-col items-center justify-center bg-brand-bg">
+        <Loader2 className="w-10 h-10 animate-spin text-brand-accent mb-4" />
+        <p className="text-brand-muted font-medium">Redirecting to login...</p>
+      </div>
+    );
+  }
 
   if (cart.length === 0 && step !== 'confirmation') {
     return (

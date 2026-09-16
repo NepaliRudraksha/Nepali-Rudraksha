@@ -8,6 +8,7 @@ import { getProducts, getSettings, SiteSettings } from '@/lib/api';
 import { Star, ShoppingCart, Filter, Loader2, Search } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useSearchParams } from 'next/navigation';
+import AddToCartButton from '@/components/AddToCartButton';
 
 function ShopContent() {
   const searchParams = useSearchParams();
@@ -16,7 +17,6 @@ function ShopContent() {
   const [products, setProducts] = useState<Product[]>([]);
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { addToCart } = useCart();
 
   useEffect(() => {
     async function loadData() {
@@ -144,13 +144,11 @@ function ShopContent() {
                     <span className="font-serif font-bold text-sm md:text-xl text-brand-secondary">
                       {product.price > 0 ? `₹ ${product.price.toLocaleString()}` : 'Enquire'}
                     </span>
-                    <button 
-                      onClick={() => addToCart(product, 1)}
+                    <AddToCartButton 
+                      product={product} 
+                      iconOnly={true} 
                       className="bg-brand-primary text-white p-1.5 md:p-2 rounded-full hover:bg-brand-accent hover:text-brand-primary transition-colors focus:ring-2 focus:ring-brand-accent focus:outline-none"
-                      aria-label="Add to cart"
-                    >
-                      <ShoppingCart size={14} className="md:w-[18px] md:h-[18px]" />
-                    </button>
+                    />
                   </div>
                 </div>
               </div>
