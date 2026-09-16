@@ -77,7 +77,7 @@ export default function Checkout() {
 
     // Build a human-readable product description from the cart
     const productDescription = cart
-      .map((item) => `${item.product.name}${item.quantity > 1 ? ` (x${item.quantity})` : ''}`)
+      .map((item) => `${item.product.name} (Qty: ${item.quantity})`)
       .join(', ');
 
     const result = await createOrder({
