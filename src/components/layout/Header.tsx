@@ -3,6 +3,7 @@ import { Search, CheckCircle2, Truck, RefreshCcw, Phone, Mail } from 'lucide-rea
 import HeaderCartIcon from '@/components/HeaderCartIcon';
 import UserNav from '@/components/layout/UserNav';
 import HeaderSearch from '@/components/layout/HeaderSearch';
+import HeaderNav from '@/components/layout/HeaderNav';
 import MotionHeader from '@/components/MotionHeader';
 import MobileMenu from '@/components/layout/MobileMenu';
 import { getSettings } from '@/lib/api';
@@ -88,26 +89,7 @@ export default async function Header() {
           </div>
 
         {/* Navigation */}
-        <nav className="group/nav hidden lg:flex items-center space-x-4 font-medium text-sm text-brand-text">
-          <Link href="/" className="relative pb-1 text-brand-secondary transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-100 after:bg-brand-accent after:transition-transform group-hover/nav:after:scale-x-0 hover:after:scale-x-100">
-            Home
-          </Link>
-          <Link href="/shop" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
-            Shop
-          </Link>
-          <Link href="/types" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
-            Rudraksha Types
-          </Link>
-          <Link href="/accessories" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
-            Accessories
-          </Link>
-          <Link href="/about" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
-            About Us
-          </Link>
-          <Link href="/contact" className="relative pb-1 transition-colors hover:text-brand-secondary after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-accent after:transition-transform hover:after:scale-x-100">
-            Contact
-          </Link>
-        </nav>
+        <HeaderNav />
 
         {/* Icons & Search */}
         <div className="flex items-center space-x-4">
