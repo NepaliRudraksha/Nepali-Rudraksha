@@ -6,6 +6,8 @@ import AddToCartButton from '@/components/AddToCartButton';
 import TestimonialCarousel from '@/components/TestimonialCarousel';
 import { MotionHeroWrapper, MotionHeroContent, MotionHeroImage, MotionSection } from '@/components/animations/MotionWrappers';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const [products, settings] = await Promise.all([getProducts(), getSettings()]);
   // Admin-added products are marked as New by default. Show marked products
