@@ -20,6 +20,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   // If on the /admin/login route itself, allow it to render directly without wrapping in admin dashboard layout
   if (pathname === '/admin/login') {
     return <>{children}</>;
@@ -220,10 +222,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 bg-brand-primary text-white flex flex-col shadow-xl">
-        <div className="p-6 border-b border-white/10">
-          <Link href="/" className="flex items-center space-x-2">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-brand-primary text-white flex flex-col shadow-xl transform transition-transform duration-300 md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="p-6 border-b border-white/10 flex justify-between items-center">
+          <Link href="/" className="flex items-center space-x-2" onClick={() => setIsSidebarOpen(false)}>
             <div className="w-8 h-8 bg-brand-accent rounded-full flex items-center justify-center text-brand-primary font-serif font-bold text-sm">
               NR
             </div>
@@ -232,6 +242,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <span className="text-[9px] text-white/60 tracking-wider uppercase">Nepali Rudraksha</span>
             </div>
           </Link>
+          <button 
+            className="md:hidden text-brand-accent hover:text-white"
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
         </div>
         
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
@@ -241,6 +257,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link
                 key={item.name}
                 href={item.href}
+                onClick={() => setIsSidebarOpen(false)}
                 className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors ${
                   isActive ? 'bg-brand-accent text-brand-primary font-bold shadow-sm' : 'text-gray-300 hover:bg-white/10 hover:text-white'
                 }`}
@@ -251,32 +268,37 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             );
           })}
         </nav>
-
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">
-        <header className="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center sticky top-0 z-10 shadow-xs">
-          <div className="flex items-center space-x-3">
-            <span className="text-xs font-bold text-brand-accent bg-brand-primary px-2.5 py-1 rounded-md uppercase tracking-wider">
+      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto w-full">
+        <header className="bg-white border-b border-gray-200 px-4 md:px-8 py-4 flex justify-between items-center sticky top-0 z-10 shadow-sm shrink-0">
+          <div className="flex items-center space-x-3 min-w-0">
+            <button 
+              className="md:hidden p-1 mr-1 text-gray-500 hover:text-brand-primary shrink-0"
+              onClick={() => setIsSidebarOpen(true)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            </button>
+            <span className="hidden sm:inline-block text-[10px] font-bold text-brand-accent bg-brand-primary px-2 py-1 rounded-md uppercase tracking-wider shrink-0">
               Admin Area
             </span>
-            <h1 className="text-xl font-serif font-bold text-gray-800 capitalize">
+            <h1 className="text-lg md:text-xl font-serif font-bold text-gray-800 capitalize truncate">
               {pathname.split('/').pop() === 'admin' ? 'Dashboard' : pathname.split('/').pop()}
             </h1>
           </div>
-          <div className="flex items-center space-x-4 relative">
+          <div className="flex items-center space-x-3 shrink-0 relative">
             <Link
               href="/"
               target="_blank"
-              className="text-xs font-semibold text-brand-primary hover:text-brand-secondary underline"
+              className="hidden sm:block text-xs font-semibold text-brand-primary hover:text-brand-secondary underline"
             >
               View Public Website ↗
             </Link>
             
             <button 
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-8 h-8 bg-brand-primary text-brand-accent rounded-full flex items-center justify-center text-xs font-bold shadow-sm hover:ring-2 hover:ring-brand-accent/50 transition-all focus:outline-none"
+              className="w-8 h-8 bg-brand-primary text-brand-accent rounded-full flex items-center justify-center text-xs font-bold shadow-sm hover:ring-2 hover:ring-brand-accent/50 transition-all focus:outline-none shrink-0"
             >
               {adminInitials}
             </button>
@@ -303,10 +325,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             )}
           </div>
         </header>
-        <div className="p-8">
+        <div className="p-4 md:p-8 flex-1 w-full overflow-x-hidden">
           {children}
         </div>
       </main>
     </div>
   );
 }
+
