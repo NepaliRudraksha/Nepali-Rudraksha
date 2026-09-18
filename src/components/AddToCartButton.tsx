@@ -29,7 +29,7 @@ export default function AddToCartButton({ product, quantity = 1, className, icon
   return (
     <button
       onClick={handleAdd}
-      className={className || 'bg-brand-primary text-white p-2 rounded-full hover:bg-brand-accent hover:text-brand-primary transition-colors'}
+      className={className || 'premium-button rounded-full bg-brand-primary p-2 text-white hover:bg-brand-accent hover:text-brand-primary'}
       aria-label={`Add ${product.name} to cart`}
     >
       {iconOnly ? (

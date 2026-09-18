@@ -68,12 +68,12 @@ export default function AdminReviewsPage() {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-      <div className="p-6 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+      <div className="p-4 md:p-6 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
           <h2 className="text-lg font-bold text-gray-800">Pending Reviews</h2>
-          <p className="text-sm text-gray-500">Approve or reject customer reviews before they appear on the site.</p>
+          <p className="text-sm text-gray-500 mt-1">Approve or reject customer reviews before they appear on the site.</p>
         </div>
-        <span className="bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full">
+        <span className="bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap shrink-0">
           {reviews.length} Pending
         </span>
       </div>
@@ -88,12 +88,12 @@ export default function AdminReviewsPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200 text-xs uppercase tracking-wider text-gray-500">
-                <th className="p-4 font-semibold">Product</th>
-                <th className="p-4 font-semibold">Reviewer</th>
-                <th className="p-4 font-semibold">Rating</th>
-                <th className="p-4 font-semibold w-1/3">Comment</th>
-                <th className="p-4 font-semibold">Date</th>
-                <th className="p-4 font-semibold text-right">Actions</th>
+                <th className="p-3 md:p-4 font-semibold hidden sm:table-cell">Product</th>
+                <th className="p-3 md:p-4 font-semibold">Reviewer</th>
+                <th className="p-3 md:p-4 font-semibold hidden md:table-cell">Rating</th>
+                <th className="p-3 md:p-4 font-semibold">Comment</th>
+                <th className="p-3 md:p-4 font-semibold hidden lg:table-cell">Date</th>
+                <th className="p-3 md:p-4 font-semibold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -101,28 +101,28 @@ export default function AdminReviewsPage() {
                 const product = products[review.product_id];
                 return (
                   <tr key={review.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="p-4 text-sm">
+                    <td className="p-3 md:p-4 text-sm hidden sm:table-cell">
                       {product ? (
-                        <Link href={`/shop/${product.id}`} className="font-medium text-brand-primary hover:underline line-clamp-2" target="_blank">
+                        <Link href={`/shop/${product.id}`} className="font-medium text-brand-primary hover:underline line-clamp-1" target="_blank">
                           {product.name}
                         </Link>
                       ) : (
-                        <span className="text-gray-400 italic">Unknown Product ({review.product_id})</span>
+                        <span className="text-gray-400 italic">Unknown Product</span>
                       )}
                     </td>
-                    <td className="p-4 text-sm font-medium text-gray-800">{review.name}</td>
-                    <td className="p-4">
-                      <div className="flex">
+                    <td className="p-3 md:p-4 text-sm font-medium text-gray-800">{review.name}</td>
+                    <td className="p-3 md:p-4 hidden md:table-cell">
+                      <div className="flex gap-0.5">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <Star key={star} size={14} className={star <= review.rating ? "fill-brand-accent text-brand-accent" : "text-gray-300"} />
+                          <Star key={star} size={13} className={star <= review.rating ? "fill-brand-accent text-brand-accent" : "text-gray-300"} />
                         ))}
                       </div>
                     </td>
-                    <td className="p-4 text-sm text-gray-600 italic">"{review.comment}"</td>
-                    <td className="p-4 text-sm text-gray-500">
+                    <td className="p-3 md:p-4 text-sm text-gray-600 italic max-w-xs truncate">"{review.comment}"</td>
+                    <td className="p-3 md:p-4 text-xs text-gray-500 hidden lg:table-cell">
                       {new Date(review.created_at).toLocaleDateString()}
                     </td>
-                    <td className="p-4 text-right space-x-2 whitespace-nowrap">
+                    <td className="p-3 md:p-4 text-right space-x-2 whitespace-nowrap">
                       <button
                         onClick={() => handleApprove(review.id)}
                         disabled={actionLoading === review.id}

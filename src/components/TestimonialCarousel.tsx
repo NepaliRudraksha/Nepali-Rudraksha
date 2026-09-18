@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type Review = {
   name: string;
@@ -14,12 +14,20 @@ type Review = {
 export default function TestimonialCarousel({ reviews }: { reviews: Review[] }) {
   const carouselRef = useRef<HTMLDivElement>(null);
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [showIndicators, setShowIndicators] = useState(false);
 
   const move = (direction: 1 | -1) => {
     carouselRef.current?.scrollBy({
-      left: direction * (carouselRef.current.clientWidth * 0.9),
+      left: direction * (carouselRef.current?.clientWidth ?? 0) * 0.95,
       behavior: 'smooth',
     });
+  };
+
+  const goToSlide = (index: number) => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    const cardWidth = carousel.clientWidth;
+    carousel.scrollTo({ left: index * cardWidth * 0.95, behavior: 'smooth' });
   };
 
   const stopAutoplay = useCallback(() => {
@@ -35,9 +43,11 @@ export default function TestimonialCarousel({ reviews }: { reviews: Review[] }) 
       const carousel = carouselRef.current;
       if (!carousel) return;
 
-      const isAtEnd = carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 8;
-      carousel.scrollTo({ left: isAtEnd ? 0 : carousel.scrollLeft + carousel.clientWidth * 0.9, behavior: 'smooth' });
-    }, 4500);
+      const cardWidth = carousel.clientWidth;
+      const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+      const nextScroll = carousel.scrollLeft + cardWidth * 0.95;
+      carousel.scrollTo({ left: nextScroll >= maxScroll ? 0 : nextScroll, behavior: 'smooth' });
+    }, 5000);
   }, [stopAutoplay]);
 
   useEffect(() => {
@@ -45,57 +55,86 @@ export default function TestimonialCarousel({ reviews }: { reviews: Review[] }) 
     return stopAutoplay;
   }, [startAutoplay, stopAutoplay]);
 
-  return (
-    <div className="flex items-center gap-2 md:gap-4 relative group">
-      <button
-        type="button"
-        onClick={() => move(-1)}
-        onMouseEnter={stopAutoplay}
-        onMouseLeave={startAutoplay}
-        className="flex-shrink-0 z-10 flex items-center justify-center rounded-full border border-brand-border bg-white p-2 md:p-2.5 text-brand-primary shadow-md transition-colors hover:border-brand-accent hover:text-brand-accent"
-        aria-label="Show previous testimonials"
-      >
-        <ChevronLeft size={20} />
-      </button>
+  const visibleCount = reviews.length <= 3 ? 1 : reviews.length <= 6 ? 2 : 3;
+  const totalSlides = Math.ceil(reviews.length / visibleCount);
 
+  return (
+    <div className="relative">
       <div
         ref={carouselRef}
-        className="flex-1 flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-3 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         aria-label="Customer testimonials"
         onMouseEnter={stopAutoplay}
         onMouseLeave={startAutoplay}
         onTouchStart={stopAutoplay}
         onTouchEnd={startAutoplay}
       >
-        {reviews.map((review) => (
+        {reviews.map((review, index) => (
           <article
             key={review.name}
-            className="w-full shrink-0 snap-center md:snap-start bg-white border border-brand-border rounded-xl p-6 hover:shadow-lg transition-all md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
+            className="w-full shrink-0 snap-center md:snap-start bg-white border border-brand-border rounded-2xl p-3.5 md:p-4 hover:shadow-xl transition-all duration-300 
+              md:w-[calc((100%-0rem)/1)] lg:w-[calc((100%-1.5rem)/2)] xl:w-[calc((100%-2rem)/3)]
+              flex flex-col"
           >
-            <div className="flex items-center mb-4" aria-label={`${review.rating} out of 5 stars`}>
+            <div className="flex items-center gap-1 mb-2" aria-label={`${review.rating} out of 5 stars`}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star key={star} size={16} className={star <= review.rating ? 'fill-brand-accent text-brand-accent' : 'text-gray-300'} />
               ))}
             </div>
-            <p className="text-brand-text text-sm italic mb-4">&ldquo;{review.text}&rdquo;</p>
-            <div className="border-t border-brand-border pt-4">
-              <p className="font-bold text-brand-primary text-sm">{review.name}</p>
-              <p className="text-xs text-brand-muted">{review.location} · Purchased: {review.product}</p>
+            <p className="text-brand-text text-sm leading-relaxed mb-3 flex-1">&ldquo;{review.text}&rdquo;</p>
+            <div className="border-t border-brand-border pt-2 mt-auto">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="w-6 h-6 rounded-full bg-brand-accent/15 flex items-center justify-center text-brand-accent text-xs font-bold flex-shrink-0">
+                  {review.name.charAt(0)}
+                </div>
+                <div>
+                  <p className="font-semibold text-brand-primary text-sm">{review.name}</p>
+                  <p className="text-xs text-brand-muted">{review.location}</p>
+                </div>
+              </div>
+              <p className="text-[11px] text-brand-muted font-medium">{review.product}</p>
             </div>
           </article>
         ))}
       </div>
 
-      <button
-        type="button"
-        onClick={() => move(1)}
-        onMouseEnter={stopAutoplay}
-        onMouseLeave={startAutoplay}
-        className="flex-shrink-0 z-10 flex items-center justify-center rounded-full border border-brand-border bg-white p-2 md:p-2.5 text-brand-primary shadow-md transition-colors hover:border-brand-accent hover:text-brand-accent"
-        aria-label="Show next testimonials"
-      >
-        <ChevronRight size={20} />
-      </button>
+      {/* Navigation Indicators */}
+      {totalSlides > 1 && (
+        <div className="flex justify-center gap-2 mt-4">
+          {Array.from({ length: totalSlides }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goToSlide(i)}
+              className="w-2 h-2 rounded-full bg-brand-border hover:bg-brand-accent transition-colors focus:outline-none focus:ring-2 focus:ring-brand-accent"
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Navigation Arrows - Desktop only */}
+      <div className="hidden md:flex absolute inset-0 z-10 pointer-events-none">
+        <button
+          type="button"
+          onClick={() => move(-1)}
+          onMouseEnter={stopAutoplay}
+          onMouseLeave={startAutoplay}
+          className="pointer-events-auto flex-shrink-0 flex items-center justify-center rounded-full border border-brand-border bg-white/90 p-2 text-brand-primary shadow-lg transition-all hover:bg-white hover:border-brand-accent hover:text-brand-accent hover:shadow-xl"
+          aria-label="Show previous testimonials"
+        >
+          <ChevronLeft size={22} />
+        </button>
+        <button
+          type="button"
+          onClick={() => move(1)}
+          onMouseEnter={stopAutoplay}
+          onMouseLeave={startAutoplay}
+          className="pointer-events-auto flex-shrink-0 flex items-center justify-center rounded-full border border-brand-border bg-white/90 p-2 text-brand-primary shadow-lg transition-all hover:bg-white hover:border-brand-accent hover:text-brand-accent hover:shadow-xl ml-auto"
+          aria-label="Show next testimonials"
+        >
+          <ChevronRight size={22} />
+        </button>
+      </div>
     </div>
   );
 }

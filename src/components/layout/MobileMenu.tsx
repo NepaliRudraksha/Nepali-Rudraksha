@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X, Search, ChevronRight } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,11 +19,18 @@ export default function MobileMenu() {
     }
   };
 
+  const closeMenuAndScrollTop = () => {
+    setIsOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const navLinks = [
-    { name: 'HOME', href: '/' },
-    { name: 'SHOP', href: '/shop' },
-    { name: 'ABOUT', href: '/about' },
-    { name: 'CONTACT', href: '/contact' },
+    { name: 'Home', href: '/' },
+    { name: 'Shop', href: '/shop' },
+    { name: 'Rudraksha Types', href: '/types' },
+    { name: 'Accessories', href: '/accessories' },
+    { name: 'About Us', href: '/about' },
+    { name: 'Contact', href: '/contact' },
   ];
 
   return (
@@ -30,8 +38,10 @@ export default function MobileMenu() {
       {/* Hamburger Button */}
       <button 
         onClick={() => setIsOpen(true)}
-        className="w-10 h-10 rounded-full border border-brand-accent flex items-center justify-center text-brand-primary hover:bg-brand-accent/10 transition-colors mr-3"
+        className="mr-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-brand-accent text-brand-primary transition-colors hover:bg-brand-accent/10"
         aria-label="Open menu"
+        aria-controls="mobile-navigation"
+        aria-expanded={isOpen}
       >
         <Menu size={20} />
       </button>
@@ -84,18 +94,27 @@ export default function MobileMenu() {
               </form>
 
               {/* Navigation Links */}
-              <nav className="space-y-3">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-between p-5 rounded-xl border border-brand-accent/30 bg-black/20 hover:bg-brand-accent hover:text-brand-primary text-brand-accent font-bold tracking-widest transition-all"
-                  >
-                    <span>{link.name}</span>
-                    <ChevronRight size={20} />
-                  </Link>
-                ))}
+              <nav id="mobile-navigation" className="space-y-2" aria-label="Mobile navigation">
+                {navLinks.map((link) => {
+                  const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
+
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      scroll
+                      onClick={closeMenuAndScrollTop}
+                      className={`flex items-center justify-between rounded-xl border p-4 text-sm font-semibold transition-all ${
+                        isActive
+                          ? 'border-brand-accent bg-brand-accent text-brand-primary'
+                          : 'border-brand-accent/30 bg-black/20 text-brand-accent hover:bg-brand-accent hover:text-brand-primary'
+                      }`}
+                    >
+                      <span>{link.name}</span>
+                      <ChevronRight size={20} />
+                    </Link>
+                  );
+                })}
               </nav>
             </div>
           </div>

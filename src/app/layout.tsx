@@ -24,13 +24,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased flex flex-col min-h-screen`}>
+      <body className={`${inter.variable} flex min-h-screen min-w-full flex-col antialiased`}>
         <Providers>
           <MaintenanceGuard>
             <ClientHeaderWrapper>
               <Header />
             </ClientHeaderWrapper>
-            <main className="flex-grow">{children}</main>
+            <main className="w-full flex-grow">{children}</main>
             <ClientFooterWrapper>
               <Footer />
             </ClientFooterWrapper>

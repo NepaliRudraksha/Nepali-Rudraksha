@@ -16,7 +16,10 @@ export default function HeaderNav() {
   ];
 
   return (
-    <nav className="group/nav hidden lg:flex items-center space-x-4 font-medium text-sm text-brand-text">
+    <nav
+      aria-label="Primary navigation"
+      className="hidden lg:flex items-center gap-7 whitespace-nowrap text-sm font-medium text-brand-text xl:gap-8"
+    >
       {links.map((link) => {
         // active if exact match for home, or starts with href for others
         const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
@@ -24,10 +27,12 @@ export default function HeaderNav() {
         return (
           <Link 
             key={link.name}
-            href={link.href} 
-            className={`relative pb-1 transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:bg-brand-accent after:transition-transform hover:after:scale-x-100 ${
+            href={link.href}
+            scroll
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className={`relative py-2 transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:origin-left after:bg-brand-accent after:transition-transform hover:after:scale-x-100 ${
               isActive 
-                ? 'text-brand-secondary after:scale-x-100 group-hover/nav:after:scale-x-0' 
+                ? 'text-brand-secondary after:scale-x-100'
                 : 'hover:text-brand-secondary after:scale-x-0'
             }`}
           >

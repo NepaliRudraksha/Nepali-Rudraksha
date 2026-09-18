@@ -143,14 +143,14 @@ export default function About() {
             { name: 'Aditya Verma', location: 'Pune', rating: 5, text: 'I was skeptical at first, but after receiving the 14 Mukhi Rudraksha with the lab certificate, I was convinced of its authenticity. The quality is outstanding and customer service is excellent.' },
             { name: 'Lakshmi Nair', location: 'Chennai', rating: 5, text: 'Nepali Rudraksha has been my go-to source for the past 3 years. Every single bead I have ordered has been genuine. The Vedic energization is a lovely touch that sets them apart.' },
           ].map((review, i) => (
-            <div key={i} className="bg-brand-light border border-brand-border rounded-xl p-8">
-              <div className="flex items-center mb-4">
+            <div key={i} className="bg-brand-light border border-brand-border rounded-xl p-8 text-left">
+              <div className="flex items-center mb-4 justify-start">
                 {[1,2,3,4,5].map(s => (
                   <Star key={s} size={16} className={s <= review.rating ? 'fill-brand-accent text-brand-accent' : 'text-gray-300'} />
                 ))}
               </div>
-              <p className="text-brand-text italic mb-4">"{review.text}"</p>
-              <div>
+              <p className="text-brand-text mb-4">"{review.text}"</p>
+              <div className="flex flex-col items-start">
                 <p className="font-bold text-brand-primary">{review.name}</p>
                 <p className="text-xs text-brand-muted">{review.location}</p>
               </div>
@@ -164,10 +164,10 @@ export default function About() {
         <h2 className="text-3xl font-serif font-bold text-brand-primary mb-4">Begin Your Spiritual Journey Today</h2>
         <p className="text-brand-muted mb-8 max-w-xl mx-auto">Explore our curated collection of authentic Rudraksha beads and find the one that resonates with your soul.</p>
         <div className="flex items-center justify-center gap-4 flex-wrap">
-          <Link href="/shop" className="bg-brand-primary hover:bg-[#1a251d] text-white font-bold px-8 py-3 rounded-md transition-colors shadow-lg">
+          <Link href="/shop" className="bg-brand-primary hover:bg-[#1a251d] text-white font-bold px-6 py-3 rounded-md transition-colors shadow-lg w-full sm:w-auto min-w-[160px] text-center">
             Shop Now
           </Link>
-          <Link href="/contact" className="border-2 border-brand-primary text-brand-primary font-bold px-8 py-3 rounded-md hover:bg-brand-primary hover:text-white transition-colors">
+          <Link href="/contact" className="border-2 border-brand-primary text-brand-primary font-bold px-6 py-3 rounded-md hover:bg-brand-primary hover:text-white transition-colors w-full sm:w-auto min-w-[160px] text-center">
             Contact Us
           </Link>
         </div>

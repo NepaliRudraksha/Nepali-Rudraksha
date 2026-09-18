@@ -7,7 +7,7 @@ import { User, LogOut, Package, Settings, ShieldCheck, ChevronDown, Sparkles } f
 import { useAuth } from '@/context/AuthContext';
 
 export default function UserNav() {
-  const { user, signOut, isLoading, demoLogin } = useAuth();
+  const { user, signOut, isLoading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -48,20 +48,20 @@ export default function UserNav() {
         // Authenticated State Button
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center space-x-2 p-1 rounded-full hover:bg-brand-light transition-all focus:outline-none focus:ring-2 focus:ring-brand-accent"
+          className="flex items-center space-x-1 rounded-full p-0 hover:bg-brand-light transition-all focus:outline-none focus:ring-2 focus:ring-brand-accent sm:space-x-2 sm:p-1"
           aria-expanded={isOpen}
           aria-label="User account menu"
         >
           <div className="w-8 h-8 rounded-full bg-brand-primary text-brand-accent font-serif font-bold text-xs flex items-center justify-center border border-brand-accent/40 shadow-sm">
             {initials}
           </div>
-          <ChevronDown size={14} className={`text-brand-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown size={14} className={`hidden text-brand-muted transition-transform duration-200 sm:block ${isOpen ? 'rotate-180' : ''}`} />
         </button>
       ) : (
         // Unauthenticated State Button
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="text-brand-primary hover:text-brand-secondary transition-colors p-1 rounded-full hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-accent"
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-brand-primary transition-colors hover:bg-brand-light hover:text-brand-secondary focus:outline-none focus:ring-2 focus:ring-brand-accent"
           aria-expanded={isOpen}
           aria-label="Account sign in or register"
         >

@@ -45,10 +45,10 @@ export function MotionHeroImage({ children }: { children: ReactNode }) {
 export function MotionSection({ children, className }: { children: ReactNode, className?: string }) {
   return (
     <motion.section 
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.7 }}
+      initial={{ opacity: 0, y: 32, scale: 0.985 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: '-80px', amount: 0.15 }}
+      transition={{ duration: 0.65, ease: [0.22, 0.61, 0.36, 1] }}
       className={className}
     >
       {children}

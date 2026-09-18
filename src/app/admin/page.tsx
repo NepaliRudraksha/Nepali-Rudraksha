@@ -240,12 +240,12 @@ export default function AdminDashboard() {
             </div>
             
             <div className="p-6">
-              <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100">
-                <div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 pb-6 border-b border-gray-100 gap-4">
+                <div className="text-left">
                   <p className="text-sm text-gray-500 mb-1">Order Date</p>
                   <p className="font-semibold text-gray-800">{new Date(selectedOrder.created_at).toLocaleString('en-IN')}</p>
                 </div>
-                <div className="text-right">
+                <div className="w-full sm:w-auto text-left sm:text-right">
                   <p className="text-sm text-gray-500 mb-1">Status</p>
                   <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm ${statusColors[selectedOrder.status]}`}>
                     {statusIcons[selectedOrder.status]}
@@ -260,7 +260,7 @@ export default function AdminDashboard() {
                   <h3 className="text-xs font-bold text-brand-primary uppercase tracking-wider mb-4 flex items-center gap-2">
                     <User size={16} className="text-brand-accent" /> Customer Info
                   </h3>
-                  <div className="space-y-4 text-sm">
+                  <div className="space-y-4 text-sm text-left">
                     <div>
                       <p className="text-brand-muted text-xs mb-1">Name</p>
                       <p className="font-medium text-gray-800">{selectedOrder.customer_name}</p>
@@ -283,7 +283,7 @@ export default function AdminDashboard() {
                   <h3 className="text-xs font-bold text-brand-primary uppercase tracking-wider mb-4 flex items-center gap-2">
                     <MapPin size={16} className="text-brand-accent" /> Shipping Address
                   </h3>
-                  <div className="space-y-4 text-sm">
+                  <div className="space-y-4 text-sm text-left">
                     {selectedOrder.address ? (
                       <div>
                         <p className="text-brand-muted text-xs mb-1">Street Address</p>
@@ -331,7 +331,7 @@ export default function AdminDashboard() {
                 <h3 className="text-xs font-bold text-brand-primary uppercase tracking-wider mb-4 flex items-center gap-2">
                   <Package size={16} className="text-brand-accent" /> Products Ordered
                 </h3>
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="bg-white rounded-lg border border-gray-200 p-4 text-left">
                   <p className="text-sm text-gray-800 whitespace-pre-line leading-relaxed font-medium">
                     {selectedOrder.product_description}
                   </p>
@@ -339,12 +339,12 @@ export default function AdminDashboard() {
               </div>
 
               {/* Payment Info */}
-              <div className="flex flex-col sm:flex-row justify-between items-center bg-brand-primary text-white rounded-xl p-6 shadow-lg">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-brand-primary text-white rounded-xl p-6 shadow-lg text-left">
                 <div>
                   <p className="text-brand-light/70 text-xs mb-1 uppercase tracking-wider font-bold">Payment Method</p>
                   <p className="font-medium capitalize text-brand-accent">{selectedOrder.payment_method || 'UPI / Online'}</p>
                 </div>
-                <div className="text-right mt-4 sm:mt-0">
+                <div className="w-full sm:w-auto text-left sm:text-right mt-4 sm:mt-0">
                   <p className="text-brand-light/70 text-xs mb-1 uppercase tracking-wider font-bold">Total Amount</p>
                   <p className="text-3xl font-serif font-bold text-white">₹{selectedOrder.amount.toLocaleString()}</p>
                 </div>

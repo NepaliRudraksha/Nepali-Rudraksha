@@ -25,22 +25,29 @@ function SearchBar() {
   return (
     <>
       {/* Desktop Search */}
-      <form onSubmit={handleSubmit} className="hidden md:flex items-center bg-brand-bg rounded-full px-3 py-1.5 border border-brand-border">
-        <button type="submit" aria-label="Search" className="text-brand-muted mr-2 hover:text-brand-accent transition-colors">
-          <Search size={16} />
+      <form
+        onSubmit={handleSubmit}
+        className="premium-search-field relative hidden h-10 w-36 items-center rounded-xl border transition-colors md:flex lg:w-40 xl:w-44 2xl:w-48"
+      >
+        <button
+          type="submit"
+          aria-label="Search"
+          className="premium-search-button absolute left-1 flex h-8 w-8 items-center justify-center rounded-lg focus:outline-none"
+        >
+          <Search size={18} aria-hidden="true" />
         </button>
         <input
           name="q"
           type="text"
           defaultValue={query}
           placeholder="Search Rudraksha..."
-          className="bg-transparent border-none outline-none text-sm w-32 xl:w-48 placeholder:text-brand-muted"
+          className="h-full w-full rounded-xl bg-transparent py-2 pl-11 pr-4 text-sm font-medium tracking-[0.01em] text-brand-text outline-none placeholder:font-normal placeholder:text-brand-muted"
         />
       </form>
 
       {/* Mobile Search Toggle */}
       <button 
-        className="md:hidden text-brand-primary p-2 -mr-2"
+        className="flex h-8 w-8 items-center justify-center rounded-lg text-brand-primary transition-colors hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-accent/50 md:hidden"
         onClick={() => setIsMobileOpen(true)}
         aria-label="Open search"
       >
@@ -60,7 +67,7 @@ function SearchBar() {
             </button>
           </div>
           <div className="p-4">
-            <form onSubmit={handleSubmit} className="flex items-center bg-brand-bg rounded-full px-4 py-3 border border-brand-border">
+            <form onSubmit={handleSubmit} className="premium-search-field flex items-center rounded-full border px-4 py-3">
               <input
                 name="q"
                 type="text"
@@ -69,7 +76,7 @@ function SearchBar() {
                 placeholder="Search for beads, malas..."
                 className="bg-transparent border-none outline-none text-base flex-1 placeholder:text-brand-muted"
               />
-              <button type="submit" aria-label="Search" className="text-brand-primary ml-2 bg-brand-light p-2 rounded-full">
+              <button type="submit" aria-label="Search" className="premium-search-button ml-2 rounded-full p-2">
                 <Search size={18} />
               </button>
             </form>
@@ -83,9 +90,9 @@ function SearchBar() {
 export default function HeaderSearch() {
   return (
     <Suspense fallback={
-      <div className="hidden md:flex items-center bg-brand-bg rounded-full px-3 py-1.5 border border-brand-border opacity-50">
-        <Search size={16} className="text-brand-muted mr-2" />
-        <div className="w-32 xl:w-48 h-5 bg-transparent"></div>
+      <div className="premium-search-field relative hidden h-10 w-36 items-center rounded-xl border opacity-50 md:flex lg:w-40 xl:w-44 2xl:w-48">
+        <Search size={18} className="absolute left-4 text-brand-muted" />
+        <div className="h-5 w-full"></div>
       </div>
     }>
       <SearchBar />

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Search, CheckCircle2, Truck, RefreshCcw, Phone, Mail } from 'lucide-react';
+import { CheckCircle2, Truck, RefreshCcw, Phone, Mail } from 'lucide-react';
 import HeaderCartIcon from '@/components/HeaderCartIcon';
 import UserNav from '@/components/layout/UserNav';
 import HeaderSearch from '@/components/layout/HeaderSearch';
@@ -15,7 +15,7 @@ export default async function Header() {
     <MotionHeader>
       {/* Top Bar */}
       <div className="bg-brand-primary text-white text-xs border-b border-brand-accent/20">
-        <div className="max-w-7xl mx-auto py-2 px-4 md:px-10 lg:px-20 flex justify-between items-center overflow-hidden">
+        <div className="max-w-7xl mx-auto flex items-center justify-between overflow-hidden px-3 py-1.5 md:px-10 md:py-2 lg:px-20">
           <div className="flex flex-1 overflow-hidden relative group mr-4 md:mr-8">
             <div className="flex items-center space-x-6 min-w-max animate-marquee group-hover:[animation-play-state:paused]">
               {/* First Set */}
@@ -69,21 +69,21 @@ export default async function Header() {
 
       {/* Main Navbar */}
       <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-10 lg:px-20 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 px-2 py-3 sm:px-3 md:px-10 lg:px-20">
           
-          <div className="flex items-center">
+          <div className="flex min-w-0 items-center">
             {/* Mobile Menu */}
             <MobileMenu />
             
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-brand-primary rounded-full flex items-center justify-center text-brand-accent font-serif font-bold text-xl">
+            <Link href="/" className="flex shrink-0 items-center space-x-2 max-[360px]:space-x-1">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-primary font-serif text-lg font-bold text-brand-accent max-[360px]:h-8 max-[360px]:w-8 max-[360px]:text-base md:h-10 md:w-10 md:text-xl">
                 NR
               </div>
-              <div>
-                <h1 className="font-serif font-bold text-xl text-brand-primary leading-tight">NEPALI</h1>
-                <h1 className="font-serif font-bold text-xl text-brand-primary leading-tight">RUDRAKSHA</h1>
-                <p className="text-[10px] text-brand-muted tracking-widest hidden md:block">DIVINE BEADS. BETTER LIFE.</p>
+              <div className="max-[360px]:hidden">
+                <h1 className="font-serif text-[17px] font-bold leading-tight text-brand-primary md:text-xl">NEPALI</h1>
+                <h1 className="font-serif text-[17px] font-bold leading-tight text-brand-primary md:text-xl">RUDRAKSHA</h1>
+                <p className="hidden whitespace-nowrap text-[10px] tracking-widest text-brand-muted md:block">DIVINE BEADS. BETTER LIFE.</p>
               </div>
             </Link>
           </div>
@@ -92,7 +92,7 @@ export default async function Header() {
         <HeaderNav />
 
         {/* Icons & Search */}
-        <div className="flex items-center space-x-4">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2 md:gap-4">
           <HeaderSearch />
           <UserNav />
           <HeaderCartIcon />

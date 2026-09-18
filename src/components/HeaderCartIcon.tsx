@@ -3,21 +3,25 @@
 import Link from 'next/link';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
+
+const subscribe = () => () => {};
+const getServerSnapshot = () => false;
+const getClientSnapshot = () => true;
 
 export default function HeaderCartIcon() {
   const { cartCount } = useCart();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
 
   return (
-    <Link href="/cart" className="text-brand-primary hover:text-brand-secondary transition-colors relative">
+    <Link
+      href="/cart"
+      aria-label={`Cart with ${cartCount} items`}
+      className="relative flex h-9 w-9 items-center justify-center rounded-lg text-brand-primary transition-colors hover:bg-brand-light hover:text-brand-secondary focus:outline-none focus:ring-2 focus:ring-brand-accent/50 md:h-8 md:w-8"
+    >
       <ShoppingCart size={20} />
       {mounted && (
-        <span className="absolute -top-2 -right-2 bg-brand-accent text-brand-primary text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+        <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand-accent text-[10px] font-bold text-brand-primary">
           {cartCount}
         </span>
       )}

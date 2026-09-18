@@ -5,10 +5,113 @@ import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
 import { Product } from '@/data/products';
 import { getProducts, getSettings, SiteSettings } from '@/lib/api';
-import { Star, ShoppingCart, Filter, Loader2, Search } from 'lucide-react';
-import { useCart } from '@/context/CartContext';
+import { Star, Filter, Loader2, Search } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import AddToCartButton from '@/components/AddToCartButton';
+
+function ProductCard({ product, settings }: { product: Product; settings: SiteSettings | null }) {
+
+  return (
+    <article className="group relative bg-white border border-brand-border rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 hover:border-brand-accent/30 flex flex-col h-full">
+      <Link href={`/shop/${product.id}`} className="block">
+        <div className="relative aspect-square bg-brand-light flex-shrink-0 overflow-hidden">
+          <div className="absolute z-10 top-3 left-3 md:top-4 md:left-4 flex flex-col gap-1.5 items-start">
+            {settings?.show_bestseller === 'true' && product.isBestseller && (
+              <span className="bg-gradient-to-r from-green-600 to-emerald-500 text-white text-[9px] md:text-[11px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-green-600/30 animate-fade-in-up">Bestseller</span>
+            )}
+            {settings?.show_new_arrivals === 'true' && product.isNew && (
+              <span className="bg-gradient-to-r from-red-500 to-rose-500 text-white text-[9px] md:text-[11px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-red-500/30 animate-fade-in-up">New</span>
+            )}
+            {product.category === 'special' && (
+              <span className="bg-gradient-to-r from-brand-accent to-yellow-600 text-white text-[9px] md:text-[11px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-brand-accent/30 animate-fade-in-up">Special</span>
+            )}
+          </div>
+          
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          
+          <Image 
+            src={product.image || "/images/rudraksha_bead_close_1789219796219.jpg"} 
+            alt={product.name} 
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1" 
+            priority={product.isBestseller || product.isNew}
+          />
+        </div>
+      </Link>
+      
+      <div className="p-3 md:p-4 flex flex-col gap-2.5 relative">
+        <div className="relative z-10">
+          <div className="flex items-center gap-1.5 mb-1.5 flex-wrap">
+            <span className={`text-[8px] font-semibold px-2 py-0.5 rounded-full ${
+              product.category === 'beads' ? 'bg-blue-100 text-blue-700' :
+              product.category === 'mala' ? 'bg-purple-100 text-purple-700' :
+              'bg-amber-100 text-amber-700'
+            }`}>
+              {product.category === 'beads' ? 'Beads' : product.category === 'mala' ? 'Mala' : 'Special'}
+            </span>
+            {product.mukhi && (
+              <span className="text-[8px] font-medium text-brand-muted px-2 py-0.5 rounded-full bg-brand-light">
+                {product.mukhi} Mukhi
+              </span>
+            )}
+          </div>
+          
+          <Link href={`/shop/${product.id}`} className="block">
+            <h3 className="font-semibold text-brand-primary text-sm leading-tight mb-1.5 hover:text-brand-accent transition-colors duration-300 line-clamp-2 group-hover:text-brand-accent">
+              {product.name}
+            </h3>
+          </Link>
+          
+          <div className="flex items-center gap-1 mb-1.5">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star 
+                key={star} 
+                size={11} 
+                className={`transition-colors duration-200 ${star <= Math.round(product.rating ?? 0) ? "fill-brand-accent text-brand-accent" : "text-brand-border group-hover:text-brand-accent/50"}`} 
+              />
+            ))}
+            <span className="text-[9px] md:text-xs text-brand-muted ml-1">({product.reviewsCount ?? 0})</span>
+          </div>
+          
+          {product.origin && (
+            <div className="flex items-center gap-1 text-[9px] text-brand-muted mb-1.5">
+              <span className="flex items-center gap-0.5">
+                {product.origin === 'nepali' ? (
+                  <>
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                    <span>Nepali Origin</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                    <span>Indonesian Origin</span>
+                  </>
+                )}
+              </span>
+            </div>
+          )}
+        </div>
+        
+        <div className="grid grid-cols-[minmax(0,1fr)_2.25rem] items-center gap-2 border-t border-brand-border/50 pt-2 relative z-10 md:grid-cols-[minmax(0,1fr)_2.5rem]">
+          <span className={`truncate font-serif font-bold text-brand-secondary ${product.price > 0 ? 'text-base md:text-lg' : 'text-sm md:text-base'}`}>
+            {product.price > 0 ? `₹${product.price.toLocaleString()}` : 'On request'}
+          </span>
+          
+          <AddToCartButton 
+            product={product} 
+            iconOnly={true} 
+            className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-brand-primary to-brand-secondary text-white flex items-center justify-center hover:from-brand-secondary hover:to-brand-primary transition-all duration-300 shadow-lg shadow-brand-primary/30 hover:shadow-xl hover:shadow-brand-accent/30 hover:-translate-y-0.5 focus:ring-2 focus:ring-brand-accent focus:outline-none group-hover:scale-105 flex-shrink-0"
+          />
+</div>
+      
+      </div>
+      
+      {/* Subtle shine effect on hover */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-150%] group-hover:translate-x-[150%] transition-transform duration-700 pointer-events-none" />
+    </article>
+  );
+}
 
 function ShopContent() {
   const searchParams = useSearchParams();
@@ -28,7 +131,7 @@ function ShopContent() {
     loadData();
   }, []);
 
-  const filteredProducts = products.filter(p => {
+  const filteredProducts = products.filter((p: Product) => {
     const matchesCategory = activeCategory === 'all' || p.category === activeCategory;
     const matchesSearch = !query || 
       p.name.toLowerCase().includes(query) || 
@@ -85,7 +188,7 @@ function ShopContent() {
           <div className="mb-6 flex justify-between items-center text-sm text-brand-muted">
             <p>
               Showing {filteredProducts.length} products
-              {query && <span className="ml-2 font-bold text-brand-primary">for "{query}"</span>}
+              {query && <span className="ml-2 font-bold text-brand-primary">for &ldquo;{query}&rdquo;</span>}
             </p>
           </div>
 
@@ -111,47 +214,7 @@ function ShopContent() {
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {filteredProducts.map((product) => (
-              <div key={product.id} className="bg-white border border-brand-border rounded-xl overflow-hidden group hover:shadow-xl transition-all flex flex-col h-full">
-                <Link href={`/shop/${product.id}`}>
-                  <div className="relative h-40 md:h-48 bg-brand-light flex-shrink-0">
-                    <div className="absolute z-10 top-2 left-2 md:top-3 md:left-3 flex flex-col gap-1 items-start">
-                      {settings?.show_bestseller === 'true' && product.isBestseller && (
-                        <span className="bg-green-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">Bestseller</span>
-                      )}
-                      {settings?.show_new_arrivals === 'true' && product.isNew && (
-                        <span className="bg-red-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">New</span>
-                      )}
-                    </div>
-                    <Image 
-                      src={product.image || "/images/rudraksha_bead_close_1789219796219.jpg"} 
-                      alt={product.name} 
-                      fill 
-                      className="object-cover group-hover:scale-110 transition-transform duration-500" 
-                    />
-                  </div>
-                </Link>
-                <div className="p-3 md:p-5 flex flex-col flex-grow justify-between gap-3">
-                  <Link href={`/shop/${product.id}`}>
-                    <h3 className="font-bold text-brand-primary text-xs md:text-base leading-tight mb-1 md:mb-2 hover:text-brand-accent transition-colors line-clamp-2">{product.name}</h3>
-                    <div className="flex items-center space-x-1 mb-1 md:mb-2">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} size={10} className={`md:w-3.5 md:h-3.5 ${star <= Math.round(product.rating ?? 0) ? "fill-brand-accent text-brand-accent" : "text-gray-300"}`} />
-                      ))}
-                      <span className="text-[10px] md:text-xs text-brand-muted ml-1">({product.reviewsCount ?? 0})</span>
-                    </div>
-                  </Link>
-                  <div className="flex items-center justify-between mt-auto">
-                    <span className="font-serif font-bold text-sm md:text-xl text-brand-secondary">
-                      {product.price > 0 ? `₹ ${product.price.toLocaleString()}` : 'Enquire'}
-                    </span>
-                    <AddToCartButton 
-                      product={product} 
-                      iconOnly={true} 
-                      className="bg-brand-primary text-white p-1.5 md:p-2 rounded-full hover:bg-brand-accent hover:text-brand-primary transition-colors focus:ring-2 focus:ring-brand-accent focus:outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
+              <ProductCard key={product.id} product={product} settings={settings} />
             ))}
           </div>
           )}
