@@ -69,20 +69,20 @@ export default async function Header() {
 
       {/* Main Navbar */}
       <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 px-2 py-3 sm:px-3 md:px-10 lg:px-20">
+        <div className="relative max-w-7xl mx-auto flex items-center justify-between gap-2 px-2 py-3 sm:px-3 md:px-10 lg:px-20">
           
           <div className="flex min-w-0 items-center">
             {/* Mobile Menu */}
             <MobileMenu />
             
             {/* Logo */}
-            <Link href="/" className="flex shrink-0 items-center space-x-2 max-[360px]:space-x-1">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-primary font-serif text-lg font-bold text-brand-accent max-[360px]:h-8 max-[360px]:w-8 max-[360px]:text-base md:h-10 md:w-10 md:text-xl">
+            <Link href="/" className="flex shrink-0 items-center space-x-1 md:space-x-2">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-primary font-serif text-lg font-bold text-brand-accent md:h-10 md:w-10 md:text-xl">
                 NR
               </div>
-              <div className="max-[360px]:hidden">
-                <h1 className="font-serif text-[17px] font-bold leading-tight text-brand-primary md:text-xl">NEPALI</h1>
-                <h1 className="font-serif text-[17px] font-bold leading-tight text-brand-primary md:text-xl">RUDRAKSHA</h1>
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-center md:static md:translate-x-0 md:translate-y-0 md:text-left">
+                <h1 className="font-serif text-[13px] font-bold leading-[1.05] tracking-[0.02em] text-brand-primary md:text-xl md:leading-tight md:tracking-normal">NEPALI</h1>
+                <h1 className="font-serif text-[13px] font-bold leading-[1.05] tracking-[0.02em] text-brand-primary md:text-xl md:leading-tight md:tracking-normal">RUDRAKSHA</h1>
                 <p className="hidden whitespace-nowrap text-[10px] tracking-widest text-brand-muted md:block">DIVINE BEADS. BETTER LIFE.</p>
               </div>
             </Link>
@@ -92,7 +92,7 @@ export default async function Header() {
         <HeaderNav />
 
         {/* Icons & Search */}
-        <div className="flex shrink-0 items-center gap-1 sm:gap-2 md:gap-4">
+        <div className="flex shrink-0 items-center gap-0 md:gap-4">
           <HeaderSearch />
           <UserNav />
           <HeaderCartIcon />

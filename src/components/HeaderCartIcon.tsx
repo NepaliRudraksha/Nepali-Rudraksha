@@ -17,7 +17,7 @@ export default function HeaderCartIcon() {
     <Link
       href="/cart"
       aria-label={`Cart with ${cartCount} items`}
-      className="relative flex h-9 w-9 items-center justify-center rounded-lg text-brand-primary transition-colors hover:bg-brand-light hover:text-brand-secondary focus:outline-none focus:ring-2 focus:ring-brand-accent/50 md:h-8 md:w-8"
+      className="relative flex h-7 w-7 items-center justify-center rounded-lg text-brand-primary transition-colors hover:bg-brand-light hover:text-brand-secondary focus:outline-none focus:ring-2 focus:ring-brand-accent/50"
     >
       <ShoppingCart size={20} />
       {mounted && (

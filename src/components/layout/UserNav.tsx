@@ -48,11 +48,11 @@ export default function UserNav() {
         // Authenticated State Button
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center space-x-1 rounded-full p-0 hover:bg-brand-light transition-all focus:outline-none focus:ring-2 focus:ring-brand-accent sm:space-x-2 sm:p-1"
+          className="flex h-7 w-7 items-center justify-center space-x-1 rounded-full p-0 transition-all hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-accent sm:h-auto sm:w-auto sm:justify-start sm:space-x-2 sm:p-1"
           aria-expanded={isOpen}
           aria-label="User account menu"
         >
-          <div className="w-8 h-8 rounded-full bg-brand-primary text-brand-accent font-serif font-bold text-xs flex items-center justify-center border border-brand-accent/40 shadow-sm">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full border border-brand-accent/40 bg-brand-primary font-serif text-xs font-bold text-brand-accent shadow-sm sm:h-8 sm:w-8">
             {initials}
           </div>
           <ChevronDown size={14} className={`hidden text-brand-muted transition-transform duration-200 sm:block ${isOpen ? 'rotate-180' : ''}`} />
@@ -61,7 +61,7 @@ export default function UserNav() {
         // Unauthenticated State Button
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-brand-primary transition-colors hover:bg-brand-light hover:text-brand-secondary focus:outline-none focus:ring-2 focus:ring-brand-accent"
+          className="flex h-7 w-7 items-center justify-center rounded-lg text-brand-primary transition-colors hover:bg-brand-light hover:text-brand-secondary focus:outline-none focus:ring-2 focus:ring-brand-accent"
           aria-expanded={isOpen}
           aria-label="Account sign in or register"
         >

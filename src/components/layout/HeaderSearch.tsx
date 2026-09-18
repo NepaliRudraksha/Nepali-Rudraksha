@@ -47,7 +47,7 @@ function SearchBar() {
 
       {/* Mobile Search Toggle */}
       <button 
-        className="flex h-8 w-8 items-center justify-center rounded-lg text-brand-primary transition-colors hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-accent/50 md:hidden"
+        className="flex h-7 w-7 items-center justify-center rounded-lg text-brand-primary transition-colors hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-accent/50 md:hidden"
         onClick={() => setIsMobileOpen(true)}
         aria-label="Open search"
       >

@@ -187,18 +187,18 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
           </div>
 
           {/* Add to Cart Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-8">
-            <div className="flex items-center border border-brand-border rounded-md bg-white">
+          <div className="grid grid-cols-2 gap-3 mb-8 sm:grid-cols-3 sm:gap-4">
+            <div className="flex h-12 w-full items-center justify-between rounded-md border border-brand-border bg-white">
               <button 
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="px-4 py-3 text-brand-muted hover:text-brand-primary transition-colors focus:outline-none"
+                className="flex h-full w-10 items-center justify-center text-brand-muted transition-colors hover:bg-brand-light hover:text-brand-primary focus:outline-none"
               >
                 <Minus size={16} />
               </button>
-              <span className="w-12 text-center font-bold text-brand-primary">{quantity}</span>
+              <span className="w-10 text-center font-bold text-brand-primary">{quantity}</span>
               <button 
                 onClick={() => setQuantity(quantity + 1)}
-                className="px-4 py-3 text-brand-muted hover:text-brand-primary transition-colors focus:outline-none"
+                className="flex h-full w-10 items-center justify-center text-brand-muted transition-colors hover:bg-brand-light hover:text-brand-primary focus:outline-none"
               >
                 <Plus size={16} />
               </button>
@@ -206,14 +206,14 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
             
             <button 
               onClick={handleAddToCart}
-              className="flex-1 bg-brand-primary hover:bg-[#1a251d] text-white font-bold py-3 px-6 rounded-md transition-colors flex items-center justify-center shadow-lg"
+              className="flex h-12 w-full items-center justify-center whitespace-nowrap rounded-md bg-brand-primary px-2 py-3 font-bold text-white shadow-lg transition-colors hover:bg-[#1a251d]"
             >
               <ShoppingCart size={18} className="mr-2" /> Add to Cart
             </button>
             
             <button 
               onClick={handleBuyNow}
-              className="flex-1 bg-brand-accent hover:bg-brand-accent-hover text-brand-primary font-bold py-3 px-6 rounded-md transition-colors text-center shadow-lg"
+              className="premium-button--bordered col-span-2 flex min-h-12 w-full items-center justify-center rounded-lg px-4 py-3 sm:col-span-1"
             >
               Buy Now
             </button>
