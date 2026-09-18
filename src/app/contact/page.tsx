@@ -5,11 +5,12 @@ import Image from '@/components/ImageKitImage';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
 import { submitContactMessage } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import Link from 'next/link';
 
 export default function Contact() {
   const { user } = useAuth();
   const [formData, setFormData] = useState({
+    name: '',
+    email: '',
     subject: '',
     message: '',
   });
@@ -22,13 +23,12 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
     setIsLoading(true);
     
     const messageData = {
-      name: user.fullName || user.email.split('@')[0] || 'Seeker',
-      email: user.email,
-      phone: user.phone || '',
+      name: user?.fullName || formData.name.trim(),
+      email: user?.email || formData.email.trim(),
+      phone: user?.phone || '',
       subject: formData.subject,
       message: formData.message,
     };
@@ -107,45 +107,71 @@ export default function Contact() {
                   <h3 className="text-2xl font-serif font-bold text-brand-primary mb-3">Message Sent!</h3>
                   <p className="text-brand-muted max-w-md">Thank you for reaching out! Our spiritual advisors will get back to you within 24 hours.</p>
                   <button 
-                    onClick={() => { setSubmitted(false); setFormData({ subject: '', message: '' }); }}
+                    onClick={() => { setSubmitted(false); setFormData({ name: '', email: '', subject: '', message: '' }); }}
                     className="mt-8 bg-brand-accent text-brand-primary font-bold px-6 py-2.5 rounded-md hover:bg-brand-accent-hover transition-colors"
                   >
                     Send Another Message
                   </button>
                 </div>
-              ) : !user ? (
-                <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <h3 className="text-2xl font-serif font-bold text-brand-primary mb-3">Login Required</h3>
-                  <p className="text-brand-muted mb-8 max-w-md">You must be logged in to send us a message through the website.</p>
-                  <Link href="/login" className="bg-brand-primary text-white font-bold px-8 py-3 rounded-md hover:bg-[#1a251d] transition-colors">
-                    Log In to Send Message
-                  </Link>
-                </div>
               ) : (
                 <>
                   <h2 className="text-2xl font-serif font-bold text-brand-primary mb-2">Send Us a Message</h2>
-                  <p className="text-brand-muted text-sm mb-6">Sending as <strong className="text-brand-primary">{user.fullName || user.email}</strong></p>
+                  <p className="text-brand-muted text-sm mb-6">
+                    {user ? (
+                      <>Sending as <strong className="text-brand-primary">{user.fullName || user.email}</strong></>
+                    ) : (
+                      'Share your details and our spiritual advisors will get back to you within 24 hours.'
+                    )}
+                  </p>
                   <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid grid-cols-1 gap-5">
-                      <div>
-                        <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-subject">Subject *</label>
-                        <select
-                          id="contact-subject"
-                          name="subject"
-                          value={formData.subject}
-                          onChange={handleChange}
-                          required
-                          className="w-full border border-brand-border rounded-lg px-4 py-3 text-sm outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-colors bg-brand-bg"
-                        >
-                          <option value="">Select a subject</option>
-                          <option value="product-inquiry">Product Inquiry</option>
-                          <option value="custom-order">Custom Mala / Order</option>
-                          <option value="spiritual-consultation">Spiritual Consultation</option>
-                          <option value="order-status">Order Status / Tracking</option>
-                          <option value="return-refund">Return & Refund</option>
-                          <option value="other">Other</option>
-                        </select>
+                    {!user && (
+                      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                        <div>
+                          <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-name">Name *</label>
+                          <input
+                            id="contact-name"
+                            name="name"
+                            type="text"
+                            value={formData.name}
+                            onChange={handleChange}
+                            required
+                            autoComplete="name"
+                            className="w-full rounded-lg border border-brand-border bg-brand-bg px-4 py-3 text-sm outline-none transition-colors focus:border-brand-accent focus:ring-1 focus:ring-brand-accent"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-email">Email *</label>
+                          <input
+                            id="contact-email"
+                            name="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                            autoComplete="email"
+                            className="w-full rounded-lg border border-brand-border bg-brand-bg px-4 py-3 text-sm outline-none transition-colors focus:border-brand-accent focus:ring-1 focus:ring-brand-accent"
+                          />
+                        </div>
                       </div>
+                    )}
+                    <div>
+                      <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-subject">Subject *</label>
+                      <select
+                        id="contact-subject"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        required
+                        className="w-full border border-brand-border rounded-lg px-4 py-3 text-sm outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-colors bg-brand-bg"
+                      >
+                        <option value="">Select a subject</option>
+                        <option value="product-inquiry">Product Inquiry</option>
+                        <option value="custom-order">Custom Mala / Order</option>
+                        <option value="spiritual-consultation">Spiritual Consultation</option>
+                        <option value="order-status">Order Status / Tracking</option>
+                        <option value="return-refund">Return & Refund</option>
+                        <option value="other">Other</option>
+                      </select>
                     </div>
                     <div>
                       <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-message">Message *</label>

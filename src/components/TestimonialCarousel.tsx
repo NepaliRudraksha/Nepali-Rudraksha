@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 type Review = {
   name: string;
@@ -14,7 +14,6 @@ type Review = {
 export default function TestimonialCarousel({ reviews }: { reviews: Review[] }) {
   const carouselRef = useRef<HTMLDivElement>(null);
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [showIndicators, setShowIndicators] = useState(false);
 
   const move = (direction: 1 | -1) => {
     carouselRef.current?.scrollBy({
@@ -69,7 +68,7 @@ export default function TestimonialCarousel({ reviews }: { reviews: Review[] }) 
         onTouchStart={stopAutoplay}
         onTouchEnd={startAutoplay}
       >
-        {reviews.map((review, index) => (
+        {reviews.map((review) => (
           <article
             key={review.name}
             className="w-full shrink-0 snap-center md:snap-start bg-white border border-brand-border rounded-2xl p-3.5 md:p-4 hover:shadow-xl transition-all duration-300 
@@ -113,28 +112,26 @@ export default function TestimonialCarousel({ reviews }: { reviews: Review[] }) 
       )}
 
       {/* Navigation Arrows - Desktop only */}
-      <div className="hidden md:flex absolute inset-0 z-10 pointer-events-none">
-        <button
-          type="button"
-          onClick={() => move(-1)}
-          onMouseEnter={stopAutoplay}
-          onMouseLeave={startAutoplay}
-          className="pointer-events-auto flex-shrink-0 flex items-center justify-center rounded-full border border-brand-border bg-white/90 p-2 text-brand-primary shadow-lg transition-all hover:bg-white hover:border-brand-accent hover:text-brand-accent hover:shadow-xl"
-          aria-label="Show previous testimonials"
-        >
-          <ChevronLeft size={22} />
-        </button>
-        <button
-          type="button"
-          onClick={() => move(1)}
-          onMouseEnter={stopAutoplay}
-          onMouseLeave={startAutoplay}
-          className="pointer-events-auto flex-shrink-0 flex items-center justify-center rounded-full border border-brand-border bg-white/90 p-2 text-brand-primary shadow-lg transition-all hover:bg-white hover:border-brand-accent hover:text-brand-accent hover:shadow-xl ml-auto"
-          aria-label="Show next testimonials"
-        >
-          <ChevronRight size={22} />
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={() => move(-1)}
+        onMouseEnter={stopAutoplay}
+        onMouseLeave={startAutoplay}
+        className="absolute -left-5 top-[42%] z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-lg transition-all hover:border-brand-accent hover:text-brand-accent hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-brand-accent/50 md:flex"
+        aria-label="Show previous testimonials"
+      >
+        <ChevronLeft size={20} />
+      </button>
+      <button
+        type="button"
+        onClick={() => move(1)}
+        onMouseEnter={stopAutoplay}
+        onMouseLeave={startAutoplay}
+        className="absolute -right-5 top-[42%] z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-brand-border bg-white text-brand-primary shadow-lg transition-all hover:border-brand-accent hover:text-brand-accent hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-brand-accent/50 md:flex"
+        aria-label="Show next testimonials"
+      >
+        <ChevronRight size={20} />
+      </button>
     </div>
   );
 }
