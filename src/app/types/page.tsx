@@ -13,7 +13,7 @@ function TypeCard({ type, index }: { type: typeof types[0]; index: number }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           
           <Image 
-            src="/images/rudraksha_bead_close_1789219796219.jpg" 
+            src="/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.53%20PMd.jpeg"
             alt={type.mukhi} 
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
@@ -68,7 +68,7 @@ export default function TypesPage() {
       {/* Header */}
       <div className="w-full bg-[#19251D] py-20 text-center text-white relative">
         <div className="absolute inset-0 opacity-30">
-          <Image src="/images/hero_rudraksha_himalayas_1789219738482.jpg" alt="Background" fill className="object-cover" />
+          <Image src="/images/banner/ChatGPT%20Image%20Sep%2018%2C%202026%2C%2007_01_56%20PM.png" alt="Himalayan temple and Rudraksha" fill className="object-cover" />
         </div>
         <div className="relative z-10 max-w-3xl mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-brand-accent mb-4">Types of Rudraksha</h1>

@@ -12,25 +12,25 @@ import AddToCartButton from '@/components/AddToCartButton';
 function ProductCard({ product, settings }: { product: Product; settings: SiteSettings | null }) {
 
   return (
-    <article className="group relative bg-white border border-brand-border rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 hover:border-brand-accent/30 flex flex-col h-full">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-brand-border bg-white transition-all duration-500 hover:border-brand-accent/30 sm:rounded-2xl sm:hover:-translate-y-1.5 sm:hover:shadow-2xl">
       <Link href={`/shop/${product.id}`} className="block">
         <div className="relative aspect-square bg-brand-light flex-shrink-0 overflow-hidden">
-          <div className="absolute z-10 top-3 left-3 md:top-4 md:left-4 flex flex-col gap-1.5 items-start">
+          <div className="absolute left-2 top-2 z-10 flex flex-col items-start gap-1 sm:left-3 sm:top-3 md:left-4 md:top-4 md:gap-1.5">
             {settings?.show_bestseller === 'true' && product.isBestseller && (
-              <span className="bg-gradient-to-r from-green-600 to-emerald-500 text-white text-[9px] md:text-[11px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-green-600/30 animate-fade-in-up">Bestseller</span>
+              <span className="animate-fade-in-up rounded-full bg-gradient-to-r from-green-600 to-emerald-500 px-2 py-0.5 text-[8px] font-bold text-white shadow-lg shadow-green-600/30 sm:px-2.5 sm:py-1 sm:text-[9px] md:text-[11px]">Bestseller</span>
             )}
             {settings?.show_new_arrivals === 'true' && product.isNew && (
-              <span className="bg-gradient-to-r from-red-500 to-rose-500 text-white text-[9px] md:text-[11px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-red-500/30 animate-fade-in-up">New</span>
+              <span className="animate-fade-in-up rounded-full bg-gradient-to-r from-red-500 to-rose-500 px-2 py-0.5 text-[8px] font-bold text-white shadow-lg shadow-red-500/30 sm:px-2.5 sm:py-1 sm:text-[9px] md:text-[11px]">New</span>
             )}
             {product.category === 'special' && (
-              <span className="bg-gradient-to-r from-brand-accent to-yellow-600 text-white text-[9px] md:text-[11px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-brand-accent/30 animate-fade-in-up">Special</span>
+              <span className="animate-fade-in-up rounded-full bg-gradient-to-r from-brand-accent to-yellow-600 px-2 py-0.5 text-[8px] font-bold text-white shadow-lg shadow-brand-accent/30 sm:px-2.5 sm:py-1 sm:text-[9px] md:text-[11px]">Special</span>
             )}
           </div>
           
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           
           <Image 
-            src={product.image || "/images/rudraksha_bead_close_1789219796219.jpg"} 
+            src={product.image || "/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg"}
             alt={product.name} 
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -40,10 +40,10 @@ function ProductCard({ product, settings }: { product: Product; settings: SiteSe
         </div>
       </Link>
       
-      <div className="p-3 md:p-4 flex flex-col gap-2.5 relative">
+      <div className="relative flex flex-col gap-2 p-2.5 sm:p-3 md:gap-2.5 md:p-4">
         <div className="relative z-10">
           <div className="flex items-center gap-1.5 mb-1.5 flex-wrap">
-            <span className={`text-[8px] font-semibold px-2 py-0.5 rounded-full ${
+            <span className={`rounded-full px-1.5 py-0.5 text-[7px] font-semibold sm:px-2 sm:text-[8px] ${
               product.category === 'beads' ? 'bg-blue-100 text-blue-700' :
               product.category === 'mala' ? 'bg-purple-100 text-purple-700' :
               'bg-amber-100 text-amber-700'
@@ -51,14 +51,14 @@ function ProductCard({ product, settings }: { product: Product; settings: SiteSe
               {product.category === 'beads' ? 'Beads' : product.category === 'mala' ? 'Mala' : 'Special'}
             </span>
             {product.mukhi && (
-              <span className="text-[8px] font-medium text-brand-muted px-2 py-0.5 rounded-full bg-brand-light">
+              <span className="rounded-full bg-brand-light px-1.5 py-0.5 text-[7px] font-medium text-brand-muted sm:px-2 sm:text-[8px]">
                 {product.mukhi} Mukhi
               </span>
             )}
           </div>
           
           <Link href={`/shop/${product.id}`} className="block">
-            <h3 className="font-semibold text-brand-primary text-sm leading-tight mb-1.5 hover:text-brand-accent transition-colors duration-300 line-clamp-2 group-hover:text-brand-accent">
+            <h3 className="mb-1.5 min-h-[2.5rem] text-[12px] font-semibold leading-tight text-brand-primary transition-colors duration-300 hover:text-brand-accent group-hover:text-brand-accent sm:text-sm">
               {product.name}
             </h3>
           </Link>
@@ -67,15 +67,15 @@ function ProductCard({ product, settings }: { product: Product; settings: SiteSe
             {[1, 2, 3, 4, 5].map((star) => (
               <Star 
                 key={star} 
-                size={11} 
+                size={10}
                 className={`transition-colors duration-200 ${star <= Math.round(product.rating ?? 0) ? "fill-brand-accent text-brand-accent" : "text-brand-border group-hover:text-brand-accent/50"}`} 
               />
             ))}
-            <span className="text-[9px] md:text-xs text-brand-muted ml-1">({product.reviewsCount ?? 0})</span>
+            <span className="ml-1 text-[8px] text-brand-muted sm:text-[9px] md:text-xs">({product.reviewsCount ?? 0})</span>
           </div>
           
           {product.origin && (
-            <div className="flex items-center gap-1 text-[9px] text-brand-muted mb-1.5">
+            <div className="mb-1.5 hidden items-center gap-1 text-[9px] text-brand-muted sm:flex">
               <span className="flex items-center gap-0.5">
                 {product.origin === 'nepali' ? (
                   <>
@@ -93,15 +93,15 @@ function ProductCard({ product, settings }: { product: Product; settings: SiteSe
           )}
         </div>
         
-        <div className="grid grid-cols-[minmax(0,1fr)_2.25rem] items-center gap-2 border-t border-brand-border/50 pt-2 relative z-10 md:grid-cols-[minmax(0,1fr)_2.5rem]">
-          <span className={`truncate font-serif font-bold text-brand-secondary ${product.price > 0 ? 'text-base md:text-lg' : 'text-sm md:text-base'}`}>
+        <div className="relative z-10 grid grid-cols-[minmax(0,1fr)_2rem] items-center gap-1.5 border-t border-brand-border/50 pt-2 sm:grid-cols-[minmax(0,1fr)_2.25rem] sm:gap-2 md:grid-cols-[minmax(0,1fr)_2.5rem]">
+          <span className={`truncate font-serif font-bold text-brand-secondary ${product.price > 0 ? 'text-sm sm:text-base md:text-lg' : 'text-xs sm:text-sm md:text-base'}`}>
             {product.price > 0 ? `₹${product.price.toLocaleString()}` : 'On request'}
           </span>
           
           <AddToCartButton 
             product={product} 
             iconOnly={true} 
-            className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-brand-primary to-brand-secondary text-white flex items-center justify-center hover:from-brand-secondary hover:to-brand-primary transition-all duration-300 shadow-lg shadow-brand-primary/30 hover:shadow-xl hover:shadow-brand-accent/30 hover:-translate-y-0.5 focus:ring-2 focus:ring-brand-accent focus:outline-none group-hover:scale-105 flex-shrink-0"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-primary to-brand-secondary text-white shadow-lg shadow-brand-primary/30 transition-all duration-300 hover:-translate-y-0.5 hover:from-brand-secondary hover:to-brand-primary hover:shadow-xl hover:shadow-brand-accent/30 focus:outline-none focus:ring-2 focus:ring-brand-accent sm:h-9 sm:w-9 md:h-10 md:w-10 group-hover:scale-105"
           />
 </div>
       
@@ -142,40 +142,40 @@ function ShopContent() {
   return (
     <div className="w-full flex flex-col items-center">
       {/* Shop Header */}
-      <div className="w-full bg-[#19251D] py-16 text-center text-white relative">
+      <div className="relative w-full bg-[#19251D] py-10 text-center text-white sm:py-14 md:py-16">
         <div className="absolute inset-0 opacity-20">
-          <Image src="/images/hero_rudraksha_himalayas_1789219738482.jpg" alt="Background" fill className="object-cover" />
+          <Image src="/images/banner/ChatGPT%20Image%20Sep%2018%2C%202026%2C%2007_01_56%20PM.png" alt="Himalayan temple and Rudraksha" fill className="object-cover" />
         </div>
         <div className="relative z-10">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-brand-accent mb-4">Our Sacred Collection</h1>
-          <p className="text-gray-300 max-w-2xl mx-auto px-4">Browse our premium selection of authentic, lab-certified Nepali Rudrakshas and Malas to aid in your spiritual journey.</p>
+          <h1 className="mb-3 px-4 font-serif text-3xl font-bold text-brand-accent sm:text-4xl md:mb-4 md:text-5xl">Our Sacred Collection</h1>
+          <p className="mx-auto max-w-2xl px-5 text-sm leading-relaxed text-gray-300 sm:text-base">Browse our premium selection of authentic, lab-certified Nepali Rudrakshas and Malas to aid in your spiritual journey.</p>
         </div>
       </div>
 
-      <div className="w-full max-w-7xl mx-auto py-12 px-4 md:px-10 lg:px-20 flex flex-col md:flex-row gap-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 md:flex-row md:gap-8 md:px-10 md:py-12 lg:px-20">
         
         {/* Sidebar Filters */}
-        <aside className="w-full md:w-64 flex-shrink-0">
-          <div className="bg-white p-6 rounded-xl border border-brand-border sticky top-32">
-            <h2 className="font-serif font-bold text-lg text-brand-primary flex items-center mb-6">
+        <aside className="w-full shrink-0 md:w-64">
+          <div className="rounded-xl border border-brand-border bg-white p-3 sm:p-4 md:sticky md:top-32 md:p-6">
+            <h2 className="mb-3 flex items-center font-serif text-base font-bold text-brand-primary md:mb-6 md:text-lg">
               <Filter size={18} className="mr-2 text-brand-accent" /> Filters
             </h2>
             
-            <div className="space-y-6">
+            <div>
               <div>
-                <h3 className="font-bold text-sm text-brand-secondary mb-3 uppercase tracking-wider">Categories</h3>
-                <ul className="space-y-2">
+                <h3 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-brand-secondary md:mb-3 md:text-sm">Categories</h3>
+                <ul className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:block md:space-y-2 md:overflow-visible md:pb-0">
                   <li>
-                    <button onClick={() => setActiveCategory('all')} className={`text-sm hover:text-brand-accent transition-colors ${activeCategory === 'all' ? 'text-brand-accent font-bold' : 'text-brand-muted'}`}>All Products</button>
+                    <button onClick={() => setActiveCategory('all')} className={`shrink-0 rounded-full border px-3 py-1.5 text-xs transition-colors md:rounded-none md:border-0 md:px-0 md:py-0 md:text-sm ${activeCategory === 'all' ? 'border-brand-accent bg-brand-accent/10 font-bold text-brand-accent' : 'border-brand-border text-brand-muted hover:text-brand-accent'}`}>All Products</button>
                   </li>
                   <li>
-                    <button onClick={() => setActiveCategory('beads')} className={`text-sm hover:text-brand-accent transition-colors ${activeCategory === 'beads' ? 'text-brand-accent font-bold' : 'text-brand-muted'}`}>Single Beads (1-16 Mukhi)</button>
+                    <button onClick={() => setActiveCategory('beads')} className={`shrink-0 rounded-full border px-3 py-1.5 text-xs transition-colors md:rounded-none md:border-0 md:px-0 md:py-0 md:text-sm ${activeCategory === 'beads' ? 'border-brand-accent bg-brand-accent/10 font-bold text-brand-accent' : 'border-brand-border text-brand-muted hover:text-brand-accent'}`}>Single Beads (1-16 Mukhi)</button>
                   </li>
                   <li>
-                    <button onClick={() => setActiveCategory('mala')} className={`text-sm hover:text-brand-accent transition-colors ${activeCategory === 'mala' ? 'text-brand-accent font-bold' : 'text-brand-muted'}`}>Rudraksha Malas</button>
+                    <button onClick={() => setActiveCategory('mala')} className={`shrink-0 rounded-full border px-3 py-1.5 text-xs transition-colors md:rounded-none md:border-0 md:px-0 md:py-0 md:text-sm ${activeCategory === 'mala' ? 'border-brand-accent bg-brand-accent/10 font-bold text-brand-accent' : 'border-brand-border text-brand-muted hover:text-brand-accent'}`}>Rudraksha Malas</button>
                   </li>
                   <li>
-                    <button onClick={() => setActiveCategory('special')} className={`text-sm hover:text-brand-accent transition-colors ${activeCategory === 'special' ? 'text-brand-accent font-bold' : 'text-brand-muted'}`}>Special Beads</button>
+                    <button onClick={() => setActiveCategory('special')} className={`shrink-0 rounded-full border px-3 py-1.5 text-xs transition-colors md:rounded-none md:border-0 md:px-0 md:py-0 md:text-sm ${activeCategory === 'special' ? 'border-brand-accent bg-brand-accent/10 font-bold text-brand-accent' : 'border-brand-border text-brand-muted hover:text-brand-accent'}`}>Special Beads</button>
                   </li>
                 </ul>
               </div>
@@ -185,7 +185,7 @@ function ShopContent() {
 
         {/* Product Grid */}
         <div className="flex-1">
-          <div className="mb-6 flex justify-between items-center text-sm text-brand-muted">
+          <div className="mb-4 flex items-center justify-between text-sm text-brand-muted md:mb-6">
             <p>
               Showing {filteredProducts.length} products
               {query && <span className="ml-2 font-bold text-brand-primary">for &ldquo;{query}&rdquo;</span>}
@@ -212,7 +212,7 @@ function ShopContent() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 md:gap-6">
               {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} settings={settings} />
             ))}

@@ -369,7 +369,7 @@ export default function Checkout() {
                     <div key={item.product.id} className="flex items-start gap-3">
                       <div className="w-14 h-14 bg-brand-light rounded-lg overflow-hidden flex-shrink-0 relative border border-brand-border">
                         <Image
-                          src={item.product.image || '/images/rudraksha_bead_close_1789219796219.jpg'}
+                          src={item.product.image || '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg'}
                           alt={item.product.name}
                           fill
                           className="object-cover"

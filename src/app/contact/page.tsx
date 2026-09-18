@@ -49,7 +49,7 @@ export default function Contact() {
       {/* Hero */}
       <section className="relative w-full py-20 bg-brand-primary text-white overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <Image src="/images/hero_rudraksha_himalayas_1789219738482.jpg" alt="Background" fill className="object-cover" />
+          <Image src="/images/banner/ChatGPT%20Image%20Sep%2018%2C%202026%2C%2007_01_56%20PM.png" alt="Himalayan temple and Rudraksha" fill className="object-cover" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 text-center">
           <p className="text-brand-accent tracking-[0.2em] text-xs font-bold uppercase mb-4">Get in Touch</p>

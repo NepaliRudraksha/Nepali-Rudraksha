@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import Image from '@/components/ImageKitImage';
 import { getSettings } from '@/lib/api';
 
 export default async function Footer() {
@@ -12,7 +13,7 @@ export default async function Footer() {
         <div className="flex overflow-hidden relative group w-full">
           <div className="flex items-center space-x-12 min-w-max animate-marquee group-hover:[animation-play-state:paused]">
             {/* First Set */}
-            <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">"Good Things Take Faith"</span>
+            <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">&ldquo;Good Things Take Faith&rdquo;</span>
             <span className="text-brand-accent/40 text-xs">✦</span>
             <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">100% Authentic & Lab Certified</span>
             <span className="text-brand-accent/40 text-xs">✦</span>
@@ -22,7 +23,7 @@ export default async function Footer() {
             <span className="text-brand-accent/40 text-xs">✦</span>
             
             {/* Duplicate Set for Seamless Loop */}
-            <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">"Good Things Take Faith"</span>
+            <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">&ldquo;Good Things Take Faith&rdquo;</span>
             <span className="text-brand-accent/40 text-xs">✦</span>
             <span className="font-serif text-brand-accent italic tracking-wider text-sm md:text-base">100% Authentic & Lab Certified</span>
             <span className="text-brand-accent/40 text-xs">✦</span>
@@ -40,8 +41,14 @@ export default async function Footer() {
         {/* Brand Info */}
         <div className="space-y-4">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-brand-accent rounded-full flex items-center justify-center text-brand-primary font-serif font-bold text-xl">
-              NR
+            <div className="relative h-16 w-16 shrink-0">
+              <Image
+                src="/logo.png"
+                alt="Nepali Rudraksha"
+                fill
+                sizes="64px"
+                className="object-contain"
+              />
             </div>
             <div>
               <h1 className="font-serif font-bold text-xl text-brand-accent leading-tight">NEPALI</h1>

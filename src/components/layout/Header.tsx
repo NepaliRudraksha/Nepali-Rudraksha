@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { CheckCircle2, Truck, RefreshCcw, Phone, Mail } from 'lucide-react';
+import Image from '@/components/ImageKitImage';
 import HeaderCartIcon from '@/components/HeaderCartIcon';
 import UserNav from '@/components/layout/UserNav';
 import HeaderSearch from '@/components/layout/HeaderSearch';
@@ -77,8 +78,15 @@ export default async function Header() {
             
             {/* Logo */}
             <Link href="/" className="flex shrink-0 items-center space-x-1 md:space-x-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-primary font-serif text-lg font-bold text-brand-accent md:h-10 md:w-10 md:text-xl">
-                NR
+              <div className="relative h-12 w-12 shrink-0 md:h-14 md:w-14">
+                <Image
+                  src="/logo.png"
+                  alt="Nepali Rudraksha"
+                  fill
+                  sizes="(max-width: 768px) 48px, 56px"
+                  className="object-contain"
+                  loading="eager"
+                />
               </div>
               <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-center md:static md:translate-x-0 md:translate-y-0 md:text-left">
                 <h1 className="font-serif text-[13px] font-bold leading-[1.05] tracking-[0.02em] text-brand-primary md:text-xl md:leading-tight md:tracking-normal">NEPALI</h1>

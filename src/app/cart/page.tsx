@@ -41,7 +41,7 @@ export default function Cart() {
                 <div className="flex items-center w-full md:w-2/3 gap-6">
                   <div className="relative w-24 h-24 bg-brand-light rounded-lg overflow-hidden border border-brand-border flex-shrink-0">
                     <Image 
-                      src={item.product.image || "/images/rudraksha_bead_close_1789219796219.jpg"} 
+                      src={item.product.image || "/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg"}
                       alt={item.product.name} 
                       fill 
                       className="object-cover" 

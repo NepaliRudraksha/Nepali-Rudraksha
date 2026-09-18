@@ -14,7 +14,7 @@ function AccessoryCard({ item, index }: { item: typeof accessories[0]; index: nu
           </div>
           
           <Image 
-            src="/images/rudraksha_pendant_1789219809886.jpg" 
+            src="/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.52%20PM.jpeg"
             alt={item.name} 
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

@@ -14,7 +14,7 @@ export default function About() {
       {/* Hero */}
       <section className="relative w-full py-24 bg-brand-primary text-white overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <Image src="/images/hero_rudraksha_himalayas_1789219738482.jpg" alt="Himalayan background" fill className="object-cover" />
+          <Image src="/images/banner/ChatGPT%20Image%20Sep%2018%2C%202026%2C%2007_01_56%20PM.png" alt="Himalayan background" fill className="object-cover" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 md:px-10 lg:px-20 text-center">
           <p className="text-brand-accent tracking-[0.2em] text-xs font-bold uppercase mb-4">Our Story</p>
@@ -30,7 +30,7 @@ export default function About() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="relative h-[450px] rounded-2xl overflow-hidden border-2 border-brand-accent/20 shadow-xl">
             <Image 
-              src="/images/rudraksha_pendant_1789219809886.jpg" 
+              src="/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.52%20PM.jpeg"
               alt="Our Founder" 
               fill 
               className="object-cover" 

@@ -147,7 +147,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
             )}
           </div>
           <Image 
-            src={product.image || "/images/rudraksha_bead_close_1789219796219.jpg"} 
+            src={product.image || "/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg"}
             alt={product.name} 
             fill 
             className="object-cover" 
@@ -360,7 +360,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                       )}
                     </div>
                     <Image 
-                      src={relatedProduct.image || "/images/rudraksha_bead_close_1789219796219.jpg"} 
+                      src={relatedProduct.image || "/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg"}
                       alt={relatedProduct.name} 
                       fill 
                       className="object-cover group-hover:scale-110 transition-transform duration-500" 

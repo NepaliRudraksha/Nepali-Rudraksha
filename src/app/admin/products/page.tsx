@@ -240,7 +240,7 @@ export default function AdminProducts() {
                           <Image
                             src={
                               product.image ||
-                              '/images/rudraksha_bead_close_1789219796219.jpg'
+                              '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg'
                             }
                             alt={product.name}
                             fill

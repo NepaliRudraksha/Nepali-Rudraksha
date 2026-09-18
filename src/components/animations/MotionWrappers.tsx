@@ -9,7 +9,7 @@ export function MotionHeroWrapper({ children }: { children: ReactNode }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="relative w-full h-[600px] lg:h-[700px] flex items-center bg-black overflow-hidden"
+      className="relative flex min-h-[calc(100svh-5.5rem)] w-full items-center overflow-hidden bg-black md:min-h-[calc(100svh-7.5rem)]"
     >
       {children}
     </motion.section>
@@ -45,7 +45,7 @@ export function MotionHeroImage({ children }: { children: ReactNode }) {
 export function MotionSection({ children, className }: { children: ReactNode, className?: string }) {
   return (
     <motion.section 
-      initial={{ opacity: 0, y: 32, scale: 0.985 }}
+      initial={{ opacity: 1, y: 0, scale: 1 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: '-80px', amount: 0.15 }}
       transition={{ duration: 0.65, ease: [0.22, 0.61, 0.36, 1] }}
