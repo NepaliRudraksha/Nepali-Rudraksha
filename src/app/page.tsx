@@ -1,9 +1,10 @@
 import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
-import { BadgeCheck, Brain, Check, CreditCard, Heart, Mountain, Play, ShieldCheck, ShoppingCart, Sparkles, Star, Truck } from 'lucide-react';
+import { BadgeCheck, Brain, Check, CreditCard, Heart, Mountain, ShieldCheck, Sparkles, Truck } from 'lucide-react';
 import ReviewCarousel from '@/components/ReviewCarousel';
 import TestimonialCarousel from '@/components/TestimonialCarousel';
 import { MotionHeroWrapper, MotionHeroContent, MotionSection } from '@/components/animations/MotionWrappers';
+import SpiritualProductCard from '@/components/SpiritualProductCard';
 
 function CategoryCard({ name, description, img, href, index }: { name: string; description: string; img: string; href: string; index: number }) {
   return (
@@ -30,12 +31,62 @@ export const dynamic = 'force-dynamic';
 
 export default function Home() {
   const featuredProducts = [
-    { id: 'five-mukhi-mala', name: '5 Mukhi Rudraksha Mala', detail: '(108 Beads)', price: 1500, reviewsCount: 124, rating: 5, badge: 'Bestseller', image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg' },
-    { id: 'one-mukhi-pendant', name: '1 Mukhi Rudraksha Pendant', detail: '(With Silver Capping)', price: 20000, reviewsCount: 76, rating: 5, badge: 'New', image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.52%20PM.jpeg' },
-    { id: 'two-mukhi', name: '2 Mukhi Rudraksha', detail: '(Nepal)', price: 15000, reviewsCount: 58, rating: 4, image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.53%20PMd.jpeg' },
-    { id: 'gaurishankar', name: 'Gaurishankar Rudraksha', detail: '(2 Beads Naturally Joined)', price: 25000, reviewsCount: 41, rating: 4, image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.56%20PM.jpeg' },
-    { id: 'seven-mukhi-mala', name: '7 Mukhi Rudraksha Mala', detail: '', price: 2500, reviewsCount: 53, rating: 4, image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.57%20PM.jpeg' },
-  ].map((product) => ({ ...product, category: '', mukhi: '', origin: '', isBestseller: false, isNew: false }));
+    {
+      id: 'dhan-yog-bracelet',
+      name: 'Dhan Yog Bracelet',
+      detail: '(Tiger Eye & Rudraksha)',
+      price: 2599,
+      originalPrice: 2999,
+      reviewsCount: 1,
+      rating: 4,
+      badge: '13%',
+      image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg',
+    },
+    {
+      id: 'one-mukhi-pendant',
+      name: '1 Mukhi Rudraksha Pendant',
+      detail: '(With Silver Capping)',
+      price: 19999,
+      originalPrice: 23999,
+      reviewsCount: 76,
+      rating: 5,
+      badge: '17%',
+      image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.52%20PM.jpeg',
+    },
+    {
+      id: 'two-mukhi',
+      name: '2 Mukhi Rudraksha',
+      detail: '(Nepal Origin)',
+      price: 14999,
+      originalPrice: 17999,
+      reviewsCount: 58,
+      rating: 4,
+      badge: '17%',
+      image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.53%20PMd.jpeg',
+    },
+    {
+      id: 'gaurishankar',
+      name: 'Gaurishankar Rudraksha',
+      detail: '(2 Beads Naturally Joined)',
+      price: 24999,
+      originalPrice: 29999,
+      reviewsCount: 41,
+      rating: 5,
+      badge: '17%',
+      image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.56%20PM.jpeg',
+    },
+    {
+      id: 'seven-mukhi-mala',
+      name: '7 Mukhi Rudraksha Mala',
+      detail: '(108 Certified Beads)',
+      price: 2499,
+      originalPrice: 2999,
+      reviewsCount: 53,
+      rating: 4,
+      badge: '17%',
+      image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.57%20PM.jpeg',
+    },
+  ];
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -54,43 +105,43 @@ export default function Home() {
         <div className="relative z-10 mx-auto flex min-h-[inherit] w-full max-w-7xl items-center px-5 py-16 sm:px-8 md:items-start md:px-10 md:pb-0 md:pt-[clamp(7rem,17vh,10rem)] lg:px-20">
           <MotionHeroContent>
             <div className="max-w-[39rem] text-brand-primary">
-              <p className="mb-2 text-[9px] font-extrabold tracking-[0.24em] text-[#564332] uppercase sm:text-[10px]">
+              <p className="mb-3 text-[9px] font-extrabold tracking-[0.24em] text-[#564332] uppercase sm:text-[10px]">
                 Sacred by Nature. Blessed for Life.
               </p>
-              <h1 className="font-[family-name:var(--font-display)] text-[43px] font-bold leading-[0.82] tracking-[-0.035em] text-[#082b20] sm:text-[52px] md:text-[48px] lg:text-[55px]">
+              <h1 className="font-[family-name:var(--font-display)] text-[43px] font-bold leading-[0.9] tracking-[-0.035em] text-[#082b20] sm:text-[52px] md:text-[48px] lg:text-[55px]">
                 Nepali Rudraksha
-                <span className="mt-3 block text-[#70462f]">A Divine Companion</span>
+                <span className="mt-4 block text-[#70462f]">A Divine Companion</span>
               </h1>
-              <p className="mt-4 max-w-[25rem] text-[12px] font-semibold leading-[1.35] text-[#132f24] sm:text-[13px]">
+              <p className="mt-5 max-w-[25rem] text-[12px] font-semibold leading-[1.42] text-[#132f24] sm:text-[13px]">
                 Original Rudraksha from the Himalayas, bringing peace, protection and positive energy to your life.
               </p>
-              <div className="mt-5 flex flex-wrap items-center gap-3.5">
+              <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Link href="/shop" className="inline-flex h-11 items-center rounded-full bg-gradient-to-r from-[#0e3729] via-[#104532] to-[#0d2e23] px-6 text-[12px] font-bold text-white shadow-[0_10px_18px_rgba(10,48,36,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_23px_rgba(10,48,36,0.32)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#173b2d] focus-visible:ring-offset-2">
                   Shop Now
                 </Link>
-                <Link href="/about" className="inline-flex h-11 items-center gap-2.5 rounded-full border border-[#193d2f]/20 bg-white/55 py-1.5 pl-2 pr-5 text-[12px] font-bold text-[#263d33] shadow-[0_4px_10px_rgba(31,46,36,0.06)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/80 hover:shadow-[0_8px_16px_rgba(31,46,36,0.12)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#173b2d] focus-visible:ring-offset-2">
-                  <span className="flex size-7 items-center justify-center rounded-full bg-[#0e4937] text-white shadow-sm shadow-[#0e4937]/30">
-                    <Play size={11} className="ml-0.5 fill-current" aria-hidden="true" />
-                  </span>
+                <Link href="/about" className="inline-flex h-11 items-center rounded-full border border-[#0e4937]/25 bg-white/75 px-5 text-[12px] font-extrabold text-[#07513d] shadow-[0_4px_10px_rgba(31,46,36,0.08)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-[0_8px_16px_rgba(31,46,36,0.14)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#173b2d] focus-visible:ring-offset-2">
                   Watch Our Story
                 </Link>
               </div>
 
-              <div className="mt-20 grid max-w-[39rem] grid-cols-2 gap-x-5 gap-y-4 sm:grid-cols-4 sm:gap-x-0">
-                {[
-                  { title: '100% Authentic', subtitle: 'Nepali Origin', icon: BadgeCheck },
-                  { title: 'Lab Certified', subtitle: '& Tested', icon: ShieldCheck },
-                  { title: 'Free Shipping', subtitle: 'Across India', icon: Truck },
-                  { title: 'Easy Returns', subtitle: 'Hassle Free', icon: CreditCard },
-                ].map((badge, index) => (
-                  <div key={badge.title} className={`flex items-center gap-2 text-[#082e21] drop-shadow-[0_1px_1px_rgba(255,255,255,0.95)] sm:px-3 ${index > 0 ? 'sm:border-l sm:border-[#173b2d]/20' : 'sm:pl-0'}`}>
-                    <badge.icon size={27} strokeWidth={2.25} className="shrink-0" aria-hidden="true" />
-                    <span className="text-[11px] font-extrabold leading-[1.12]">
-                      <span className="block whitespace-nowrap">{badge.title}</span>
-                      <span className="block whitespace-nowrap text-[#254c3d]">{badge.subtitle}</span>
-                    </span>
-                  </div>
-                ))}
+              <div className="relative mt-6 max-w-[39rem] sm:mt-7">
+                <div className="pointer-events-none absolute -inset-10 bg-[radial-gradient(ellipse_92%_76%_at_46%_50%,rgba(255,253,246,0.76)_0%,rgba(255,253,246,0.42)_38%,rgba(255,253,246,0.12)_58%,transparent_76%)] blur-2xl" />
+                <div className="relative grid grid-cols-2 gap-x-7 gap-y-5 sm:grid-cols-4 sm:gap-x-0 sm:gap-y-0">
+                  {[
+                    { title: '100% Authentic', subtitle: 'Nepali Origin', icon: BadgeCheck },
+                    { title: 'Lab Certified', subtitle: '& Tested', icon: ShieldCheck },
+                    { title: 'Free Shipping', subtitle: 'Across India', icon: Truck },
+                    { title: 'Easy Returns', subtitle: 'Hassle Free', icon: CreditCard },
+                  ].map((badge, index) => (
+                    <div key={badge.title} className={`flex min-w-0 items-center gap-2 text-[#062b20] sm:px-3 ${index > 0 ? 'sm:border-l sm:border-[#173b2d]/25' : 'sm:pl-0'}`}>
+                      <badge.icon size={27} strokeWidth={2.35} className="shrink-0" aria-hidden="true" />
+                      <span className="min-w-0 text-[11px] font-extrabold leading-[1.1] sm:text-[12px] sm:leading-[1.12]">
+                        <span className="block whitespace-nowrap">{badge.title}</span>
+                        <span className="block whitespace-nowrap text-[#173d2f]">{badge.subtitle}</span>
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </MotionHeroContent>
@@ -191,96 +242,13 @@ export default function Home() {
           <Link href="/shop" className="border-b border-[#85523b] pb-1 text-[11px] font-bold text-[#70462f] transition-colors hover:text-[#173b2d] sm:text-[12px]">View All Products</Link>
         </div>
 
-<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {featuredProducts.map((product) => (
-            <article key={product.id} className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-[#ece5d9] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#d4b872] hover:shadow-lg">
-              <Link href="/shop" className="block">
-                <div className="relative aspect-[1.35/1] flex-shrink-0 overflow-hidden bg-[#faf7ef]">
-                  
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  <Image 
-                    src={product.image}
-                    alt={product.name} 
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    priority
-                  />
-                  
-                  {product.badge && <span className={`absolute left-2 top-2 rounded-sm px-2 py-1 text-[9px] font-extrabold text-white ${product.badge === 'Bestseller' ? 'bg-[#08784d]' : 'bg-[#b71822]'}`}>{product.badge}</span>}
-                  <Heart size={18} className="absolute right-2 top-2 text-[#8c4538] drop-shadow-sm" strokeWidth={2} aria-label="Add to wishlist" />
-                </div>
-              </Link>
-              
-              <div className="p-3 md:p-4 flex flex-col flex-grow justify-between gap-2.5 relative">
-                <div className="relative z-10">
-                  <div className="flex items-center gap-1.5 mb-1.5 flex-wrap">
-                    {product.category === 'beads' && (
-                      <span className="text-[8px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">Beads</span>
-                    )}
-                    {product.category === 'mala' && (
-                      <span className="text-[8px] font-semibold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">Mala</span>
-                    )}
-                    {product.category === 'special' && (
-                      <span className="text-[8px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Special</span>
-                    )}
-                    {product.mukhi && (
-                      <span className="text-[8px] font-medium text-brand-muted px-2 py-0.5 rounded-full bg-brand-light">
-                        {product.mukhi} Mukhi
-                      </span>
-                    )}
-                  </div>
-                  
-                  <Link href="/shop" className="block">
-                    <h3 className="font-semibold text-brand-primary text-sm leading-tight mb-1.5 hover:text-brand-accent transition-colors duration-300 line-clamp-2 group-hover:text-brand-accent">
-                      {product.name}
-                    </h3>
-                    {product.detail && <p className="-mt-1 mb-1.5 text-[11px] font-semibold leading-tight text-[#46594f]">{product.detail}</p>}
-                  </Link>
-                  
-                  <div className="flex items-center gap-1 mb-1.5">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star 
-                        key={star} 
-                        size={11} 
-                        className={`transition-colors duration-200 ${star <= Math.round(product.rating ?? 0) ? "fill-brand-accent text-brand-accent" : "text-brand-border group-hover:text-brand-accent/50"}`} 
-                      />
-                    ))}
-                    <span className="text-[9px] md:text-xs text-brand-muted ml-1">({product.reviewsCount ?? 0})</span>
-                  </div>
-                  
-                  {product.origin && (
-                    <div className="flex items-center gap-1 text-[9px] text-brand-muted mb-1.5">
-                      <span className="flex items-center gap-0.5">
-                        {product.origin === 'nepali' ? (
-                          <>
-                            <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                            <span>Nepali Origin</span>
-                          </>
-                        ) : (
-                          <>
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                            <span>Indonesian Origin</span>
-                          </>
-                        )}
-                      </span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="mt-auto border-t border-brand-border/50 pt-2 relative z-10">
-                  <span className="font-serif text-base font-bold text-brand-secondary md:text-lg">
-                    {product.price > 0 ? `₹${product.price.toLocaleString()}` : 'On request'}
-                  </span>
-                  
-                  <Link href="/shop" className="mt-2 flex h-9 w-full items-center justify-center gap-2 rounded-sm bg-[#063b2b] px-3 text-[11px] font-bold text-white transition-colors hover:bg-[#0c513d]">
-                    <ShoppingCart size={15} aria-hidden="true" />
-                    Add to Cart
-                  </Link>
-                </div>
-              </div>
-            </article>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-5 lg:gap-5">
+          {featuredProducts.map((product, idx) => (
+            <SpiritualProductCard
+              key={product.id}
+              product={product}
+              priority={idx < 2}
+            />
           ))}
         </div>
         </div>
@@ -341,13 +309,12 @@ export default function Home() {
             sizes="100vw"
             className="object-cover object-[60%_center] lg:object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#fffdf6]/95 via-[#fffdf6]/72 via-[32%] to-transparent to-[62%]" />
-
-          <div className="relative mx-auto flex min-h-[430px] max-w-7xl items-center px-6 py-12 sm:min-h-[390px] sm:px-10 lg:h-full lg:min-h-0 lg:px-20">
-            <div className="max-w-[19rem] text-[#112f24] sm:max-w-[32rem] lg:max-w-[39rem]">
-              <p className="mb-2 text-[10px] font-extrabold tracking-[0.22em] text-[#655342] uppercase sm:text-[11px] lg:text-[13px]">Sourced from the Himalayas</p>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_92%_72%_at_13%_22%,rgba(255,253,246,0.92)_0%,rgba(255,253,246,0.72)_45%,rgba(255,253,246,0.22)_70%,transparent_90%)]" />
+          <div className="relative mx-auto flex min-h-[430px] max-w-7xl items-start px-6 pb-12 pt-8 sm:min-h-[390px] sm:items-center sm:px-10 sm:py-12 lg:h-full lg:min-h-0 lg:px-20">
+            <div className="max-w-[19rem] text-[#082d21] sm:max-w-[32rem] lg:max-w-[39rem]">
+              <p className="mb-2 text-[10px] font-extrabold tracking-[0.22em] text-[#5d3d2c] uppercase sm:text-[11px] lg:text-[13px]">Sourced from the Himalayas</p>
               <h2 className="font-[family-name:var(--font-display)] text-[38px] font-bold leading-[0.9] tracking-[-0.025em] text-balance sm:text-[52px] lg:text-[62px]">Pure. Natural. Authentic.</h2>
-              <p className="mt-3 max-w-[35rem] text-[13px] font-semibold leading-[1.35] text-[#243e33] sm:text-[15px] lg:text-[17px]">
+              <p className="mt-3 max-w-[35rem] text-[13px] font-extrabold leading-[1.35] text-[#082d21] sm:text-[15px] lg:text-[17px]">
                 Our Rudraksha beads are collected from the pristine Himalayan region of Nepal, where nature and spirituality coexist in perfect harmony.
               </p>
               <Link href="/about" className="mt-6 inline-flex h-12 items-center rounded-full bg-[#f3cf83] px-7 text-[12px] font-bold text-[#17392c] shadow-[0_5px_12px_rgba(72,49,16,0.16)] transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#17392c] focus-visible:ring-offset-2 lg:text-[14px]">
@@ -360,8 +327,7 @@ export default function Home() {
 
       {/* 7. Community, Insights, and Instagram */}
       <MotionSection className="w-full overflow-hidden bg-[#fffdf8]">
-        <div className="grid min-w-0 lg:grid-cols-[minmax(0,1.7fr)_minmax(24rem,1fr)]">
-          <div className="min-w-0 px-5 py-9 sm:px-10 sm:py-11 lg:px-12 xl:px-16 xl:py-12">
+        <div className="mx-auto min-w-0 max-w-7xl px-5 py-9 sm:px-10 sm:py-11 lg:px-12 xl:px-16 xl:py-12">
             <div>
               <p className="text-[10px] font-extrabold tracking-[0.22em] text-[#6b6257] uppercase sm:text-[11px]">Testimonials</p>
               <h2 className="mt-2 max-w-[19rem] font-[family-name:var(--font-display)] text-[33px] font-bold leading-none tracking-[-0.03em] text-[#102e22] text-balance sm:max-w-none sm:text-[43px] xl:text-[48px]">What Our Customers Say</h2>
@@ -378,7 +344,31 @@ export default function Home() {
               ]}
             />
 
-            <div className="mt-10 flex flex-wrap items-end justify-between gap-4">
+            <section className="mt-12 border-y border-[#eee8dd] py-8 sm:mt-14 sm:py-10">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-extrabold tracking-[0.2em] text-[#6b6257] uppercase sm:text-[11px]">Our Instagram</p>
+                  <p className="mt-1.5 text-[15px] font-bold text-[#173b2d] sm:text-[17px]">@nepalirudraksha</p>
+                </div>
+                <Link href="/" className="border-b border-[#85523b] pb-1.5 text-[11px] font-bold text-[#70462f] sm:text-[12px]">Follow Us</Link>
+              </div>
+              <div className="mt-6 grid min-w-0 grid-cols-3 gap-2.5 sm:mt-7 sm:gap-3 lg:grid-cols-6">
+                {[
+                  'WhatsApp%20Image%202026-09-18%20at%205.16.01%20PM.jpeg',
+                  'WhatsApp%20Image%202026-09-18%20at%205.16.03%20PM.jpeg',
+                  'WhatsApp%20Image%202026-09-18%20at%205.16.04%20PM.jpeg',
+                  'WhatsApp%20Image%202026-09-18%20at%205.16.11%20PM.jpeg',
+                  'WhatsApp%20Image%202026-09-18%20at%205.16.11%20PMd.jpeg',
+                  'WhatsApp%20Image%202026-09-18%20at%205.16.12%20PM.jpeg',
+                ].map((image, index) => (
+                  <Link key={image} href="/" className="group relative min-w-0 aspect-square overflow-hidden rounded-md">
+                    <Image src={`/images/nepaliraksha/${image}`} alt={`Nepali Rudraksha Instagram post ${index + 1}`} fill sizes="(max-width: 640px) 30vw, (max-width: 1024px) 20vw, 14vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
+                  </Link>
+                ))}
+              </div>
+            </section>
+
+            <div className="mt-12 flex flex-wrap items-end justify-between gap-4 sm:mt-14">
               <div>
                 <p className="text-[10px] font-extrabold tracking-[0.22em] text-[#6b6257] uppercase sm:text-[11px]">From Our Blog</p>
                 <h2 className="mt-2 max-w-[19rem] font-[family-name:var(--font-display)] text-[31px] font-bold leading-none tracking-[-0.03em] text-[#102e22] text-balance sm:max-w-none sm:text-[40px] xl:text-[44px]">Insights for a Better Life</h2>
@@ -404,33 +394,6 @@ export default function Home() {
               ))}
             </div>
           </div>
-
-          <aside className="w-full min-w-0 self-start border-t border-[#eee8dd] bg-white lg:border-l lg:border-t-0">
-            <div className="min-w-0 px-5 py-9 sm:px-10 sm:py-11 lg:px-12 xl:px-16 xl:py-12">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-[10px] font-extrabold tracking-[0.2em] text-[#6b6257] uppercase sm:text-[11px]">Our Instagram</p>
-                  <p className="mt-1.5 text-[15px] font-bold text-[#173b2d] sm:text-[17px]">@nepalirudraksha</p>
-                </div>
-                <Link href="/" className="border-b border-[#85523b] pb-1.5 text-[11px] font-bold text-[#70462f] sm:text-[12px]">Follow Us</Link>
-              </div>
-              <div className="mt-8 grid min-w-0 grid-cols-3 gap-2.5 sm:mt-10 sm:gap-3 lg:mt-14">
-                {[
-                  'WhatsApp%20Image%202026-09-18%20at%205.16.01%20PM.jpeg',
-                  'WhatsApp%20Image%202026-09-18%20at%205.16.03%20PM.jpeg',
-                  'WhatsApp%20Image%202026-09-18%20at%205.16.04%20PM.jpeg',
-                  'WhatsApp%20Image%202026-09-18%20at%205.16.11%20PM.jpeg',
-                  'WhatsApp%20Image%202026-09-18%20at%205.16.11%20PMd.jpeg',
-                  'WhatsApp%20Image%202026-09-18%20at%205.16.12%20PM.jpeg',
-                ].map((image, index) => (
-                  <Link key={image} href="/" className="group relative min-w-0 aspect-square overflow-hidden rounded-sm">
-                    <Image src={`/images/nepaliraksha/${image}`} alt={`Nepali Rudraksha Instagram post ${index + 1}`} fill sizes="(max-width: 1024px) 33vw, 10vw" className="object-contain transition-transform duration-300 group-hover:scale-[1.02]" />
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </aside>
-        </div>
       </MotionSection>
 
       {/* 8. Spiritual Community */}

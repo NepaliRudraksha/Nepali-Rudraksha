@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { User, LogOut, Package, Settings, ShieldCheck, ChevronDown, Sparkles } from 'lucide-react';
+import { User, LogOut, Package, Settings, ShieldCheck, ChevronDown, Sparkles, Heart, Truck } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 export default function UserNav() {
@@ -45,23 +45,26 @@ export default function UserNav() {
   return (
     <div className="relative" ref={dropdownRef}>
       {user ? (
-        // Authenticated State Button
+        // Authenticated State Button - Modern avatar button
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-7 w-7 items-center justify-center space-x-1 rounded-full p-0 transition-all hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-accent sm:h-auto sm:w-auto sm:justify-start sm:space-x-2 sm:p-1"
+          className="flex items-center gap-2 rounded-xl p-1 pr-3 transition-all duration-200 hover:bg-brand-light/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 group"
           aria-expanded={isOpen}
           aria-label="User account menu"
         >
-          <div className="flex h-7 w-7 items-center justify-center rounded-full border border-brand-accent/40 bg-brand-primary font-serif text-xs font-bold text-brand-accent shadow-sm sm:h-8 sm:w-8">
+          <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-primary font-serif text-sm font-bold text-brand-accent shadow-sm border border-brand-accent/30 group-hover:ring-2 group-hover:ring-brand-accent/50 transition-all">
             {initials}
           </div>
-          <ChevronDown size={14} className={`hidden text-brand-muted transition-transform duration-200 sm:block ${isOpen ? 'rotate-180' : ''}`} />
+          <span className="hidden sm:block font-medium text-sm text-brand-text truncate max-w-[140px]">
+            {user.fullName || 'Seeker'}
+          </span>
+          <ChevronDown size={14} className="hidden sm:block text-brand-muted transition-transform duration-200 group-hover:text-brand-primary" />
         </button>
       ) : (
-        // Unauthenticated State Button
+        // Unauthenticated State Button - Modern icon button
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-7 w-7 items-center justify-center rounded-lg text-brand-primary transition-colors hover:bg-brand-light hover:text-brand-secondary focus:outline-none focus:ring-2 focus:ring-brand-accent"
+          className="flex h-8 w-8 items-center justify-center rounded-xl text-brand-primary transition-all duration-200 hover:bg-brand-light hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 md:h-9 md:w-9"
           aria-expanded={isOpen}
           aria-label="Account sign in or register"
         >
@@ -69,56 +72,78 @@ export default function UserNav() {
         </button>
       )}
 
-      {/* Dropdown Menu */}
+      {/* Dropdown Menu - Modern glassmorphism */}
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-brand-border py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div 
+          className="absolute right-0 mt-2.5 w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-brand-border/60 py-2 z-50 animate-in fade-in-2 slide-in-from-top-4 duration-200"
+          style={{ animation: 'fadeInUp 0.25s ease-out' }}
+        >
           {user ? (
             // Authenticated Menu Items
             <>
-              <div className="px-4 py-3 border-b border-brand-border/60 bg-brand-bg/50">
-                <div className="flex items-center space-x-2.5">
-                  <div className="w-9 h-9 rounded-full bg-brand-primary text-brand-accent font-serif font-bold text-sm flex items-center justify-center border border-brand-accent/40">
+              {/* User Header */}
+              <div className="px-4 py-4 border-b border-brand-border/60 bg-brand-bg/50 rounded-t-2xl">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 shrink-0 rounded-full bg-brand-primary text-brand-accent font-serif font-bold text-lg flex items-center justify-center border-2 border-brand-accent/40 shadow-md">
                     {initials}
                   </div>
-                  <div className="overflow-hidden">
-                    <p className="font-serif font-bold text-sm text-brand-primary truncate">
+                  <div className="overflow-hidden flex-1 min-w-0">
+                    <p className="font-serif font-bold text-brand-primary truncate">
                       {user.fullName || 'Seeker'}
                     </p>
                     <p className="text-xs text-brand-muted truncate">{user.email}</p>
                   </div>
                 </div>
-                <div className="mt-2 flex items-center space-x-1.5">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-brand-light text-brand-secondary border border-brand-border">
+                <div className="mt-3 flex items-center space-x-2">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-brand-light text-brand-secondary border border-brand-border/60">
                     {isAdmin ? 'Temple Admin' : 'Sacred Seeker'}
                   </span>
                 </div>
               </div>
 
-              <div className="py-1">
+              {/* Menu Items */}
+              <div className="py-2 space-y-1">
                 <Link
                   href="/account"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center space-x-3 px-4 py-2.5 text-sm text-brand-text hover:bg-brand-light/70 transition-colors"
+                  className="flex items-center space-x-3 px-4 py-2.5 text-sm font-medium text-brand-text rounded-xl mx-2 transition-all duration-200 hover:bg-brand-light hover:shadow-sm group"
                 >
-                  <User size={16} className="text-brand-primary" />
+                  <div className="w-8 h-8 rounded-lg bg-brand-light text-brand-primary flex items-center justify-center group-hover:bg-brand-accent/20 group-hover:text-brand-primary transition-all">
+                    <User size={17} />
+                  </div>
                   <span>My Dashboard</span>
                 </Link>
 
                 <Link
                   href="/account?tab=orders"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center space-x-3 px-4 py-2.5 text-sm text-brand-text hover:bg-brand-light/70 transition-colors"
+                  className="flex items-center space-x-3 px-4 py-2.5 text-sm font-medium text-brand-text rounded-xl mx-2 transition-all duration-200 hover:bg-brand-light hover:shadow-sm group"
                 >
-                  <Package size={16} className="text-brand-primary" />
+                  <div className="w-8 h-8 rounded-lg bg-brand-light text-brand-primary flex items-center justify-center group-hover:bg-brand-accent/20 group-hover:text-brand-primary transition-all">
+                    <Package size={17} />
+                  </div>
                   <span>My Orders</span>
+                </Link>
+
+                <Link
+                  href="/account?tab=wishlist"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center space-x-3 px-4 py-2.5 text-sm font-medium text-brand-text rounded-xl mx-2 transition-all duration-200 hover:bg-brand-light hover:shadow-sm group"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-brand-light text-brand-primary flex items-center justify-center group-hover:bg-brand-accent/20 group-hover:text-brand-primary transition-all">
+                    <Heart size={17} />
+                  </div>
+                  <span>Wishlist</span>
                 </Link>
 
                 <Link
                   href="/account?tab=settings"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center space-x-3 px-4 py-2.5 text-sm text-brand-text hover:bg-brand-light/70 transition-colors"
+                  className="flex items-center space-x-3 px-4 py-2.5 text-sm font-medium text-brand-text rounded-xl mx-2 transition-all duration-200 hover:bg-brand-light hover:shadow-sm group"
                 >
-                  <Settings size={16} className="text-brand-primary" />
+                  <div className="w-8 h-8 rounded-lg bg-brand-light text-brand-primary flex items-center justify-center group-hover:bg-brand-accent/20 group-hover:text-brand-primary transition-all">
+                    <Settings size={17} />
+                  </div>
                   <span>Profile & Delivery</span>
                 </Link>
 
@@ -126,41 +151,49 @@ export default function UserNav() {
                   <Link
                     href="/admin"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center space-x-3 px-4 py-2.5 text-sm font-medium text-amber-800 bg-amber-50/70 hover:bg-amber-100/70 transition-colors"
+                    className="flex items-center space-x-3 px-4 py-2.5 text-sm font-semibold text-amber-800 bg-amber-50/70 rounded-xl mx-2 border border-amber-200 transition-all duration-200 hover:bg-amber-100/70 hover:shadow-sm group"
                   >
-                    <ShieldCheck size={16} className="text-amber-700" />
+                    <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center group-hover:bg-amber-200 transition-all">
+                      <ShieldCheck size={17} />
+                    </div>
                     <span>Admin Portal</span>
                   </Link>
                 )}
               </div>
 
-              <div className="border-t border-brand-border/60 pt-1 mt-1">
-                <button
-                  onClick={handleSignOut}
-                  disabled={isLoading}
-                  className="w-full flex items-center space-x-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors text-left font-medium"
-                >
-                  <LogOut size={16} />
-                  <span>Sign Out</span>
-                </button>
-              </div>
+              {/* Divider */}
+              <div className="border-t border-brand-border/60 my-2" />
+
+              {/* Sign Out */}
+              <button
+                onClick={handleSignOut}
+                disabled={isLoading}
+                className="w-full flex items-center space-x-3 px-4 py-2.5 text-sm font-medium text-red-600 rounded-xl mx-2 transition-all duration-200 hover:bg-red-50 hover:shadow-sm group disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <div className="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center group-hover:bg-red-100 transition-all">
+                  <LogOut size={17} />
+                </div>
+                <span>Sign Out</span>
+              </button>
             </>
           ) : (
-            // Unauthenticated Menu Items
-            <div className="p-4">
-              <div className="text-center mb-4">
-                <div className="w-10 h-10 bg-brand-light text-brand-primary rounded-full flex items-center justify-center mx-auto mb-2 border border-brand-border">
-                  <Sparkles size={20} className="text-brand-accent" />
+            // Unauthenticated Menu Items - Modern card design
+            <div className="p-4 space-y-4">
+              {/* Welcome Card */}
+              <div className="text-center p-4 bg-brand-bg/50 rounded-2xl border border-brand-border/60">
+                <div className="w-14 h-14 bg-brand-light text-brand-primary rounded-2xl flex items-center justify-center mx-auto mb-3 border border-brand-border">
+                  <Sparkles size={24} className="text-brand-accent" />
                 </div>
-                <h4 className="font-serif font-bold text-brand-primary text-base">Sacred Sanctuary</h4>
-                <p className="text-xs text-brand-muted mt-0.5">Sign in to track orders, save favorites & consultations</p>
+                <h4 className="font-serif font-bold text-brand-primary text-lg">Sacred Sanctuary</h4>
+                <p className="text-xs text-brand-muted mt-1.5">Sign in to track orders, save favorites & consultations</p>
               </div>
 
-              <div className="space-y-2">
+              {/* Action Buttons */}
+              <div className="space-y-2.5">
                 <Link
                   href="/login"
                   onClick={() => setIsOpen(false)}
-                  className="w-full flex items-center justify-center py-2.5 px-4 bg-brand-primary text-brand-accent hover:bg-[#152019] rounded-xl text-sm font-semibold transition-colors shadow-sm"
+                  className="w-full flex items-center justify-center py-3 px-4 bg-brand-primary text-brand-accent hover:bg-brand-secondary rounded-xl text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2"
                 >
                   Sign In
                 </Link>
@@ -168,13 +201,27 @@ export default function UserNav() {
                 <Link
                   href="/signup"
                   onClick={() => setIsOpen(false)}
-                  className="w-full flex items-center justify-center py-2.5 px-4 bg-brand-light text-brand-primary hover:bg-[#eae5d0] border border-brand-border rounded-xl text-sm font-semibold transition-colors"
+                  className="w-full flex items-center justify-center py-3 px-4 bg-white text-brand-primary border border-brand-border rounded-xl text-sm font-semibold transition-all duration-200 hover:bg-brand-light hover:border-brand-accent/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2"
                 >
                   Create Account
                 </Link>
               </div>
 
-
+              {/* Benefits */}
+              <div className="pt-2 border-t border-brand-border/60 space-y-2">
+                {[
+                  { icon: Heart, text: 'Save favorites' },
+                  { icon: Truck, text: 'Track orders' },
+                  { icon: Sparkles, text: 'Spiritual guidance' },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center space-x-2.5 text-sm text-brand-muted">
+                    <div className="w-6 h-6 rounded-lg bg-brand-light text-brand-primary flex items-center justify-center shrink-0">
+                      <item.icon size={14} />
+                    </div>
+                    <span>{item.text}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

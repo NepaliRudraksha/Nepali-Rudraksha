@@ -2,252 +2,45 @@
 
 import { useState } from 'react';
 import Image from '@/components/ImageKitImage';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
+import { CheckCircle2, Clock3, Mail, MapPin, MessageCircle, Phone, Send, ShieldCheck } from 'lucide-react';
 import { submitContactMessage } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 
+const contactItems = [
+  { icon: Phone, label: 'Call us', value: '+91 98765 43210', detail: 'Mon – Sat, 9 AM – 7 PM IST' },
+  { icon: Mail, label: 'Email us', value: 'info@nepalirudraksha.com', detail: 'We reply within 24 hours' },
+  { icon: MapPin, label: 'Our roots', value: 'Kathmandu, Nepal', detail: 'Direct Himalayan sourcing' },
+  { icon: Clock3, label: 'Business hours', value: 'Monday – Saturday', detail: 'Closed on Sundays & festivals' },
+];
+
 export default function Contact() {
   const { user } = useAuth();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setFormData({ ...formData, [event.target.name]: event.target.value });
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setIsLoading(true);
-    
-    const messageData = {
-      name: user?.fullName || formData.name.trim(),
-      email: user?.email || formData.email.trim(),
-      phone: user?.phone || '',
-      subject: formData.subject,
-      message: formData.message,
-    };
-
-    const { error } = await submitContactMessage(messageData);
-    
+    const { error } = await submitContactMessage({ name: user?.fullName || formData.name.trim(), email: user?.email || formData.email.trim(), phone: user?.phone || '', subject: formData.subject, message: formData.message });
     setIsLoading(false);
-    if (!error) {
-      setSubmitted(true);
-    } else {
-      alert('Failed to send message: ' + error);
-    }
+    if (!error) setSubmitted(true);
+    else alert(`Failed to send message: ${error}`);
   };
 
   return (
-    <div className="w-full flex flex-col items-center">
-      
-      {/* Hero */}
-      <section className="relative w-full py-20 bg-brand-primary text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <Image src="/images/banner/ChatGPT%20Image%20Sep%2018%2C%202026%2C%2007_01_56%20PM.png" alt="Himalayan temple and Rudraksha" fill className="object-cover" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 text-center">
-          <p className="text-brand-accent tracking-[0.2em] text-xs font-bold uppercase mb-4">Get in Touch</p>
-          <h1 className="text-5xl font-serif font-bold mb-4">Contact Us</h1>
-          <p className="text-gray-300 max-w-xl mx-auto">Have questions about Rudraksha? We would love to help you find the perfect bead for your spiritual journey.</p>
-        </div>
-      </section>
+    <main className="w-full overflow-hidden bg-[#fffdf8]">
+      <section className="relative isolate min-h-[340px] overflow-hidden sm:min-h-[390px]"><Image src="/images/pure_natural_authentic/ChatGPT%20Image%20Sep%2019%2C%202026%2C%2012_31_18%20AM.png" alt="Himalayan landscape" fill sizes="100vw" className="-z-10 object-cover" priority /><div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#082d21]/87 via-[#123b2e]/56 to-[#153929]/22" /><div className="mx-auto flex min-h-[340px] max-w-7xl items-center px-5 py-12 sm:min-h-[390px] sm:px-10 lg:px-12 xl:px-16"><div className="max-w-xl"><p className="text-[10px] font-extrabold tracking-[0.22em] text-[#f0cf89] uppercase">Get in touch</p><h1 className="mt-4 font-[family-name:var(--font-display)] text-[48px] font-bold leading-[0.86] text-white sm:text-[62px]">Let&apos;s talk<br />about your journey.</h1><p className="mt-5 text-[13px] leading-relaxed text-white/85 sm:text-[16px]">Whether you need help choosing a Rudraksha or have a question about an order, our team is here to guide you.</p></div></div></section>
 
-      <section className="w-full max-w-7xl mx-auto py-16 px-4 md:px-10 lg:px-20">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <section className="mx-auto max-w-7xl px-5 py-12 sm:px-10 sm:py-16 lg:px-12 xl:px-16"><div className="grid gap-8 lg:grid-cols-[0.83fr_1.17fr] lg:gap-10">
+        <aside className="rounded-2xl bg-[#123a2c] p-6 text-white shadow-[0_16px_34px_rgba(18,58,44,0.18)] sm:p-8"><p className="text-[10px] font-extrabold tracking-[0.2em] text-[#f0ca83] uppercase">Reach us</p><h2 className="mt-3 font-[family-name:var(--font-display)] text-[35px] font-bold leading-[0.9]">Guidance from people who care.</h2><p className="mt-4 text-[12px] leading-relaxed text-white/75">Choose the contact method that feels easiest. We are happy to help with authentic sourcing, spiritual guidance, and order support.</p><div className="mt-8 space-y-5">{contactItems.map((item) => <div key={item.label} className="flex gap-3"><span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#f0cb85]"><item.icon size={17} /></span><div><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/60">{item.label}</p><p className="mt-1 text-[13px] font-bold text-white">{item.value}</p><p className="mt-0.5 text-[10px] text-white/65">{item.detail}</p></div></div>)}</div><div className="mt-8 rounded-xl border border-white/15 bg-white/10 p-4"><div className="flex items-center gap-2 text-[#f1ce89]"><MessageCircle size={17} /><p className="text-[12px] font-bold">Chat on WhatsApp</p></div><p className="mt-2 text-[11px] leading-relaxed text-white/70">For quick consultations and custom requests, connect with us on WhatsApp.</p><a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex h-9 items-center rounded-full bg-[#f0ca83] px-4 text-[11px] font-bold text-[#17382b] hover:bg-[#f7d99d]">Start a chat</a></div></aside>
 
-          {/* Contact Info */}
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-serif font-bold text-brand-primary mb-6">Reach Us</h2>
-              <div className="space-y-6">
-                {[
-                  { icon: <Phone size={22} />, label: 'Phone', value: '+91 98765 43210', sub: 'Mon - Sat: 9AM - 7PM IST' },
-                  { icon: <Mail size={22} />, label: 'Email', value: 'info@nepalirudraksha.com', sub: 'We reply within 24 hours' },
-                  { icon: <MapPin size={22} />, label: 'Location', value: 'Kathmandu, Nepal', sub: 'Direct Himalayan sourcing' },
-                  { icon: <Clock size={22} />, label: 'Business Hours', value: 'Mon - Sat: 9:00 AM - 7:00 PM', sub: 'Closed on Sundays & major festivals' },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-brand-accent/10 rounded-lg flex items-center justify-center text-brand-accent flex-shrink-0">
-                      {item.icon}
-                    </div>
-                    <div>
-                      <p className="text-xs text-brand-muted uppercase tracking-wider font-bold mb-0.5">{item.label}</p>
-                      <p className="font-semibold text-brand-primary">{item.value}</p>
-                      <p className="text-xs text-brand-muted mt-0.5">{item.sub}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+        <div className="rounded-2xl border border-[#e9e0d3] bg-white p-5 shadow-[0_12px_28px_rgba(35,48,37,0.06)] sm:p-8">{submitted ? <div className="flex min-h-[430px] flex-col items-center justify-center text-center"><span className="flex size-16 items-center justify-center rounded-full bg-[#e6f0e8] text-[#2c7045]"><CheckCircle2 size={34} /></span><h2 className="mt-5 font-[family-name:var(--font-display)] text-[35px] font-bold leading-none text-[#173b2d]">Message sent</h2><p className="mt-3 max-w-sm text-[13px] leading-relaxed text-[#6d766e]">Thank you for reaching out. Our spiritual advisors will reply within 24 hours.</p><button type="button" onClick={() => { setSubmitted(false); setFormData({ name: '', email: '', subject: '', message: '' }); }} className="mt-7 rounded-full bg-[#173b2d] px-5 py-2.5 text-[12px] font-bold text-white">Send another message</button></div> : <><p className="text-[10px] font-extrabold tracking-[0.2em] text-[#9a7647] uppercase">Send a message</p><h2 className="mt-3 font-[family-name:var(--font-display)] text-[35px] font-bold leading-none text-[#173b2d]">How can we help?</h2><p className="mt-3 text-[12px] leading-relaxed text-[#707970]">{user ? <>Sending as <strong className="text-[#264437]">{user.fullName || user.email}</strong></> : 'Share a few details and our advisors will get back to you within 24 hours.'}</p><form onSubmit={handleSubmit} className="mt-7 space-y-5">{!user && <div className="grid gap-4 sm:grid-cols-2"><label className="text-[11px] font-bold text-[#35463b]">Name *<input id="contact-name" name="name" type="text" value={formData.name} onChange={handleChange} required autoComplete="name" className="mt-2 h-11 w-full rounded-lg border border-[#e4ddd2] bg-[#fffcf7] px-3 text-[13px] font-medium outline-none transition-colors focus:border-[#9b7a43] focus:ring-2 focus:ring-[#ead8b5]" /></label><label className="text-[11px] font-bold text-[#35463b]">Email *<input id="contact-email" name="email" type="email" value={formData.email} onChange={handleChange} required autoComplete="email" className="mt-2 h-11 w-full rounded-lg border border-[#e4ddd2] bg-[#fffcf7] px-3 text-[13px] font-medium outline-none transition-colors focus:border-[#9b7a43] focus:ring-2 focus:ring-[#ead8b5]" /></label></div>}<label className="block text-[11px] font-bold text-[#35463b]">Subject *<select id="contact-subject" name="subject" value={formData.subject} onChange={handleChange} required className="mt-2 h-11 w-full rounded-lg border border-[#e4ddd2] bg-[#fffcf7] px-3 text-[13px] font-medium outline-none transition-colors focus:border-[#9b7a43] focus:ring-2 focus:ring-[#ead8b5]"><option value="">Select a subject</option><option value="product-inquiry">Product inquiry</option><option value="custom-order">Custom mala / order</option><option value="spiritual-consultation">Spiritual consultation</option><option value="order-status">Order status / tracking</option><option value="return-refund">Return & refund</option><option value="other">Other</option></select></label><label className="block text-[11px] font-bold text-[#35463b]">Message *<textarea id="contact-message" name="message" value={formData.message} onChange={handleChange} required rows={6} placeholder="Tell us how we can help you on your spiritual journey..." className="mt-2 w-full resize-none rounded-lg border border-[#e4ddd2] bg-[#fffcf7] px-3 py-3 text-[13px] font-medium outline-none transition-colors focus:border-[#9b7a43] focus:ring-2 focus:ring-[#ead8b5]" /></label><button type="submit" disabled={isLoading} className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#173b2d] text-[12px] font-bold text-white transition-colors hover:bg-[#28523e] disabled:opacity-60">{isLoading ? <><span className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white" /> Sending...</> : <><Send size={15} /> Send message</>}</button></form></>}</div>
+      </div></section>
 
-            {/* WhatsApp CTA */}
-            <div className="bg-green-50 border border-green-200 rounded-xl p-6">
-              <h3 className="font-bold text-green-800 mb-2">💬 Chat on WhatsApp</h3>
-              <p className="text-sm text-green-700 mb-4">For quick queries, consultations, or custom orders, reach us on WhatsApp.</p>
-              <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" className="inline-block bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-2.5 rounded-md transition-colors text-sm">
-                Chat Now
-              </a>
-            </div>
-          </div>
+      <section className="border-y border-[#ece4d7] bg-[#f8f4ec]"><div className="mx-auto grid max-w-7xl gap-7 px-5 py-12 sm:px-10 sm:py-14 lg:grid-cols-[0.9fr_1.1fr] lg:px-12 xl:px-16"><div><p className="text-[10px] font-extrabold tracking-[0.2em] text-[#9a7647] uppercase">Find us</p><h2 className="mt-3 font-[family-name:var(--font-display)] text-[37px] font-bold leading-[0.92] text-[#173b2d]">From Kathmandu to your doorstep.</h2><p className="mt-4 text-[13px] leading-relaxed text-[#6e786f]">Our roots are in Kathmandu, Nepal. From here, we connect sacred Himalayan traditions with seekers around the world.</p><div className="mt-6 flex items-center gap-3 rounded-xl border border-[#e3d8c7] bg-white p-4"><ShieldCheck className="size-6 text-[#98783e]" /><p className="text-[11px] leading-relaxed text-[#5f6b61]"><strong className="text-[#294237]">Secure worldwide delivery.</strong><br />Every shipment is carefully packed and trackable.</p></div></div><div className="min-h-[250px] overflow-hidden rounded-2xl border border-[#e4dbcf] bg-[#e9e4da] shadow-sm sm:min-h-[310px]"><iframe src="https://maps.google.com/maps?q=Kathmandu,Nepal&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Location Map - Kathmandu, Nepal" /></div></div></section>
 
-          {/* Contact Form */}
-          <div className="lg:col-span-2">
-            <div className="bg-white border border-brand-border rounded-2xl p-8 shadow-sm">
-              {submitted ? (
-                <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                    <CheckCircle size={40} className="text-green-600" />
-                  </div>
-                  <h3 className="text-2xl font-serif font-bold text-brand-primary mb-3">Message Sent!</h3>
-                  <p className="text-brand-muted max-w-md">Thank you for reaching out! Our spiritual advisors will get back to you within 24 hours.</p>
-                  <button 
-                    onClick={() => { setSubmitted(false); setFormData({ name: '', email: '', subject: '', message: '' }); }}
-                    className="mt-8 bg-brand-accent text-brand-primary font-bold px-6 py-2.5 rounded-md hover:bg-brand-accent-hover transition-colors"
-                  >
-                    Send Another Message
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <h2 className="text-2xl font-serif font-bold text-brand-primary mb-2">Send Us a Message</h2>
-                  <p className="text-brand-muted text-sm mb-6">
-                    {user ? (
-                      <>Sending as <strong className="text-brand-primary">{user.fullName || user.email}</strong></>
-                    ) : (
-                      'Share your details and our spiritual advisors will get back to you within 24 hours.'
-                    )}
-                  </p>
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    {!user && (
-                      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                        <div>
-                          <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-name">Name *</label>
-                          <input
-                            id="contact-name"
-                            name="name"
-                            type="text"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                            autoComplete="name"
-                            className="w-full rounded-lg border border-brand-border bg-brand-bg px-4 py-3 text-sm outline-none transition-colors focus:border-brand-accent focus:ring-1 focus:ring-brand-accent"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-email">Email *</label>
-                          <input
-                            id="contact-email"
-                            name="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                            autoComplete="email"
-                            className="w-full rounded-lg border border-brand-border bg-brand-bg px-4 py-3 text-sm outline-none transition-colors focus:border-brand-accent focus:ring-1 focus:ring-brand-accent"
-                          />
-                        </div>
-                      </div>
-                    )}
-                    <div>
-                      <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-subject">Subject *</label>
-                      <select
-                        id="contact-subject"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        required
-                        className="w-full border border-brand-border rounded-lg px-4 py-3 text-sm outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-colors bg-brand-bg"
-                      >
-                        <option value="">Select a subject</option>
-                        <option value="product-inquiry">Product Inquiry</option>
-                        <option value="custom-order">Custom Mala / Order</option>
-                        <option value="spiritual-consultation">Spiritual Consultation</option>
-                        <option value="order-status">Order Status / Tracking</option>
-                        <option value="return-refund">Return & Refund</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-bold text-brand-primary mb-1.5" htmlFor="contact-message">Message *</label>
-                      <textarea
-                        id="contact-message"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        required
-                        rows={5}
-                        placeholder="Tell us how we can help you on your spiritual journey..."
-                        className="w-full border border-brand-border rounded-lg px-4 py-3 text-sm outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-colors bg-brand-bg resize-none"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-full bg-brand-primary hover:bg-[#1a251d] text-white font-bold py-3.5 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
-                    >
-                      {isLoading ? (
-                        <>
-                          <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          <Send size={18} />
-                          Send Message
-                        </>
-                      )}
-                    </button>
-                  </form>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Map Section */}
-        <div className="w-full mt-16 rounded-2xl overflow-hidden border border-brand-border h-[400px] shadow-sm bg-brand-light">
-          <iframe 
-            src="https://maps.google.com/maps?q=Kathmandu,Nepal&t=&z=13&ie=UTF8&iwloc=&output=embed" 
-            width="100%" 
-            height="100%" 
-            style={{ border: 0 }} 
-            allowFullScreen 
-            loading="lazy" 
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Location Map - Kathmandu, Nepal"
-          ></iframe>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="w-full bg-brand-light py-16 px-4 md:px-10 lg:px-20 border-t border-brand-border">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-brand-muted text-xs tracking-[0.2em] uppercase font-bold mb-2">Frequently Asked</p>
-            <h2 className="text-3xl font-serif font-bold text-brand-primary">Quick Answers</h2>
-          </div>
-          <div className="space-y-4">
-            {[
-              { q: 'Are your Rudrakshas 100% authentic?', a: 'Yes, absolutely. All our Rudraksha beads are sourced directly from Nepal and Indonesia and come with lab certification from accredited gemological laboratories. We guarantee their authenticity.' },
-              { q: 'How do I know which Rudraksha is right for me?', a: 'Our spiritual advisors can guide you based on your date of birth, life goals, and specific needs. You can contact us via WhatsApp or email for a free consultation.' },
-              { q: 'Do you ship internationally?', a: 'Yes, we ship to over 50 countries worldwide. International orders are fully insured and tracked. Delivery typically takes 7-14 business days.' },
-              { q: 'How are Rudrakshas energized?', a: 'Before dispatch, every Rudraksha is cleansed with Panchamrit (five sacred ingredients) and energized with specific Vedic mantras by our in-house pandit, as per traditional Hindu scripture.' },
-            ].map((faq, i) => (
-              <div key={i} className="bg-white rounded-xl p-6 border border-brand-border">
-                <h3 className="font-bold text-brand-primary mb-2">{faq.q}</h3>
-                <p className="text-brand-muted text-sm leading-relaxed">{faq.a}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-    </div>
+      <section className="mx-auto max-w-4xl px-5 py-12 sm:px-10 sm:py-16"><div className="text-center"><p className="text-[10px] font-extrabold tracking-[0.2em] text-[#9a7647] uppercase">Frequently asked</p><h2 className="mt-3 font-[family-name:var(--font-display)] text-[37px] font-bold leading-none text-[#173b2d]">Quick answers</h2></div><div className="mt-8 space-y-3">{[{ q: 'Are your Rudrakshas authentic?', a: 'Yes. Our Rudraksha are sourced directly from Nepal and Indonesia and selected pieces are accompanied by accredited laboratory certification.' }, { q: 'How do I choose the right Rudraksha?', a: 'Our advisors can guide you according to your intentions, life goals, and spiritual preferences. Reach out for a personal consultation.' }, { q: 'Do you deliver internationally?', a: 'Yes. We ship to more than 50 countries with careful packing and trackable delivery.' }].map((faq) => <article key={faq.q} className="rounded-xl border border-[#e8dfd1] bg-white px-5 py-4"><h3 className="text-[13px] font-bold text-[#294237]">{faq.q}</h3><p className="mt-2 text-[12px] leading-relaxed text-[#707970]">{faq.a}</p></article>)}</div></section>
+    </main>
   );
 }
