@@ -5,6 +5,8 @@ import ReviewCarousel from '@/components/ReviewCarousel';
 import TestimonialCarousel from '@/components/TestimonialCarousel';
 import { MotionHeroWrapper, MotionHeroContent, MotionSection } from '@/components/animations/MotionWrappers';
 import SpiritualProductCard from '@/components/SpiritualProductCard';
+import InstagramMarquee from '@/components/InstagramMarquee';
+import { getSettings } from '@/lib/api';
 
 function CategoryCard({ name, description, img, href, index }: { name: string; description: string; img: string; href: string; index: number }) {
   return (
@@ -29,7 +31,25 @@ function CategoryCard({ name, description, img, href, index }: { name: string; d
 
 export const dynamic = 'force-dynamic';
 
-export default function Home() {
+export default async function Home() {
+  const settings = await getSettings();
+  let homepageCategories = [];
+  try {
+    if (settings.homepage_categories) {
+      homepageCategories = JSON.parse(settings.homepage_categories);
+    }
+  } catch (e) {
+    console.error('Failed to parse homepage categories', e);
+  }
+
+  let homepageInstagram = [];
+  try {
+    if (settings.homepage_instagram) {
+      homepageInstagram = JSON.parse(settings.homepage_instagram);
+    }
+  } catch (e) {
+    console.error('Failed to parse homepage instagram', e);
+  }
   const featuredProducts = [
     {
       id: 'dhan-yog-bracelet',
@@ -122,7 +142,7 @@ export default function Home() {
                 <Link href="/about" className="inline-flex h-11 items-center rounded-full border border-[#0e4937]/25 bg-white/75 px-5 text-[12px] font-extrabold text-[#07513d] shadow-[0_4px_10px_rgba(31,46,36,0.08)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-[0_8px_16px_rgba(31,46,36,0.14)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#173b2d] focus-visible:ring-offset-2">
                   Watch Our Story
                 </Link>
-              </div>
+          </div>
 
               <div className="relative mt-6 max-w-[39rem] sm:mt-7">
                 <div className="pointer-events-none absolute -inset-10 bg-[radial-gradient(ellipse_92%_76%_at_46%_50%,rgba(255,253,246,0.76)_0%,rgba(255,253,246,0.42)_38%,rgba(255,253,246,0.12)_58%,transparent_76%)] blur-2xl" />
@@ -142,7 +162,7 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-              </div>
+          </div>
             </div>
           </MotionHeroContent>
         </div>
@@ -162,14 +182,12 @@ export default function Home() {
           </Link>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 lg:gap-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:gap-3">
           {[
-            { name: 'Rudraksha Beads', description: 'Sacred Origin', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.42%20PM.jpeg', href: '/shop' },
+            { name: 'Rudraksha Beads', description: 'Sacred Origin', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.42%20PM.jpeg', href: '/shop?category=beads' },
             { name: 'Rudraksha Malas', description: 'For Meditation', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg', href: '/shop?category=mala' },
-            { name: 'Pendants', description: 'Divine Energy', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.44%20PM.jpeg', href: '/shop' },
-            { name: 'Bracelets', description: 'Wear Your Belief', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.45%20PM.jpeg', href: '/shop' },
-            { name: 'Puja Accessories', description: 'Ritual Essentials', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.48%20PM.jpeg', href: '/shop' },
-            { name: 'Gift Sets', description: 'Meaningful Gifting', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.51%20PM.jpeg', href: '/shop' },
+            { name: 'Pendants', description: 'Divine Energy', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.44%20PM.jpeg', href: '/shop?category=special' },
+            { name: 'Gift Sets', description: 'Meaningful Gifting', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.51%20PM.jpeg', href: '/shop?category=special' },
             { name: 'Spiritual Essentials', description: 'For a Balanced Life', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.53%20PM.jpeg', href: '/shop?category=special' },
           ].map((cat, i) => (
             <CategoryCard key={cat.name} name={cat.name} description={cat.description} img={cat.img} href={cat.href} index={i} />
@@ -351,50 +369,13 @@ export default function Home() {
                   <p className="mt-1.5 text-[15px] font-bold text-[#173b2d] sm:text-[17px]">@nepalirudraksha</p>
                 </div>
                 <Link href="/" className="border-b border-[#85523b] pb-1.5 text-[11px] font-bold text-[#70462f] sm:text-[12px]">Follow Us</Link>
-              </div>
-              <div className="mt-6 grid min-w-0 grid-cols-3 gap-2.5 sm:mt-7 sm:gap-3 lg:grid-cols-6">
-                {[
-                  'WhatsApp%20Image%202026-09-18%20at%205.16.01%20PM.jpeg',
-                  'WhatsApp%20Image%202026-09-18%20at%205.16.03%20PM.jpeg',
-                  'WhatsApp%20Image%202026-09-18%20at%205.16.04%20PM.jpeg',
-                  'WhatsApp%20Image%202026-09-18%20at%205.16.11%20PM.jpeg',
-                  'WhatsApp%20Image%202026-09-18%20at%205.16.11%20PMd.jpeg',
-                  'WhatsApp%20Image%202026-09-18%20at%205.16.12%20PM.jpeg',
-                ].map((image, index) => (
-                  <Link key={image} href="/" className="group relative min-w-0 aspect-square overflow-hidden rounded-md">
-                    <Image src={`/images/nepaliraksha/${image}`} alt={`Nepali Rudraksha Instagram post ${index + 1}`} fill sizes="(max-width: 640px) 30vw, (max-width: 1024px) 20vw, 14vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
-                  </Link>
-                ))}
+          </div>
+<div className="mt-6">
+                <InstagramMarquee />
               </div>
             </section>
-
-            <div className="mt-12 flex flex-wrap items-end justify-between gap-4 sm:mt-14">
-              <div>
-                <p className="text-[10px] font-extrabold tracking-[0.22em] text-[#6b6257] uppercase sm:text-[11px]">From Our Blog</p>
-                <h2 className="mt-2 max-w-[19rem] font-[family-name:var(--font-display)] text-[31px] font-bold leading-none tracking-[-0.03em] text-[#102e22] text-balance sm:max-w-none sm:text-[40px] xl:text-[44px]">Insights for a Better Life</h2>
-              </div>
-              <Link href="/blog" className="border-b border-[#85523b] pb-1.5 text-[11px] font-bold text-[#70462f] transition-colors hover:text-[#173b2d] xl:text-[12px]">View All Articles</Link>
-            </div>
-
-            <div className="mt-5 grid gap-4 sm:grid-cols-3">
-              {[
-                { title: 'Benefits of 5 Mukhi Rudraksha', date: '15 Sep 2026', image: '/images/insight_for_better/WhatsApp%20Image%202026-09-18%20at%205.15.41%20PM.jpeg', imageFit: 'object-cover' },
-                { title: 'How to Identify Original Rudraksha', date: '08 Sep 2026', image: '/images/insight_for_better/WhatsApp%20Image%202026-09-18%20at%205.15.58%20PM.jpeg', imageFit: 'object-cover' },
-                { title: 'The Spiritual Significance of Rudraksha in Hinduism', date: '01 Sep 2026', image: '/images/insight_for_better/WhatsApp%20Image%202026-09-18%20at%205.16.00%20PM.jpeg', imageFit: 'object-cover' },
-              ].map((article) => (
-                <Link key={article.title} href="/blog" className="group flex overflow-hidden rounded-lg bg-white shadow-[0_3px_10px_rgba(35,49,39,0.08)] transition-shadow hover:shadow-md sm:block">
-                  <div className="relative aspect-[8/3] w-[42%] shrink-0 overflow-hidden bg-white sm:w-full">
-                    <Image src={article.image} alt={article.title} fill sizes="(max-width: 640px) 42vw, 25vw" className={`${article.imageFit} transition-transform duration-300 group-hover:scale-[1.02]`} />
-                  </div>
-                  <div className="p-2.5">
-                    <h3 className="text-[12px] font-bold leading-[1.2] text-[#18352a] xl:text-[13px]">{article.title}</h3>
-                    <p className="mt-1.5 text-[10px] font-semibold text-[#758178] xl:text-[11px]">{article.date}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
           </div>
-      </MotionSection>
+        </MotionSection>
 
       {/* 8. Spiritual Community */}
       <MotionSection className="w-full overflow-hidden">
@@ -447,7 +428,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 <p className="text-xs text-white/80 text-center">Authentic Himalayan Rudraksha</p>
-              </div>
+          </div>
             </div>
           </div>
           
@@ -528,3 +509,4 @@ export default function Home() {
     </div>
   );
 }
+

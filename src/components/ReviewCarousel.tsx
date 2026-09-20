@@ -1,8 +1,8 @@
 'use client';
 
 import Image from '@/components/ImageKitImage';
-import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
-import { useCallback, useEffect, useRef } from 'react';
+import { Star } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 type CustomerReview = {
   name: string;
@@ -17,27 +17,7 @@ type ReviewCarouselProps = {
 
 export default function ReviewCarousel({ reviews }: ReviewCarouselProps) {
   const carouselRef = useRef<HTMLDivElement>(null);
-
-  const move = useCallback((direction: -1 | 1) => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-
-    const card = carousel.querySelector<HTMLElement>('[data-review-card]');
-    const gap = Number.parseFloat(window.getComputedStyle(carousel).gap) || 0;
-    const amount = (card?.offsetWidth ?? carousel.clientWidth) + gap;
-    const visibleCards = window.matchMedia('(min-width: 640px)').matches ? 3 : 2;
-    const step = amount * visibleCards;
-    const cycleWidth = carousel.scrollWidth / 2;
-    const currentPosition = carousel.scrollLeft >= cycleWidth
-      ? carousel.scrollLeft - cycleWidth
-      : carousel.scrollLeft;
-    let nextPosition = currentPosition + step * direction;
-
-    if (nextPosition < 0) nextPosition += cycleWidth;
-    if (nextPosition >= cycleWidth) nextPosition -= cycleWidth;
-
-    carousel.scrollTo({ left: nextPosition, behavior: 'smooth' });
-  }, []);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const carousel = carouselRef.current;
@@ -48,25 +28,27 @@ export default function ReviewCarousel({ reviews }: ReviewCarouselProps) {
     const pixelsPerSecond = 26;
 
     const animate = (time: number) => {
-      if (previousTime) {
-        const cycleWidth = carousel.scrollWidth / 2;
-        carousel.scrollLeft += ((time - previousTime) / 1000) * pixelsPerSecond;
+      if (!isHovered) {
+        if (previousTime) {
+          const cycleWidth = carousel.scrollWidth / 2;
+          carousel.scrollLeft += ((time - previousTime) / 1000) * pixelsPerSecond;
 
-        if (carousel.scrollLeft >= cycleWidth) {
-          carousel.scrollLeft -= cycleWidth;
+          if (carousel.scrollLeft >= cycleWidth) {
+            carousel.scrollLeft -= cycleWidth;
+          }
         }
-      }
 
-      previousTime = time;
+        previousTime = time;
+      }
       animationFrame = window.requestAnimationFrame(animate);
     };
 
     animationFrame = window.requestAnimationFrame(animate);
     return () => window.cancelAnimationFrame(animationFrame);
-  }, []);
+  }, [isHovered]);
 
   return (
-    <div className="group relative mt-6 overflow-visible">
+    <div className="group relative mt-6 overflow-visible" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} onTouchStart={() => setIsHovered(true)} onTouchEnd={() => setTimeout(() => setIsHovered(false), 3000)}>
       <div
         ref={carouselRef}
         className="mx-0 flex gap-2 overflow-x-auto sm:mx-12 sm:gap-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -104,23 +86,6 @@ export default function ReviewCarousel({ reviews }: ReviewCarouselProps) {
           </article>
         ))}
       </div>
-
-      <button
-        type="button"
-        onClick={() => move(-1)}
-        className="absolute -left-4 top-1/2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-[#d5cbbd] bg-[#fffdf8] text-[#173b2d] shadow-sm transition-colors hover:bg-[#173b2d] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#173b2d] sm:left-7 sm:size-10"
-        aria-label="Show previous testimonials"
-      >
-        <ChevronLeft size={17} aria-hidden="true" />
-      </button>
-      <button
-        type="button"
-        onClick={() => move(1)}
-        className="absolute -right-4 top-1/2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-[#d5cbbd] bg-[#fffdf8] text-[#173b2d] shadow-sm transition-colors hover:bg-[#173b2d] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#173b2d] sm:right-7 sm:size-10"
-        aria-label="Show next testimonials"
-      >
-        <ChevronRight size={17} aria-hidden="true" />
-      </button>
     </div>
   );
 }

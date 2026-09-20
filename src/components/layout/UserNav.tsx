@@ -209,7 +209,7 @@ export default function UserNav() {
         <button
           ref={buttonRef}
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 rounded-xl p-1 pr-3 transition-all duration-200 hover:bg-brand-light/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 group"
+          className="group flex items-center gap-0 rounded-xl p-1 transition-all duration-200 hover:bg-brand-light/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 sm:gap-2 sm:pr-3"
           aria-expanded={isOpen}
           aria-label="User account menu"
         >

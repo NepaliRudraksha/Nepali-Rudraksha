@@ -78,7 +78,7 @@ export default async function Header() {
       <div className="bg-white/95 backdrop-blur-md sticky top-[32px] z-40 border-b border-brand-border/60 shadow-xs">
         <div className="max-w-7xl mx-auto px-2 py-2.5 md:px-10 lg:px-20">
           {/* Mobile Layout: Hamburger + Logo left | Brand text centered | Actions right */}
-          <div className="flex items-center justify-between gap-2 md:hidden">
+          <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-1 md:hidden">
             {/* Left: Hamburger Menu + Logo */}
             <div className="flex items-center gap-2">
               <MobileMenu />
@@ -103,10 +103,10 @@ export default async function Header() {
             {/* Center: Brand text (centered) */}
             <Link 
               href="/" 
-              className="flex flex-col items-center mx-auto min-w-0"
+              className="flex min-w-0 flex-col items-center justify-self-center"
               aria-label="Nepali Rudraksha Home"
             >
-              <span className="whitespace-nowrap font-sans text-[12px] font-bold leading-none tracking-tight text-brand-primary">
+              <span className="whitespace-nowrap font-sans text-[12px] font-bold leading-none tracking-[-0.03em] text-brand-primary">
                 NEPALI RUDRAKSHA
               </span>
               <span className="whitespace-nowrap text-[7px] font-medium uppercase tracking-[0.08em] text-brand-muted leading-none">
@@ -115,7 +115,7 @@ export default async function Header() {
             </Link>
             
             {/* Right: Shopping actions */}
-            <div className="relative flex items-center justify-end gap-1 w-[88px]">
+            <div className="relative flex shrink-0 items-center justify-end gap-1">
               <HeaderSearch />
               <UserNav />
               <HeaderCartIcon />
@@ -142,11 +142,11 @@ export default async function Header() {
                     loading="eager"
                   />
                 </div>
-                <div className="hidden lg:block text-left min-w-0">
-                  <h1 className="font-serif text-lg font-bold leading-tight tracking-normal text-brand-primary truncate max-w-[160px]">
+                <div className="hidden min-w-0 text-left md:block">
+                  <h1 className="whitespace-nowrap font-serif text-lg font-bold leading-tight tracking-normal text-brand-primary">
                     NEPALI RUDRAKSHA
                   </h1>
-                  <p className="text-[10px] tracking-wider text-brand-muted font-medium uppercase truncate max-w-[160px]">
+                  <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-brand-muted">
                     DIVINE BEADS · BETTER LIFE
                   </p>
                 </div>

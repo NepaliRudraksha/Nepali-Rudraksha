@@ -17,7 +17,6 @@ import {
   Search,
   ShieldCheck,
   ShoppingBag,
-  Sprout,
   Truck,
   UsersRound,
   X,
@@ -27,7 +26,6 @@ import { usePathname, useRouter } from 'next/navigation';
 const navLinks = [
   { name: 'Home', href: '/', icon: House },
   { name: 'Shop', href: '/shop', icon: ShoppingBag },
-  { name: 'Accessories', href: '/accessories', icon: Sprout },
   { name: 'About Us', href: '/about', icon: UsersRound },
   { name: 'Contact', href: '/contact', icon: Phone },
 ];
@@ -233,7 +231,7 @@ export default function MobileMenu() {
                 onClick={closeMenuAndScrollTop}
                 className="flex items-center gap-3 rounded-lg bg-[#f8f5ec] px-3 py-3 text-brand-primary transition-colors hover:bg-brand-light"
               >
-                <Sprout size={23} className="shrink-0 text-[#b39b50]" />
+                <Leaf size={23} className="shrink-0 text-[#b39b50]" />
                 <span className="flex-1 font-serif text-[11px] italic">Sacred Beads for a Better Tomorrow</span>
                 <ChevronRight size={15} className="text-brand-muted" />
               </Link>

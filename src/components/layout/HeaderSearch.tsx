@@ -110,7 +110,7 @@ function SearchBar() {
 export default function HeaderSearch() {
   return (
     <Suspense fallback={
-      <button className="flex h-9 w-9 items-center justify-center rounded-xl border border-brand-border/60 opacity-50">
+      <button className="flex h-8 w-8 items-center justify-center rounded-xl border border-brand-border/60 opacity-50 md:h-9 md:w-9">
         <Search size={20} className="text-brand-muted" />
       </button>
     }>

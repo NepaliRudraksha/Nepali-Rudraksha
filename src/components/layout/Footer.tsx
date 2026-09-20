@@ -76,7 +76,6 @@ export default async function Footer() {
             <li><Link href="/" className="hover:text-brand-accent transition-colors">Home</Link></li>
             <li><Link href="/about" className="hover:text-brand-accent transition-colors">About Us</Link></li>
             <li><Link href="/shop" className="hover:text-brand-accent transition-colors">Shop</Link></li>
-            <li><Link href="/accessories" className="hover:text-brand-accent transition-colors">Accessories</Link></li>
             <li><Link href="/contact" className="hover:text-brand-accent transition-colors">Contact</Link></li>
           </ul>
         </div>

@@ -16,6 +16,8 @@ const defaultSettings: SiteSettings = {
   show_bestseller: 'true',
   show_new_arrivals: 'true',
   maintenance_mode: 'false',
+  homepage_categories: '[]',
+  homepage_instagram: '[]',
 };
 
 export default function AdminSettings() {

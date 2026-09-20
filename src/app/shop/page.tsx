@@ -9,15 +9,17 @@ import { useCart } from '@/context/CartContext';
 import { Product } from '@/data/products';
 import { getProducts, getSettings, SiteSettings } from '@/lib/api';
 
-type Category = Product['category'] | 'all' | 'types';
+type Category = Product['category'] | 'all' | 'types' | 'pendants' | 'gift-sets' | 'spiritual-essentials';
 type SortOption = 'featured' | 'price-low' | 'price-high' | 'name' | 'mukhi';
 type ViewMode = 'grid' | 'list';
 
 const categoryOptions: { id: Category; label: string }[] = [
   { id: 'all', label: 'All Products' },
-  { id: 'beads', label: 'Single Beads (1–16 Mukhi)' },
+  { id: 'beads', label: 'Rudraksha Beads' },
   { id: 'mala', label: 'Rudraksha Malas' },
-  { id: 'special', label: 'Special Beads' },
+  { id: 'pendants', label: 'Pendants' },
+  { id: 'gift-sets', label: 'Gift Sets' },
+  { id: 'spiritual-essentials', label: 'Spiritual Essentials' },
   { id: 'types', label: 'Rudraksha Types (1-12 Mukhi)' },
 ];
 
@@ -315,9 +317,27 @@ function ShopContent() {
     loadData();
   }, []);
 
+  // Set active category from URL query param
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam && ['beads', 'mala', 'special', 'types', 'pendants', 'bracelets', 'puja-accessories', 'gift-sets', 'spiritual-essentials'].includes(categoryParam)) {
+      setActiveCategory(categoryParam as Category);
+    }
+  }, [searchParams]);
+
   const filteredProducts = useMemo(() => {
     const matchingProducts = products.filter((product) => {
-      const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
+      let matchesCategory = activeCategory === 'all';
+      
+      if (!matchesCategory) {
+        // Map filter categories to actual product categories
+        if (activeCategory === 'beads') matchesCategory = product.category === 'beads';
+        else if (activeCategory === 'mala') matchesCategory = product.category === 'mala';
+        else if (['special', 'pendants', 'gift-sets', 'spiritual-essentials'].includes(activeCategory)) matchesCategory = product.category === 'special';
+        else if (['bracelets', 'puja-accessories'].includes(activeCategory)) matchesCategory = false; // These are accessories, not shop products
+        else matchesCategory = product.category === activeCategory;
+      }
+      
       const matchesSearch = !query || product.name.toLowerCase().includes(query) || product.description?.toLowerCase().includes(query);
       const matchesOrigin = selectedOrigins.length === 0 || (product.origin && selectedOrigins.includes(product.origin));
       return matchesCategory && matchesSearch && matchesOrigin && product.price <= maxPrice;
@@ -346,6 +366,9 @@ function ShopContent() {
   const getCategoryCount = (category: Category) => {
     if (category === 'types') return rudrakshaTypes.length;
     if (category === 'all') return products.length + rudrakshaTypes.length;
+    if (category === 'beads') return products.filter((p) => p.category === 'beads').length;
+    if (category === 'mala') return products.filter((p) => p.category === 'mala').length;
+    if (['special', 'pendants', 'gift-sets', 'spiritual-essentials'].includes(category)) return products.filter((p) => p.category === 'special').length;
     return products.filter((product) => product.category === category).length;
   };
   const toggleOrigin = (origin: Product['origin']) => {

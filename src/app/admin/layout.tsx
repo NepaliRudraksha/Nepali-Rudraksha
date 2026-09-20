@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, Package, ShoppingBag, Settings, LogOut, 
-  ShieldCheck, ShieldAlert, Lock, ArrowLeft, Loader2, ArrowRight, Users, CircleAlert, Star, Mail
+  ShieldCheck, ShieldAlert, Lock, ArrowLeft, Loader2, ArrowRight, Users, CircleAlert, Star, Mail, Home
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
@@ -213,6 +213,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Customers', href: '/admin/customers', icon: <Users size={20} /> },
     { name: 'Reviews', href: '/admin/reviews', icon: <Star size={20} /> },
     { name: 'Messages', href: '/admin/messages', icon: <Mail size={20} /> },
+    { name: 'Homepage', href: '/admin/homepage', icon: <Home size={20} /> },
     { name: 'Settings', href: '/admin/settings', icon: <Settings size={20} /> },
   ];
 

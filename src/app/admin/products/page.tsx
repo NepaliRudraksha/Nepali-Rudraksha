@@ -4,7 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from '@/components/ImageKitImage';
 import { Product } from '@/data/products';
 import { getProducts, createProduct, updateProduct, deleteProduct, isSupabaseConfigured } from '@/lib/api';
-import { PlusCircle, Pencil, Trash2, Search, Filter, ChevronDown, X, Save, Loader2, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
+import { PlusCircle, Pencil, Trash2, Search, Filter, ChevronDown, X, Save, Loader2, CheckCircle, AlertCircle, RefreshCw, Upload, Image as ImageIcon, Trash } from 'lucide-react';
+import AdminProductModal from '@/components/AdminProductModal';
 
 type EditableProduct = Omit<Product, 'benefits'> & { benefits: string };
 
@@ -39,11 +40,40 @@ export default function AdminProducts() {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [toast, setToast] = useState<Toast | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const supabaseReady = isSupabaseConfigured();
 
   const showToast = (type: Toast['type'], message: string) => {
     setToast({ type, message });
     setTimeout(() => setToast(null), 4000);
+  };
+
+  const handleImageUpload = async (file: File) => {
+    setIsUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Upload failed');
+      }
+      
+      setEditingProduct({ ...editingProduct, image: data.url });
+      showToast('success', 'Image uploaded successfully!');
+      return data.url;
+    } catch (error) {
+      showToast('error', error instanceof Error ? error.message : 'Failed to upload image');
+      return null;
+    } finally {
+      setIsUploadingImage(false);
+    }
   };
 
   const loadProducts = useCallback(async () => {
@@ -339,206 +369,19 @@ export default function AdminProducts() {
       </div>
 
       {/* Add/Edit Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
-              <h3 className="text-lg font-bold text-gray-800">
-                {isEditing ? 'Edit Product' : 'Add New Product'}
-              </h3>
-              <button
-                onClick={() => setShowModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Product Name *</label>
-                  <input
-                    type="text"
-                    value={editingProduct.name}
-                    onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
-                    placeholder="e.g. 5 Mukhi Rudraksha"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-accent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">
-                    Price (₹) <span className="text-gray-400 font-normal">0 for &quot;On Enquiry&quot;</span>
-                  </label>
-                  <input
-                    type="number"
-                    value={editingProduct.price}
-                    onChange={(e) =>
-                      setEditingProduct({ ...editingProduct, price: Number(e.target.value) })
-                    }
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-accent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Category *</label>
-                  <select
-                    value={editingProduct.category}
-                    onChange={(e) =>
-                      setEditingProduct({
-                        ...editingProduct,
-                        category: e.target.value as Product['category'],
-                      })
-                    }
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-accent bg-white"
-                  >
-                    <option value="beads">Beads</option>
-                    <option value="mala">Mala</option>
-                    <option value="special">Special</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Origin</label>
-                  <select
-                    value={editingProduct.origin || ''}
-                    onChange={(e) =>
-                      setEditingProduct({
-                        ...editingProduct,
-                        origin: (e.target.value as Product['origin']) || undefined,
-                      })
-                    }
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-accent bg-white"
-                  >
-                    <option value="">None</option>
-                    <option value="nepali">Nepali</option>
-                    <option value="indonesian">Indonesian</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">
-                    Mukhi <span className="text-gray-400 font-normal">(number of faces)</span>
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={21}
-                    value={editingProduct.mukhi || ''}
-                    onChange={(e) =>
-                      setEditingProduct({
-                        ...editingProduct,
-                        mukhi: e.target.value ? Number(e.target.value) : undefined,
-                      })
-                    }
-                    placeholder="e.g. 5"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-accent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Rating (1–5)</label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={5}
-                    value={editingProduct.rating}
-                    onChange={(e) =>
-                      setEditingProduct({ ...editingProduct, rating: Number(e.target.value) })
-                    }
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-accent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Reviews Count</label>
-                  <input
-                    type="number"
-                    value={editingProduct.reviewsCount}
-                    onChange={(e) =>
-                      setEditingProduct({ ...editingProduct, reviewsCount: Number(e.target.value) })
-                    }
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-accent"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Image URL</label>
-                  <input
-                    type="url"
-                    value={editingProduct.image || ''}
-                    onChange={(e) => setEditingProduct({ ...editingProduct, image: e.target.value })}
-                    placeholder="https://images.unsplash.com/..."
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-accent"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
-                  <textarea
-                    rows={3}
-                    value={editingProduct.description || ''}
-                    onChange={(e) =>
-                      setEditingProduct({ ...editingProduct, description: e.target.value })
-                    }
-                    placeholder="Product description..."
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-accent resize-none"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-1">
-                    Benefits{' '}
-                    <span className="text-gray-400 font-normal">(one per line)</span>
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={editingProduct.benefits}
-                    onChange={(e) =>
-                      setEditingProduct({ ...editingProduct, benefits: e.target.value })
-                    }
-                    placeholder={'Enhances focus\nBrings peace\nAttracts prosperity'}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-accent resize-none font-mono"
-                  />
-                </div>
-                <div className="flex items-center gap-6">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={editingProduct.isBestseller || false}
-                      onChange={(e) =>
-                        setEditingProduct({ ...editingProduct, isBestseller: e.target.checked })
-                      }
-                      className="w-4 h-4 accent-brand-accent"
-                    />
-                    <span className="text-sm font-medium text-gray-700">Bestseller</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={editingProduct.isNew || false}
-                      onChange={(e) =>
-                        setEditingProduct({ ...editingProduct, isNew: e.target.checked })
-                      }
-                      className="w-4 h-4 accent-brand-accent"
-                    />
-                    <span className="text-sm font-medium text-gray-700">New Arrival</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200 sticky bottom-0 bg-white">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-5 py-2.5 text-sm font-bold text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={isSaving || !editingProduct.name}
-                className="flex items-center gap-2 px-5 py-2.5 text-sm font-bold bg-brand-primary text-white rounded-lg hover:bg-[#1a251d] transition-colors disabled:opacity-60"
-              >
-                {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                {isSaving ? 'Saving...' : 'Save Product'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+      <AdminProductModal
+          show={showModal}
+          onClose={() => setShowModal(false)}
+          isEditing={isEditing}
+          editingProduct={editingProduct}
+          isSaving={isSaving}
+          isUploadingImage={isUploadingImage}
+          onImageUpload={handleImageUpload}
+          onImageChange={(url) => setEditingProduct({ ...editingProduct, image: url })}
+          onImageRemove={() => setEditingProduct({ ...editingProduct, image: '' })}
+          onFormChange={(field, value) => setEditingProduct({ ...editingProduct, [field]: value })}
+          onSave={handleSave}
+        />
+      </div>
   );
 }

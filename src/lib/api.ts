@@ -37,6 +37,8 @@ export interface SiteSettings {
   show_bestseller: string;
   show_new_arrivals: string;
   maintenance_mode: string;
+  homepage_categories: string;
+  homepage_instagram: string;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -340,6 +342,21 @@ const defaultSettings: SiteSettings = {
   show_bestseller: 'true',
   show_new_arrivals: 'true',
   maintenance_mode: 'false',
+  homepage_categories: JSON.stringify([
+    { name: 'Rudraksha Beads', description: 'Sacred Origin', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.42%20PM.jpeg', href: '/shop?category=beads' },
+    { name: 'Rudraksha Malas', description: 'For Meditation', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg', href: '/shop?category=mala' },
+    { name: 'Pendants', description: 'Divine Energy', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.44%20PM.jpeg', href: '/shop?category=special' },
+    { name: 'Gift Sets', description: 'Meaningful Gifting', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.51%20PM.jpeg', href: '/shop?category=special' },
+    { name: 'Spiritual Essentials', description: 'For a Balanced Life', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.53%20PM.jpeg', href: '/shop?category=special' },
+  ]),
+  homepage_instagram: JSON.stringify([
+    '/images/nepaliraksha/WhatsApp%20Image%202026-09-18%20at%205.16.01%20PM.jpeg',
+    '/images/nepaliraksha/WhatsApp%20Image%202026-09-18%20at%205.16.03%20PM.jpeg',
+    '/images/nepaliraksha/WhatsApp%20Image%202026-09-18%20at%205.16.04%20PM.jpeg',
+    '/images/nepaliraksha/WhatsApp%20Image%202026-09-18%20at%205.16.11%20PM.jpeg',
+    '/images/nepaliraksha/WhatsApp%20Image%202026-09-18%20at%205.16.11%20PMd.jpeg',
+    '/images/nepaliraksha/WhatsApp%20Image%202026-09-18%20at%205.16.12%20PM.jpeg',
+  ]),
 };
 
 export async function getSettings(): Promise<SiteSettings> {
