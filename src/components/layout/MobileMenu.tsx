@@ -7,7 +7,6 @@ import Image from '@/components/ImageKitImage';
 import {
   ArrowRight,
   ChevronRight,
-  Flower2,
   FlaskConical,
   Heart,
   House,
@@ -28,7 +27,6 @@ import { usePathname, useRouter } from 'next/navigation';
 const navLinks = [
   { name: 'Home', href: '/', icon: House },
   { name: 'Shop', href: '/shop', icon: ShoppingBag },
-  { name: 'Rudraksha Types', href: '/types', icon: Flower2 },
   { name: 'Accessories', href: '/accessories', icon: Sprout },
   { name: 'About Us', href: '/about', icon: UsersRound },
   { name: 'Contact', href: '/contact', icon: Phone },

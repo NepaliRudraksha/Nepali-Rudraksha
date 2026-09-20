@@ -9,7 +9,6 @@ export default function HeaderNav() {
   const links = [
     { name: 'Home', href: '/' },
     { name: 'Shop', href: '/shop' },
-    { name: 'Types', href: '/types' },
     { name: 'Accessories', href: '/accessories' },
     { name: 'About Us', href: '/about' },
     { name: 'Contact', href: '/contact' },
@@ -22,7 +21,7 @@ export default function HeaderNav() {
   return (
     <nav
       aria-label="Primary navigation"
-      className="hidden lg:flex items-center gap-0.5 whitespace-nowrap"
+      className="hidden lg:flex items-center gap-6 whitespace-nowrap"
     >
       {links.map((link, index) => {
         const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);

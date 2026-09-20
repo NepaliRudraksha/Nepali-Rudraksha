@@ -77,39 +77,45 @@ export default async function Header() {
       {/* Main Navbar - Modern elevated design */}
       <div className="bg-white/95 backdrop-blur-md sticky top-[32px] z-40 border-b border-brand-border/60 shadow-xs">
         <div className="max-w-7xl mx-auto px-2 py-2.5 md:px-10 lg:px-20">
-          {/* Mobile Layout: Hamburger | Centered Logo | Search, account, cart */}
-          <div className="grid grid-cols-[2.25rem_minmax(0,1fr)_6rem] items-center gap-1 md:hidden">
-            {/* Left: Hamburger Menu */}
-            <MobileMenu />
+          {/* Mobile Layout: Hamburger + Logo left | Brand text centered | Actions right */}
+          <div className="flex items-center justify-between gap-2 md:hidden">
+            {/* Left: Hamburger Menu + Logo */}
+            <div className="flex items-center gap-2">
+              <MobileMenu />
+              <Link 
+                href="/" 
+                className="flex items-center gap-1.5 group"
+                aria-label="Nepali Rudraksha Home"
+              >
+                <div className="relative h-8 w-8 shrink-0">
+                  <Image
+                    src="/logo.png"
+                    alt="Nepali Rudraksha"
+                    fill
+                    sizes="32px"
+                    className="object-contain transition-transform duration-300 group-hover:scale-105"
+                    loading="eager"
+                  />
+                </div>
+              </Link>
+            </div>
             
-            {/* Center: Compact brand lockup, sized to keep the store name visible. */}
+            {/* Center: Brand text (centered) */}
             <Link 
               href="/" 
-              className="flex min-w-0 items-center justify-center gap-1.5 group"
+              className="flex flex-col items-center mx-auto min-w-0"
               aria-label="Nepali Rudraksha Home"
             >
-              <div className="relative h-6 w-6 shrink-0">
-                <Image
-                  src="/logo.png"
-                  alt="Nepali Rudraksha"
-                  fill
-                  sizes="24px"
-                  className="object-contain transition-transform duration-300 group-hover:scale-105"
-                  loading="eager"
-                />
-              </div>
-              <div className="min-w-0">
-                <h1 className="whitespace-nowrap font-sans text-[11px] font-bold leading-none tracking-tight text-brand-primary min-[360px]:text-xs">
-                  NEPALI RUDRAKSHA
-                </h1>
-                <p className="mt-1 hidden whitespace-nowrap text-[8px] font-medium uppercase tracking-[0.08em] text-brand-muted min-[360px]:block">
-                  DIVINE BEADS · BETTER LIFE
-                </p>
-              </div>
+              <span className="whitespace-nowrap font-sans text-[12px] font-bold leading-none tracking-tight text-brand-primary">
+                NEPALI RUDRAKSHA
+              </span>
+              <span className="whitespace-nowrap text-[7px] font-medium uppercase tracking-[0.08em] text-brand-muted leading-none">
+                DIVINE BEADS · BETTER LIFE
+              </span>
             </Link>
             
             {/* Right: Shopping actions */}
-            <div className="relative flex items-center justify-end gap-0">
+            <div className="relative flex items-center justify-end gap-1 w-[88px]">
               <HeaderSearch />
               <UserNav />
               <HeaderCartIcon />

@@ -7,9 +7,8 @@ import { useRouter } from 'next/navigation';
 import { Product } from '@/data/products';
 import { getProductById, getProducts, getApprovedReviews, submitReview, Review, getSettings, SiteSettings } from '@/lib/api';
 import { useCart } from '@/context/CartContext';
-import { Star, ShieldCheck, Truck, Check, ArrowLeft, Minus, Plus, ShoppingCart, Loader2 } from 'lucide-react';
+import { Star, ShieldCheck, Truck, Check, ArrowLeft, Minus, Plus, ShoppingBag, Loader2, Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import AddToCartButton from '@/components/AddToCartButton';
 import { useAuth } from '@/context/AuthContext';
 
 export default function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -29,6 +28,36 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+
+  function formatPrice(price: number) {
+    return `₹${price.toLocaleString('en-IN')}`;
+  }
+
+  function getBadgeText(product: Product, settings: SiteSettings | null) {
+    return product.isBestseller && settings?.show_bestseller !== 'false'
+      ? 'Bestseller'
+      : product.isNew && settings?.show_new_arrivals !== 'false'
+        ? 'New'
+        : product.origin === 'nepali'
+          ? 'Nepali'
+          : '';
+  }
+
+  function getBadgeStyle(category: Product['category']) {
+    const styles: Record<Product['category'], string> = {
+      beads: 'bg-[#edf3e8] text-[#31533d]',
+      mala: 'bg-[#f3edf8] text-[#70438a]',
+      special: 'bg-[#f9eee0] text-[#8b592e]',
+    };
+    return styles[category] || 'bg-[#edf3e8] text-[#31533d]';
+  }
+
+  function getDiscountInfo(product: Product) {
+    const originalPrice = Math.round(product.price * 1.22);
+    const savings = Math.max(0, originalPrice - product.price);
+    const discountPercent = Math.round(((originalPrice - product.price) / originalPrice) * 100);
+    return { originalPrice, savings, discountPercent };
+  }
   
   useEffect(() => {
     async function fetchData() {
@@ -136,22 +165,34 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 mb-16">
-        {/* Product Image */}
-        <div className="bg-brand-light rounded-2xl overflow-hidden relative aspect-square border border-brand-border shadow-sm">
-          <div className="absolute z-10 top-4 left-4 md:top-6 md:left-6 flex flex-col gap-2 items-start">
-            {settings?.show_bestseller === 'true' && product.isBestseller && (
-              <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded shadow-sm">Bestseller</span>
-            )}
-            {settings?.show_new_arrivals === 'true' && product.isNew && (
-              <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded shadow-sm">New</span>
-            )}
-          </div>
+{/* Product Image */}
+        <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#f5efe6]">
           <Image 
             src={product.image || "/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg"}
             alt={product.name} 
             fill 
             className="object-cover" 
           />
+          <div className="absolute left-2 top-2 z-10">
+            <span className="inline-flex items-center rounded bg-[#9c7a38] px-1.5 py-0.5 text-[9.5px] sm:text-[10px] font-bold text-white shadow-sm tracking-tight">
+              {getBadgeText(product, settings)}
+            </span>
+          </div>
+          <button
+            type="button"
+            aria-label={`Add ${product.name} to wishlist`}
+            className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/85 shadow-sm backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white active:scale-95"
+          >
+            <Heart size={14} className="text-[#9c7a38] hover:text-[#7f6128]" strokeWidth={1.75} />
+          </button>
+          <div className="absolute bottom-1.5 left-2.5 z-10 flex items-center gap-1">
+            <span className="h-1.5 w-2 rounded-full bg-[#d4a23b]" />
+            <span className="h-1 w-1 rounded-full bg-white/80" />
+            <span className="h-1 w-1 rounded-full bg-white/80" />
+            <span className="h-1 w-1 rounded-full bg-white/80" />
+            <span className="h-1 w-1 rounded-full bg-white/80" />
+            <span className="h-1 w-1 rounded-full bg-white/80" />
+          </div>
         </div>
 
         {/* Product Info */}
@@ -170,8 +211,33 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
             <span className="text-sm text-brand-muted">({totalReviewsCount} customer {totalReviewsCount === 1 ? 'review' : 'reviews'})</span>
           </div>
 
-          <div className="text-3xl font-serif font-bold text-brand-secondary mb-8 pb-8 border-b border-brand-border">
-            {product.price > 0 ? `₹ ${product.price.toLocaleString()}` : 'Price on Request'}
+          <div className="mb-4">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-serif font-bold text-brand-secondary leading-snug">
+                {product.price > 0 ? formatPrice(product.price) : 'On request'}
+              </span>
+              {(() => {
+                const { originalPrice } = getDiscountInfo(product);
+                return originalPrice > product.price && product.price > 0 ? (
+                  <span className="text-xl font-normal text-[#8c8c8c] line-through">
+                    {formatPrice(originalPrice)}
+                  </span>
+                ) : null;
+              })()}
+            </div>
+            {(() => {
+              const { savings, discountPercent } = getDiscountInfo(product);
+              return savings > 0 && product.price > 0 ? (
+                <div className="mt-0.5 flex items-center gap-2">
+                  <span className="text-[13px] font-bold uppercase tracking-wide text-[#9c7a38]">
+                    {discountPercent}% OFF
+                  </span>
+                  <span className="text-[13px] font-semibold text-[#2e8b57]">
+                    Save {formatPrice(savings)}
+                  </span>
+                </div>
+              ) : null;
+            })()}
           </div>
 
           <div className="space-y-4 mb-8 text-brand-text">
@@ -206,14 +272,15 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
             
             <button 
               onClick={handleAddToCart}
-              className="flex h-12 w-full items-center justify-center whitespace-nowrap rounded-md bg-brand-primary px-2 py-3 font-bold text-white shadow-lg transition-colors hover:bg-[#1a251d]"
+              className="flex min-h-12 w-full items-center justify-center gap-1.5 rounded-full bg-[#9c7a38] px-2.5 text-[11px] sm:text-[12px] font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#866629] active:scale-[0.98]"
             >
-              <ShoppingCart size={18} className="mr-2" /> Add to Cart
+              <ShoppingBag size={13} className="text-white" />
+              <span>Add to Cart</span>
             </button>
             
             <button 
               onClick={handleBuyNow}
-              className="premium-button--bordered col-span-2 flex min-h-12 w-full items-center justify-center rounded-lg px-4 py-3 sm:col-span-1"
+              className="col-span-2 flex min-h-12 w-full items-center justify-center rounded-full border border-[#cfc7bc] bg-transparent px-4 py-3 sm:col-span-1 text-[11px] sm:text-[12px] font-semibold text-[#454545] transition-all duration-200 hover:bg-neutral-100/70 hover:text-[#1c221e] active:scale-[0.98]"
             >
               Buy Now
             </button>
@@ -346,45 +413,124 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
             </Link>
           </div>
           
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+<div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {relatedProducts.map((relatedProduct) => (
-              <div key={relatedProduct.id} className="bg-white border border-brand-border rounded-xl overflow-hidden group hover:shadow-xl transition-all flex flex-col h-full">
-                <Link href={`/shop/${relatedProduct.id}`}>
-                  <div className="relative h-40 md:h-48 bg-brand-light flex-shrink-0">
-                    <div className="absolute z-10 top-2 left-2 md:top-3 md:left-3 flex flex-col gap-1 items-start">
-                      {settings?.show_bestseller === 'true' && relatedProduct.isBestseller && (
-                        <span className="bg-green-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">Bestseller</span>
-                      )}
-                      {settings?.show_new_arrivals === 'true' && relatedProduct.isNew && (
-                        <span className="bg-red-600 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2 md:py-1 rounded">New</span>
-                      )}
-                    </div>
-                    <Image 
-                      src={relatedProduct.image || "/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg"}
-                      alt={relatedProduct.name} 
-                      fill 
-                      className="object-cover group-hover:scale-110 transition-transform duration-500" 
-                    />
-                  </div>
-                </Link>
-                <div className="p-3 md:p-5 flex flex-col flex-grow justify-between gap-3">
-                  <div>
-                    <Link href={`/shop/${relatedProduct.id}`}>
-                      <h3 className="font-bold text-brand-primary text-xs md:text-base leading-tight mb-1 md:mb-2 h-8 md:h-10 hover:text-brand-accent transition-colors line-clamp-2">{relatedProduct.name}</h3>
+              <article key={relatedProduct.id} className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-[#ede6da] bg-white p-2 sm:p-2.5 shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfb57a] hover:shadow-[0_8px_20px_rgba(0,0,0,0.07)]">
+                <div>
+                  <div className="relative aspect-[1.12/1] w-full overflow-hidden rounded-lg bg-[#f5efe6]">
+                    <Link href={`/shop/${relatedProduct.id}`} className="block h-full w-full">
+                      <Image
+                        src={relatedProduct.image || '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg'}
+                        alt={relatedProduct.name}
+                        fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
                     </Link>
-                    <div className="flex items-center space-x-1 mb-1 md:mb-2">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} size={10} className={`md:w-3.5 md:h-3.5 ${star <= Math.round(relatedProduct.rating ?? 0) ? "fill-brand-accent text-brand-accent" : "text-gray-300"}`} />
-                      ))}
-                      <span className="text-[10px] md:text-xs text-brand-muted ml-1">({relatedProduct.reviewsCount ?? 0})</span>
+
+                    <div className="absolute left-2 top-2 z-10">
+                      <span className="inline-flex items-center rounded bg-[#9c7a38] px-1.5 py-0.5 text-[9.5px] sm:text-[10px] font-bold text-white shadow-sm tracking-tight">
+                        {getBadgeText(relatedProduct, settings)}
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      aria-label={`Add ${relatedProduct.name} to wishlist`}
+                      className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/85 shadow-sm backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white active:scale-95"
+                    >
+                      <Heart size={14} className="text-[#9c7a38] hover:text-[#7f6128]" strokeWidth={1.75} />
+                    </button>
+
+                    <div className="absolute bottom-1.5 left-2.5 z-10 flex items-center gap-1">
+                      <span className="h-1.5 w-2 rounded-full bg-[#d4a23b]" />
+                      <span className="h-1 w-1 rounded-full bg-white/80" />
+                      <span className="h-1 w-1 rounded-full bg-white/80" />
+                      <span className="h-1 w-1 rounded-full bg-white/80" />
+                      <span className="h-1 w-1 rounded-full bg-white/80" />
+                      <span className="h-1 w-1 rounded-full bg-white/80" />
                     </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-serif font-bold text-sm md:text-xl text-brand-secondary">₹ {relatedProduct.price > 0 ? relatedProduct.price.toLocaleString() : 'Enquire'}</span>
-                    <AddToCartButton product={relatedProduct} iconOnly={true} />
+
+                  <div className="mt-1.5 flex flex-col">
+                    <Link href={`/shop/${relatedProduct.id}`} className="group/title block">
+                      <h2 className="font-[family-name:var(--font-display)] text-[14px] sm:text-[15px] font-bold text-[#1f2421] transition-colors line-clamp-1 group-hover/title:text-[#9c7a38] leading-tight">
+                        {relatedProduct.name}
+                      </h2>
+                    </Link>
+
+                    <div className="mt-0.5 flex items-center gap-1">
+                      <div className="flex items-center">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            size={11.5}
+                            className={`${
+                              star <= (relatedProduct.rating && relatedProduct.rating > 0 ? Math.round(relatedProduct.rating) : 5)
+                                ? 'fill-[#d49b28] text-[#d49b28]'
+                                : 'text-[#d49b28] fill-transparent'
+                            }`}
+                            strokeWidth={1.5}
+                          />
+                        ))}
+                      </div>
+                      <span className="ml-0.5 text-[10px] sm:text-[11px] font-normal text-[#6f7571]">
+                        ({relatedProduct.reviewsCount ?? 0})
+                      </span>
+                    </div>
+
+                    <div className="mt-0.5 flex items-baseline gap-1.5">
+                      <span className="text-[15px] sm:text-[16.5px] font-bold text-[#1a211e] leading-snug">
+                        {relatedProduct.price > 0 ? formatPrice(relatedProduct.price) : 'On request'}
+                      </span>
+                      {(() => {
+                        const { originalPrice, savings, discountPercent } = getDiscountInfo(relatedProduct);
+                        return originalPrice > relatedProduct.price && relatedProduct.price > 0 ? (
+                          <span className="text-[11.5px] sm:text-[12.5px] font-normal text-[#8c8c8c] line-through">
+                            {formatPrice(originalPrice)}
+                          </span>
+                        ) : null;
+                      })()}
+                    </div>
+
+                    {(() => {
+                      const { savings, discountPercent } = getDiscountInfo(relatedProduct);
+                      return savings > 0 && relatedProduct.price > 0 ? (
+                        <div className="mt-0.5 flex items-center gap-2">
+                          <span className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wide text-[#9c7a38]">
+                            {discountPercent}% OFF
+                          </span>
+                          <span className="text-[10.5px] sm:text-[11px] font-semibold text-[#2e8b57]">
+                            Save {formatPrice(savings)}
+                          </span>
+                        </div>
+                      ) : null;
+                    })()}
                   </div>
                 </div>
-              </div>
+
+                <div className="mt-2.5 flex flex-col gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => addToCart(relatedProduct, 1)}
+                    className="flex h-8 sm:h-8.5 w-full items-center justify-center gap-1.5 rounded-full bg-[#9c7a38] px-2.5 text-[11px] sm:text-[12px] font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#866629] active:scale-[0.98]"
+                  >
+                    <ShoppingBag size={13} className="text-white" />
+                    <span>Add to Cart</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      addToCart(relatedProduct, 1);
+                      router.push('/checkout');
+                    }}
+                    className="flex h-7.5 sm:h-8 w-full items-center justify-center rounded-full border border-[#cfc7bc] bg-transparent px-2.5 text-[11px] sm:text-[12px] font-semibold text-[#454545] transition-all duration-200 hover:bg-neutral-100/70 hover:text-[#1c221e] active:scale-[0.98]"
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </article>
             ))}
           </div>
         </div>
