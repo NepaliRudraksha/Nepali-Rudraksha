@@ -2,12 +2,13 @@ export type Product = {
   id: string;
   name: string;
   price: number;
-  category: 'beads' | 'mala' | 'special';
+  category: string;
   origin?: 'nepali' | 'indonesian';
   rating?: number;
   reviewsCount?: number;
   isBestseller?: boolean;
   isNew?: boolean;
+  isFeatured?: boolean;
   image?: string;
   description?: string;
   benefits?: string[];
@@ -23,6 +24,7 @@ export const products: Product[] = [
     origin: 'nepali',
     rating: 0,
     reviewsCount: 0,
+    isFeatured: true,
     description: 'The 1 Mukhi Rudraksha is the rarest and most powerful of all Rudrakshas. It represents Lord Shiva himself and is believed to bring supreme consciousness, liberation (Moksha), and unparalleled spiritual growth. Sourced directly from Nepal with a certified lab report.',
     benefits: ['Enhances meditation & focus', 'Brings liberation (Moksha)', 'Removes sins & negativity', 'Supreme spiritual power'],
     mukhi: 1,
@@ -47,6 +49,7 @@ export const products: Product[] = [
     rating: 0,
     reviewsCount: 0,
     isBestseller: true,
+    isFeatured: true,
     description: 'The 2 Mukhi Rudraksha represents the union of Shiva and Shakti (Ardhanarishvara). It is the bead of relationships, harmony, and emotional balance. This Nepali bead is premium quality and comes with a lab certificate.',
     benefits: ['Harmonizes relationships', 'Emotional balance', 'Unity & togetherness', 'Heals emotional wounds'],
     mukhi: 2,
@@ -81,6 +84,7 @@ export const products: Product[] = [
     rating: 0,
     reviewsCount: 0,
     isBestseller: true,
+    isFeatured: true,
     description: 'The 5 Mukhi Rudraksha is the most common and widely used Rudraksha, representing Lord Kalagni Rudra (a form of Shiva). It brings peace, health, and freedom. Suitable for all — men, women, and children alike.',
     benefits: ['Most versatile bead for all', 'Brings peace & health', 'Controls blood pressure', 'Protects from negative energies'],
     mukhi: 5,
@@ -217,6 +221,7 @@ export const products: Product[] = [
     rating: 0,
     reviewsCount: 0,
     isBestseller: true,
+    isFeatured: true,
     description: 'This powerful SidhMala contains one bead of each Mukhi from 1 to 14, strung in a specific sacred order. It is considered the most complete and powerful Rudraksha mala, providing benefits of all 14 Mukhis simultaneously. Price is on enquiry as it varies by bead quality.',
     benefits: ['Benefits of all 14 Mukhis', 'Complete protection & prosperity', 'Supreme spiritual attainment', 'Ideal for serious practitioners'],
   },
@@ -251,6 +256,7 @@ export const products: Product[] = [
     rating: 0,
     reviewsCount: 0,
     isBestseller: true,
+    isFeatured: true,
     description: 'The Gaurishankar Rudraksha is a naturally joined pair of two Rudrakshas, representing the divine union of Lord Shiva (Shankar) and Goddess Parvati (Gauri). It is the bead of marital harmony, family happiness, and love. Extremely auspicious for married couples.',
     benefits: ['Marital harmony & happiness', 'Family bonding & love', 'Fertility blessings', 'One of rarest natural formations'],
   },

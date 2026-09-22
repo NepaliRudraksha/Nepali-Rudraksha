@@ -17,7 +17,8 @@ export default function InstagramMarquee({ images }: { images?: string[] }) {
   const marqueeRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
 
-  const displayImages = images && images.length > 0 ? images : defaultInstagramImages;
+  // An explicit empty list is a valid admin choice and must not restore demo images.
+  const displayImages = images ?? defaultInstagramImages;
 
   useEffect(() => {
     const marquee = marqueeRef.current;

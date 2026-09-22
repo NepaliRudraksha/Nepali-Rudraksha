@@ -5,7 +5,7 @@ import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Product } from '@/data/products';
-import { getProductById, getProducts, getApprovedReviews, submitReview, Review, getSettings, SiteSettings } from '@/lib/api';
+import { getCategories, getProductById, getProducts, getApprovedReviews, submitReview, Review, getSettings, SiteSettings, StoreCategory } from '@/lib/api';
 import { useCart } from '@/context/CartContext';
 import { Star, ShieldCheck, Truck, Check, ArrowLeft, Minus, Plus, ShoppingBag, Loader2, Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -22,6 +22,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<SiteSettings | null>(null);
+  const [categories, setCategories] = useState<StoreCategory[]>([]);
   
   // Review Form State
   const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, text: '' });
@@ -33,14 +34,11 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
     return `₹${price.toLocaleString('en-IN')}`;
   }
 
-  function getBadgeText(product: Product, settings: SiteSettings | null) {
-    return product.isBestseller && settings?.show_bestseller !== 'false'
-      ? 'Bestseller'
-      : product.isNew && settings?.show_new_arrivals !== 'false'
-        ? 'New'
-        : product.origin === 'nepali'
-          ? 'Nepali'
-          : '';
+  function getBadgeTexts(product: Product, settings: SiteSettings | null): string[] {
+    return [
+      product.isBestseller && settings?.show_bestseller !== 'false' ? 'Bestseller' : null,
+      product.isNew && settings?.show_new_arrivals !== 'false' ? 'New Arrival' : null,
+    ].filter((badge): badge is string => Boolean(badge));
   }
 
   function getBadgeStyle(category: Product['category']) {
@@ -52,23 +50,18 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
     return styles[category] || 'bg-[#edf3e8] text-[#31533d]';
   }
 
-  function getDiscountInfo(product: Product) {
-    const originalPrice = Math.round(product.price * 1.22);
-    const savings = Math.max(0, originalPrice - product.price);
-    const discountPercent = Math.round(((originalPrice - product.price) / originalPrice) * 100);
-    return { originalPrice, savings, discountPercent };
-  }
-  
   useEffect(() => {
     async function fetchData() {
-      const [data, fetchedReviews, settingsData] = await Promise.all([
+      const [data, fetchedReviews, settingsData, categoriesData] = await Promise.all([
         getProductById(resolvedParams.id),
         getApprovedReviews(resolvedParams.id),
-        getSettings()
+        getSettings(),
+        getCategories(),
       ]);
       setProduct(data || null);
       setReviews(fetchedReviews);
       setSettings(settingsData);
+      setCategories(categoriesData);
       
       if (data) {
         // Fetch related products
@@ -110,10 +103,8 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
     );
   }
 
-  const averageRating = reviews.length > 0 
-    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length 
-    : 0;
-  const totalReviewsCount = reviews.length;
+  const averageRating = product.rating ?? 0;
+  const totalReviewsCount = product.reviewsCount ?? 0;
 
   const handleAddToCart = () => {
     if (!user) {
@@ -173,11 +164,13 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
             fill 
             className="object-cover" 
           />
-          <div className="absolute left-2 top-2 z-10">
-            <span className="inline-flex items-center rounded bg-[#9c7a38] px-1.5 py-0.5 text-[9.5px] sm:text-[10px] font-bold text-white shadow-sm tracking-tight">
-              {getBadgeText(product, settings)}
-            </span>
-          </div>
+          {getBadgeTexts(product, settings).includes('Bestseller') && (
+            <div className="absolute left-2 top-2 z-10">
+              <span className="inline-flex items-center rounded bg-[#9c7a38] px-1.5 py-0.5 text-[9.5px] font-bold text-white shadow-sm tracking-tight sm:text-[10px]">
+                Bestseller
+              </span>
+            </div>
+          )}
           <button
             type="button"
             aria-label={`Add ${product.name} to wishlist`}
@@ -198,7 +191,10 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
         {/* Product Info */}
         <div className="flex flex-col">
           <p className="text-brand-accent text-sm tracking-widest uppercase font-bold mb-2">
-            {product.category === 'beads' ? 'Single Bead' : product.category === 'mala' ? 'Rudraksha Mala' : 'Special Bead'}
+            {categories.find((category) => category.id === product.category)?.name ?? 'Uncategorized'}
+            {getBadgeTexts(product, settings).includes('New Arrival') && (
+              <span className="ml-2 normal-case tracking-normal text-[#1f2421]">New Arrival</span>
+            )}
           </p>
           <h1 className="text-3xl md:text-5xl font-serif font-bold text-brand-primary mb-4 leading-tight">{product.name}</h1>
           
@@ -216,33 +212,18 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
               <span className="text-3xl font-serif font-bold text-brand-secondary leading-snug">
                 {product.price > 0 ? formatPrice(product.price) : 'On request'}
               </span>
-              {(() => {
-                const { originalPrice } = getDiscountInfo(product);
-                return originalPrice > product.price && product.price > 0 ? (
-                  <span className="text-xl font-normal text-[#8c8c8c] line-through">
-                    {formatPrice(originalPrice)}
-                  </span>
-                ) : null;
-              })()}
             </div>
-            {(() => {
-              const { savings, discountPercent } = getDiscountInfo(product);
-              return savings > 0 && product.price > 0 ? (
-                <div className="mt-0.5 flex items-center gap-2">
-                  <span className="text-[13px] font-bold uppercase tracking-wide text-[#9c7a38]">
-                    {discountPercent}% OFF
-                  </span>
-                  <span className="text-[13px] font-semibold text-[#2e8b57]">
-                    Save {formatPrice(savings)}
-                  </span>
-                </div>
-              ) : null;
-            })()}
           </div>
 
           <div className="space-y-4 mb-8 text-brand-text">
-            <p>Experience the divine energy of this authentic {product.name}. Carefully sourced from the Himalayas, this powerful bead brings peace, focus, and prosperity to its wearer.</p>
+            <p>{product.description || `Experience the divine energy of this authentic ${product.name}. Carefully sourced from the Himalayas, this powerful bead brings peace, focus, and prosperity to its wearer.`}</p>
             <ul className="space-y-2 mt-4 text-sm">
+              {product.mukhi && (
+                <li className="flex items-center"><Check size={16} className="text-brand-accent mr-2" /> {product.mukhi} Mukhi</li>
+              )}
+              {(product.benefits ?? []).map((benefit) => (
+                <li key={benefit} className="flex items-center"><Check size={16} className="text-brand-accent mr-2" /> {benefit}</li>
+              ))}
               <li className="flex items-center"><Check size={16} className="text-brand-accent mr-2" /> 100% Original and Authentic</li>
               <li className="flex items-center"><Check size={16} className="text-brand-accent mr-2" /> Lab Certified (Certificate included)</li>
               <li className="flex items-center"><Check size={16} className="text-brand-accent mr-2" /> Energized with Vedic Mantras before shipping</li>
@@ -428,11 +409,13 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                       />
                     </Link>
 
-                    <div className="absolute left-2 top-2 z-10">
-                      <span className="inline-flex items-center rounded bg-[#9c7a38] px-1.5 py-0.5 text-[9.5px] sm:text-[10px] font-bold text-white shadow-sm tracking-tight">
-                        {getBadgeText(relatedProduct, settings)}
-                      </span>
-                    </div>
+                    {getBadgeTexts(relatedProduct, settings).includes('Bestseller') && (
+                      <div className="absolute left-2 top-2 z-10">
+                        <span className="inline-flex items-center rounded bg-[#9c7a38] px-1.5 py-0.5 text-[9.5px] font-bold text-white shadow-sm tracking-tight sm:text-[10px]">
+                          Bestseller
+                        </span>
+                      </div>
+                    )}
 
                     <button
                       type="button"
@@ -477,35 +460,18 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                       <span className="ml-0.5 text-[10px] sm:text-[11px] font-normal text-[#6f7571]">
                         ({relatedProduct.reviewsCount ?? 0})
                       </span>
+                      {getBadgeTexts(relatedProduct, settings).includes('New Arrival') && (
+                        <span className="ml-1 text-[10px] font-semibold text-[#1f2421]">
+                          New Arrival
+                        </span>
+                      )}
                     </div>
 
                     <div className="mt-0.5 flex items-baseline gap-1.5">
                       <span className="text-[15px] sm:text-[16.5px] font-bold text-[#1a211e] leading-snug">
                         {relatedProduct.price > 0 ? formatPrice(relatedProduct.price) : 'On request'}
                       </span>
-                      {(() => {
-                        const { originalPrice, savings, discountPercent } = getDiscountInfo(relatedProduct);
-                        return originalPrice > relatedProduct.price && relatedProduct.price > 0 ? (
-                          <span className="text-[11.5px] sm:text-[12.5px] font-normal text-[#8c8c8c] line-through">
-                            {formatPrice(originalPrice)}
-                          </span>
-                        ) : null;
-                      })()}
                     </div>
-
-                    {(() => {
-                      const { savings, discountPercent } = getDiscountInfo(relatedProduct);
-                      return savings > 0 && relatedProduct.price > 0 ? (
-                        <div className="mt-0.5 flex items-center gap-2">
-                          <span className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wide text-[#9c7a38]">
-                            {discountPercent}% OFF
-                          </span>
-                          <span className="text-[10.5px] sm:text-[11px] font-semibold text-[#2e8b57]">
-                            Save {formatPrice(savings)}
-                          </span>
-                        </div>
-                      ) : null;
-                    })()}
                   </div>
                 </div>
 

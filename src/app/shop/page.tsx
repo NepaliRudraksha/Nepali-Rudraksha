@@ -7,28 +7,11 @@ import { Check, ChevronDown, Filter, Heart, Leaf, Loader2, MapPin, RotateCcw, Se
 import Image from '@/components/ImageKitImage';
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/data/products';
-import { getProducts, getSettings, SiteSettings } from '@/lib/api';
+import { getCategories, getProducts, getSettings, SiteSettings, StoreCategory } from '@/lib/api';
 
-type Category = Product['category'] | 'all' | 'types' | 'pendants' | 'gift-sets' | 'spiritual-essentials';
+type Category = string;
 type SortOption = 'featured' | 'price-low' | 'price-high' | 'name' | 'mukhi';
 type ViewMode = 'grid' | 'list';
-
-const categoryOptions: { id: Category; label: string }[] = [
-  { id: 'all', label: 'All Products' },
-  { id: 'beads', label: 'Rudraksha Beads' },
-  { id: 'mala', label: 'Rudraksha Malas' },
-  { id: 'pendants', label: 'Pendants' },
-  { id: 'gift-sets', label: 'Gift Sets' },
-  { id: 'spiritual-essentials', label: 'Spiritual Essentials' },
-  { id: 'types', label: 'Rudraksha Types (1-12 Mukhi)' },
-];
-
-const categoryLabel: Record<Product['category'], string> = { beads: 'Beads', mala: 'Mala', special: 'Special' };
-const categoryBadgeStyles: Record<Product['category'], string> = {
-  beads: 'bg-[#edf3e8] text-[#31533d]',
-  mala: 'bg-[#f3edf8] text-[#70438a]',
-  special: 'bg-[#f9eee0] text-[#8b592e]',
-};
 
 const rudrakshaTypes = [
   { mukhi: 1, title: '1 Mukhi', desc: 'Symbol of Lord Shiva. Brings super consciousness and enlightenment.', price: 1500, benefits: ['Spiritual Growth', 'Peace & Positivity'] },
@@ -59,17 +42,9 @@ function ProductCard({ product, settings }: { product: Product; settings: SiteSe
   const [added, setAdded] = useState(false);
 
   const rating = product.rating && product.rating > 0 ? Math.round(product.rating) : 5;
-  const originalPrice = Math.round(product.price * 1.22);
-  const savings = Math.max(0, originalPrice - product.price);
-  const discountPercent = Math.round(((originalPrice - product.price) / originalPrice) * 100);
 
-  const badgeText = product.isBestseller && settings?.show_bestseller !== 'false'
-    ? 'Bestseller'
-    : product.isNew && settings?.show_new_arrivals !== 'false'
-      ? 'New'
-      : product.origin === 'nepali'
-        ? 'Nepali'
-        : `${discountPercent}%`;
+  const isBestseller = product.isBestseller && settings?.show_bestseller !== 'false';
+  const isNewArrival = product.isNew && settings?.show_new_arrivals !== 'false';
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -108,11 +83,13 @@ function ProductCard({ product, settings }: { product: Product; settings: SiteSe
           </Link>
 
           {/* Badge (Top Left) */}
-          <div className="absolute left-2 top-2 z-10">
-            <span className="inline-flex items-center rounded bg-[#9c7a38] px-1.5 py-0.5 text-[9.5px] sm:text-[10px] font-bold text-white shadow-sm tracking-tight">
-              {badgeText}
-            </span>
-          </div>
+          {isBestseller && (
+            <div className="absolute left-2 top-2 z-10">
+              <span className="inline-flex items-center rounded bg-[#9c7a38] px-1.5 py-0.5 text-[9.5px] font-bold text-white shadow-sm tracking-tight sm:text-[10px]">
+                Bestseller
+              </span>
+            </div>
+          )}
 
           {/* Wishlist Button (Top Right) */}
           <button
@@ -171,6 +148,11 @@ function ProductCard({ product, settings }: { product: Product; settings: SiteSe
             <span className="ml-0.5 text-[10px] sm:text-[11px] font-normal text-[#6f7571]">
               ({product.reviewsCount ?? 0})
             </span>
+            {isNewArrival && (
+              <span className="ml-1 text-[10px] font-semibold text-[#1f2421]">
+                New Arrival
+              </span>
+            )}
           </div>
 
           {/* Price Row */}
@@ -178,24 +160,7 @@ function ProductCard({ product, settings }: { product: Product; settings: SiteSe
             <span className="text-[15px] sm:text-[16.5px] font-bold text-[#1a211e] leading-snug">
               {product.price > 0 ? formatPrice(product.price) : 'On request'}
             </span>
-            {originalPrice > product.price && product.price > 0 && (
-              <span className="text-[11.5px] sm:text-[12.5px] font-normal text-[#8c8c8c] line-through">
-                {formatPrice(originalPrice)}
-              </span>
-            )}
           </div>
-
-          {/* Discount & Savings - NO background color */}
-          {savings > 0 && product.price > 0 && (
-            <div className="mt-0.5 flex items-center gap-2">
-              <span className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wide text-[#9c7a38]">
-                {discountPercent}% OFF
-              </span>
-              <span className="text-[10.5px] sm:text-[11px] font-semibold text-[#2e8b57]">
-                Save {formatPrice(savings)}
-              </span>
-            </div>
-          )}
         </div>
       </div>
 
@@ -234,19 +199,11 @@ function ProductCard({ product, settings }: { product: Product; settings: SiteSe
 function TypeCard({ type }: { type: typeof rudrakshaTypes[number] }) {
   const router = useRouter();
   const { addToCart } = useCart();
-  const originalPrice = Math.round(type.price * 1.2);
-  const savings = Math.max(0, originalPrice - type.price);
-  const discountPercent = Math.round(((originalPrice - type.price) / originalPrice) * 100);
 
   return (
     <article className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-[#ede6da] bg-white p-2 sm:p-2.5 shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cfb57a] hover:shadow-[0_8px_20px_rgba(0,0,0,0.07)]">
       <Link href={`/shop?category=beads`} className="relative block aspect-[1.12/1] overflow-hidden bg-[#f5efe6]">
         <Image src={beadImage} alt={type.title} fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
-        <div className="absolute left-2 top-2 z-10">
-          <span className="inline-flex items-center rounded bg-[#9c7a38] px-1.5 py-0.5 text-[9.5px] sm:text-[10px] font-bold text-white shadow-sm tracking-tight">
-            {discountPercent > 0 ? `${discountPercent}%` : ''}
-          </span>
-        </div>
       </Link>
       <div className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/85 shadow-sm backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white active:scale-95">
         <Heart size={14} className="text-[#9c7a38]" />
@@ -260,14 +217,6 @@ function TypeCard({ type }: { type: typeof rudrakshaTypes[number] }) {
         </p>
         <div className="mt-0.5 flex items-baseline gap-1.5">
           <span className="text-[17px] sm:text-[18px] font-bold text-[#1a211e]">₹{type.price.toLocaleString('en-IN')}</span>
-          {discountPercent > 0 && (
-            <span className="text-[12.5px] sm:text-[13.5px] font-normal text-[#8c8c8c] line-through">₹{originalPrice.toLocaleString('en-IN')}</span>
-          )}
-          {savings > 0 && (
-            <span className="text-[11.5px] sm:text-[12px] font-bold uppercase tracking-wide text-[#9c7a38]">
-              {discountPercent}% OFF
-            </span>
-          )}
         </div>
       </div>
       <div className="mt-2.5 flex flex-col gap-1.5">
@@ -304,14 +253,16 @@ function ShopContent() {
   const [viewMode] = useState<ViewMode>('grid');
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<StoreCategory[]>([]);
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
-      const [productsData, settingsData] = await Promise.all([getProducts(), getSettings()]);
+      const [productsData, settingsData, categoriesData] = await Promise.all([getProducts(), getSettings(), getCategories()]);
       setProducts(productsData);
       setSettings(settingsData);
+      setCategories(categoriesData);
       setIsLoading(false);
     }
     loadData();
@@ -320,23 +271,14 @@ function ShopContent() {
   // Set active category from URL query param
   useEffect(() => {
     const categoryParam = searchParams.get('category');
-    if (categoryParam && ['beads', 'mala', 'special', 'types', 'pendants', 'bracelets', 'puja-accessories', 'gift-sets', 'spiritual-essentials'].includes(categoryParam)) {
+    if (categoryParam === 'types' || categories.some((category) => category.id === categoryParam)) {
       setActiveCategory(categoryParam as Category);
     }
-  }, [searchParams]);
+  }, [categories, searchParams]);
 
   const filteredProducts = useMemo(() => {
     const matchingProducts = products.filter((product) => {
-      let matchesCategory = activeCategory === 'all';
-      
-      if (!matchesCategory) {
-        // Map filter categories to actual product categories
-        if (activeCategory === 'beads') matchesCategory = product.category === 'beads';
-        else if (activeCategory === 'mala') matchesCategory = product.category === 'mala';
-        else if (['special', 'pendants', 'gift-sets', 'spiritual-essentials'].includes(activeCategory)) matchesCategory = product.category === 'special';
-        else if (['bracelets', 'puja-accessories'].includes(activeCategory)) matchesCategory = false; // These are accessories, not shop products
-        else matchesCategory = product.category === activeCategory;
-      }
+      const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
       
       const matchesSearch = !query || product.name.toLowerCase().includes(query) || product.description?.toLowerCase().includes(query);
       const matchesOrigin = selectedOrigins.length === 0 || (product.origin && selectedOrigins.includes(product.origin));
@@ -366,9 +308,6 @@ function ShopContent() {
   const getCategoryCount = (category: Category) => {
     if (category === 'types') return rudrakshaTypes.length;
     if (category === 'all') return products.length + rudrakshaTypes.length;
-    if (category === 'beads') return products.filter((p) => p.category === 'beads').length;
-    if (category === 'mala') return products.filter((p) => p.category === 'mala').length;
-    if (['special', 'pendants', 'gift-sets', 'spiritual-essentials'].includes(category)) return products.filter((p) => p.category === 'special').length;
     return products.filter((product) => product.category === category).length;
   };
   const toggleOrigin = (origin: Product['origin']) => {
@@ -386,6 +325,11 @@ function ShopContent() {
 
   const isTypesCategory = activeCategory === 'types';
   const displayCount = isTypesCategory ? filteredTypes.length : filteredProducts.length;
+  const categoryOptions: { id: Category; label: string }[] = [
+    { id: 'all', label: 'All Products' },
+    ...categories.map((category) => ({ id: category.id, label: category.name })),
+    { id: 'types', label: 'Rudraksha Types (1-12 Mukhi)' },
+  ];
 
   return (
     <main className="min-h-screen w-full bg-[#fbfaf7]">

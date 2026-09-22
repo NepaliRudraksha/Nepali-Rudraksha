@@ -13,11 +13,11 @@ export interface SpiritualProduct {
   name: string;
   detail?: string;
   price: number;
-  originalPrice?: number;
   reviewsCount?: number;
   rating?: number;
-  badge?: string;
+  badges?: string[];
   image: string;
+  category: string;
 }
 
 interface SpiritualProductCardProps {
@@ -30,11 +30,8 @@ export default function SpiritualProductCard({ product, priority = false }: Spir
   const { addToCart } = useCart();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [added, setAdded] = useState(false);
-
-  // Calculate original price and savings if not explicitly provided
-  const originalPrice = product.originalPrice || Math.round(product.price * 1.2);
-  const savings = Math.max(0, originalPrice - product.price);
-  const discountPercent = Math.round(((originalPrice - product.price) / originalPrice) * 100);
+  const isBestseller = product.badges?.includes('Bestseller') ?? false;
+  const isNewArrival = product.badges?.includes('New Arrival') ?? false;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -44,7 +41,7 @@ export default function SpiritualProductCard({ product, priority = false }: Spir
       id: product.id,
       name: product.name,
       price: product.price,
-      category: 'beads',
+      category: product.category,
       image: product.image,
       rating: product.rating,
       reviewsCount: product.reviewsCount,
@@ -63,7 +60,7 @@ export default function SpiritualProductCard({ product, priority = false }: Spir
       id: product.id,
       name: product.name,
       price: product.price,
-      category: 'beads',
+      category: product.category,
       image: product.image,
       rating: product.rating,
       reviewsCount: product.reviewsCount,
@@ -95,12 +92,13 @@ export default function SpiritualProductCard({ product, priority = false }: Spir
             />
           </Link>
 
-          {/* Discount Badge (Top Left) */}
-          <div className="absolute left-2 top-2 z-10">
-            <span className="inline-flex items-center rounded bg-[#9c7a38] px-1.5 py-0.5 text-[9.5px] sm:text-[10px] font-bold text-white shadow-sm tracking-tight">
-              {product.badge || `${discountPercent}%`}
-            </span>
-          </div>
+          {isBestseller && (
+            <div className="absolute left-2 top-2 z-10">
+              <span className="inline-flex items-center rounded bg-[#9c7a38] px-1.5 py-0.5 text-[9.5px] font-bold text-white shadow-sm tracking-tight sm:text-[10px]">
+                Bestseller
+              </span>
+            </div>
+          )}
 
           {/* Wishlist Button (Top Right) */}
           <button
@@ -159,6 +157,11 @@ export default function SpiritualProductCard({ product, priority = false }: Spir
             <span className="ml-0.5 text-[10px] sm:text-[11px] font-normal text-[#6f7571]">
               ({product.reviewsCount ?? 1})
             </span>
+            {isNewArrival && (
+              <span className="ml-1 text-[10px] font-semibold text-[#1f2421]">
+                New Arrival
+              </span>
+            )}
           </div>
 
           {/* Price Row */}
@@ -166,24 +169,7 @@ export default function SpiritualProductCard({ product, priority = false }: Spir
             <span className="text-[15px] sm:text-[16.5px] font-bold text-[#1a211e] leading-snug">
               ₹{product.price.toLocaleString()}
             </span>
-            {originalPrice > product.price && (
-              <span className="text-[11.5px] sm:text-[12.5px] font-normal text-[#8c8c8c] line-through">
-                ₹{originalPrice.toLocaleString()}
-              </span>
-            )}
           </div>
-
-          {/* Discount & Savings - NO background color */}
-          {savings > 0 && (
-            <div className="mt-0.5 flex items-center gap-2">
-              <span className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wide text-[#9c7a38]">
-                {discountPercent}% OFF
-              </span>
-              <span className="text-[10.5px] sm:text-[11px] font-semibold text-[#2e8b57]">
-                Save ₹{savings.toLocaleString()}
-              </span>
-            </div>
-          )}
         </div>
       </div>
 

@@ -37,8 +37,45 @@ export interface SiteSettings {
   show_bestseller: string;
   show_new_arrivals: string;
   maintenance_mode: string;
-  homepage_categories: string;
   homepage_instagram: string;
+}
+
+export interface StoreCategory {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  href: string;
+  display_order: number;
+}
+
+export interface HomepageInstagramImage {
+  url: string;
+  fileId?: string;
+}
+
+export function parseHomepageInstagramImages(value: string): HomepageInstagramImage[] {
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.flatMap((image): HomepageInstagramImage[] => {
+      if (typeof image === 'string') {
+        return image ? [{ url: image }] : [];
+      }
+
+      if (typeof image !== 'object' || image === null) return [];
+      const candidate = image as Record<string, unknown>;
+      if (typeof candidate.url !== 'string' || !candidate.url) return [];
+
+      return [{
+        url: candidate.url,
+        fileId: typeof candidate.fileId === 'string' ? candidate.fileId : undefined,
+      }];
+    });
+  } catch {
+    return [];
+  }
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -52,29 +89,50 @@ export const isSupabaseConfigured = (): boolean =>
     process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co'
   );
 
-/** Map a raw Supabase DB row → Product type */
-function rowToProduct(item: Record<string, unknown>): Product {
-  let dynamicRating = 0;
-  let dynamicReviewsCount = 0;
-  
-  if (item.reviews && Array.isArray(item.reviews)) {
-    const approvedReviews = item.reviews.filter((r: any) => r.is_approved === true);
-    dynamicReviewsCount = approvedReviews.length;
-    if (dynamicReviewsCount > 0) {
-      dynamicRating = approvedReviews.reduce((sum: number, r: any) => sum + r.rating, 0) / dynamicReviewsCount;
-    }
+interface SupabaseErrorDetails {
+  code?: string;
+  message?: string;
+  details?: string;
+  hint?: string;
+}
+
+function getSupabaseErrorDetails(error: unknown): SupabaseErrorDetails {
+  if (typeof error !== 'object' || error === null) {
+    return { message: String(error) };
   }
 
+  const candidate = error as Record<string, unknown>;
+
+  return {
+    code: typeof candidate.code === 'string' ? candidate.code : undefined,
+    message: typeof candidate.message === 'string' ? candidate.message : undefined,
+    details: typeof candidate.details === 'string' ? candidate.details : undefined,
+    hint: typeof candidate.hint === 'string' ? candidate.hint : undefined,
+  };
+}
+
+function getSupabaseErrorMessage(error: unknown): string {
+  const { code, message, details, hint } = getSupabaseErrorDetails(error);
+  const parts = [code, message, details, hint].filter(
+    (value): value is string => Boolean(value),
+  );
+
+  return parts.join(' — ') || 'The database request failed without an error message.';
+}
+
+/** Map a raw Supabase DB row → Product type */
+function rowToProduct(item: Record<string, unknown>): Product {
   return {
     id: item.id as string,
     name: item.name as string,
     price: item.price as number,
-    category: item.category as Product['category'],
+    category: item.category as string,
     origin: (item.origin as Product['origin']) ?? undefined,
-    rating: item.reviews ? dynamicRating : 0, // Fallback to 0 instead of database hardcoded value
-    reviewsCount: item.reviews ? dynamicReviewsCount : 0,
+    rating: (item.rating as number) ?? 0,
+    reviewsCount: (item.reviews_count as number) ?? 0,
     isBestseller: (item.is_bestseller as boolean) ?? false,
     isNew: (item.is_new as boolean) ?? false,
+    isFeatured: (item.is_featured as boolean) ?? false,
     image: (item.image as string) ?? undefined,
     description: (item.description as string) ?? undefined,
     benefits: (item.benefits as string[]) ?? undefined,
@@ -91,7 +149,7 @@ export async function getProducts(): Promise<Product[]> {
       return mockProducts;
     }
 
-    const { data, error } = await supabase.from('products').select('*, reviews(rating, is_approved)').order('name');
+    const { data, error } = await supabase.from('products').select('*').order('name');
     if (error) {
       console.error('Error fetching products from Supabase:', error);
       return mockProducts;
@@ -103,6 +161,30 @@ export async function getProducts(): Promise<Product[]> {
   }
 }
 
+export async function getFeaturedProducts(): Promise<Product[]> {
+  try {
+    if (!isSupabaseConfigured()) {
+      console.log('Supabase not configured – using mock data for featured products.');
+      return mockProducts.filter(p => p.isFeatured);
+    }
+
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('is_featured', true)
+      .order('name');
+
+    if (error) {
+      console.error('Error fetching featured products:', error);
+      return mockProducts.filter(p => p.isFeatured);
+    }
+    return (data as Record<string, unknown>[]).map(rowToProduct);
+  } catch (error) {
+    console.error('Failed to fetch featured products:', error);
+    return mockProducts.filter(p => p.isFeatured);
+  }
+}
+
 export async function getProductById(id: string): Promise<Product | undefined> {
   try {
     if (!isSupabaseConfigured()) {
@@ -111,7 +193,7 @@ export async function getProductById(id: string): Promise<Product | undefined> {
 
     const { data, error } = await supabase
       .from('products')
-      .select('*, reviews(rating, is_approved)')
+      .select('*')
       .eq('id', id)
       .single();
 
@@ -141,6 +223,7 @@ export async function createProduct(product: Product): Promise<{ error: string |
       reviews_count: product.reviewsCount ?? 0,
       is_bestseller: product.isBestseller ?? false,
       is_new: product.isNew ?? false,
+      is_featured: product.isFeatured ?? false,
       image: product.image ?? null,
       description: product.description ?? null,
       benefits: product.benefits ?? null,
@@ -172,6 +255,7 @@ export async function updateProduct(
       reviews_count: product.reviewsCount,
       is_bestseller: product.isBestseller,
       is_new: product.isNew,
+      is_featured: product.isFeatured,
       image: product.image ?? null,
       description: product.description ?? null,
       benefits: product.benefits ?? null,
@@ -342,13 +426,6 @@ const defaultSettings: SiteSettings = {
   show_bestseller: 'true',
   show_new_arrivals: 'true',
   maintenance_mode: 'false',
-  homepage_categories: JSON.stringify([
-    { name: 'Rudraksha Beads', description: 'Sacred Origin', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.42%20PM.jpeg', href: '/shop?category=beads' },
-    { name: 'Rudraksha Malas', description: 'For Meditation', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg', href: '/shop?category=mala' },
-    { name: 'Pendants', description: 'Divine Energy', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.44%20PM.jpeg', href: '/shop?category=special' },
-    { name: 'Gift Sets', description: 'Meaningful Gifting', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.51%20PM.jpeg', href: '/shop?category=special' },
-    { name: 'Spiritual Essentials', description: 'For a Balanced Life', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.53%20PM.jpeg', href: '/shop?category=special' },
-  ]),
   homepage_instagram: JSON.stringify([
     '/images/nepaliraksha/WhatsApp%20Image%202026-09-18%20at%205.16.01%20PM.jpeg',
     '/images/nepaliraksha/WhatsApp%20Image%202026-09-18%20at%205.16.03%20PM.jpeg',
@@ -358,6 +435,86 @@ const defaultSettings: SiteSettings = {
     '/images/nepaliraksha/WhatsApp%20Image%202026-09-18%20at%205.16.12%20PM.jpeg',
   ]),
 };
+
+const fallbackCategories: StoreCategory[] = [
+  { id: 'beads', name: 'Rudraksha Beads', description: 'Sacred Origin', image: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.42%20PM.jpeg', href: '/shop?category=beads', display_order: 1 },
+  { id: 'mala', name: 'Rudraksha Malas', description: 'For Meditation', image: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg', href: '/shop?category=mala', display_order: 2 },
+  { id: 'special', name: 'Pendants', description: 'Divine Energy', image: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.44%20PM.jpeg', href: '/shop?category=special', display_order: 3 },
+  { id: 'gift-sets', name: 'Gift Sets', description: 'Meaningful Gifting', image: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.51%20PM.jpeg', href: '/shop?category=gift-sets', display_order: 4 },
+  { id: 'spiritual-essentials', name: 'Spiritual Essentials', description: 'For a Balanced Life', image: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.53%20PM.jpeg', href: '/shop?category=spiritual-essentials', display_order: 5 },
+];
+
+export async function getCategories(): Promise<StoreCategory[]> {
+  if (!isSupabaseConfigured()) return fallbackCategories;
+
+  try {
+    const { data, error } = await supabase
+      .from('categories')
+      .select('id, name, description, image, href, display_order')
+      .eq('is_visible', true)
+      .order('display_order');
+
+    if (error) {
+      console.warn(
+        'Categories could not be loaded from Supabase. Apply supabase/migrations/0011_create_categories.sql to the connected database.',
+        getSupabaseErrorDetails(error),
+      );
+      return fallbackCategories;
+    }
+
+    return (data as StoreCategory[]) ?? [];
+  } catch (error) {
+    console.warn(
+      'Categories request failed. Using the temporary fallback category list.',
+      getSupabaseErrorDetails(error),
+    );
+    return fallbackCategories;
+  }
+}
+
+export async function saveCategories(categories: StoreCategory[]): Promise<{ error: string | null }> {
+  if (!isSupabaseConfigured()) return { error: 'Supabase not configured.' };
+  if (categories.some((category) => !category.name.trim())) {
+    return { error: 'Each category needs a name.' };
+  }
+
+  const categoriesToSave = categories.map((category, index) => ({
+    ...category,
+    display_order: index + 1,
+    is_visible: true,
+  }));
+
+  const { data: existingCategories, error: existingCategoriesError } = await supabase
+    .from('categories')
+    .select('id')
+    .eq('is_visible', true);
+
+  if (existingCategoriesError) {
+    return { error: getSupabaseErrorMessage(existingCategoriesError) };
+  }
+
+  if (categoriesToSave.length > 0) {
+    const { error: upsertError } = await supabase
+      .from('categories')
+      .upsert(categoriesToSave, { onConflict: 'id' });
+
+    if (upsertError) return { error: getSupabaseErrorMessage(upsertError) };
+  }
+
+  const categoryIds = new Set(categories.map((category) => category.id));
+  const deletedCategoryIds = ((existingCategories as { id: string }[]) ?? [])
+    .map((category) => category.id)
+    .filter((categoryId) => !categoryIds.has(categoryId));
+
+  if (deletedCategoryIds.length === 0) return { error: null };
+
+  const { error: deleteError } = await supabase
+    .from('categories')
+    .delete()
+    .in('id', deletedCategoryIds);
+
+  return { error: deleteError ? getSupabaseErrorMessage(deleteError) : null };
+}
 
 export async function getSettings(): Promise<SiteSettings> {
   try {
@@ -505,6 +662,57 @@ export interface ReviewSubmission {
   comment: string;
 }
 
+export interface HomepageReview {
+  id: string;
+  name: string;
+  rating: number;
+  comment: string;
+  productName: string;
+}
+
+interface HomepageReviewRow {
+  id: string;
+  name: string;
+  rating: number;
+  comment: string;
+  products: { name: string } | { name: string }[] | null;
+}
+
+export async function getHomepageReviews(): Promise<HomepageReview[]> {
+  try {
+    if (!isSupabaseConfigured()) return [];
+
+    const { data, error } = await supabase
+      .from('reviews')
+      .select('id, name, rating, comment, products(name)')
+      .eq('is_approved', true)
+      .order('created_at', { ascending: false })
+      .limit(12);
+
+    if (error) {
+      console.error('Error fetching homepage reviews:', error);
+      return [];
+    }
+
+    return ((data as HomepageReviewRow[]) ?? []).map((review) => {
+      const product = Array.isArray(review.products)
+        ? review.products[0]
+        : review.products;
+
+      return {
+        id: review.id,
+        name: review.name,
+        rating: review.rating,
+        comment: review.comment,
+        productName: product?.name ?? 'Verified Customer',
+      };
+    });
+  } catch (error) {
+    console.error('Failed to fetch homepage reviews:', error);
+    return [];
+  }
+}
+
 export async function getApprovedReviews(productId: string): Promise<Review[]> {
   try {
     if (!isSupabaseConfigured()) return [];
@@ -571,6 +779,53 @@ export async function getPendingReviews(): Promise<Review[]> {
   } catch (error) {
     console.error('Failed to fetch pending reviews:', error);
     return [];
+  }
+}
+
+export async function getApprovedReviewsForAdmin(): Promise<Review[]> {
+  try {
+    if (!isSupabaseConfigured()) return [];
+
+    const { data, error } = await supabase
+      .from('reviews')
+      .select('*')
+      .eq('is_approved', true)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching approved reviews:', error);
+      return [];
+    }
+    return (data as Review[]) ?? [];
+  } catch (error) {
+    console.error('Failed to fetch approved reviews:', error);
+    return [];
+  }
+}
+
+export async function updateReview(
+  id: string,
+  review: Pick<Review, 'name' | 'rating' | 'comment'>,
+): Promise<{ error: string | null }> {
+  try {
+    if (!isSupabaseConfigured()) return { error: 'Supabase not configured' };
+
+    const { error } = await supabase
+      .from('reviews')
+      .update({
+        name: review.name,
+        rating: review.rating,
+        comment: review.comment,
+      })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error updating review:', error);
+      return { error: error.message };
+    }
+    return { error: null };
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }
 

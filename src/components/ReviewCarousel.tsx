@@ -6,9 +6,10 @@ import { useEffect, useRef, useState } from 'react';
 
 type CustomerReview = {
   name: string;
-  city: string;
+  subtitle: string;
   quote: string;
   image: string;
+  rating: number;
 };
 
 type ReviewCarouselProps = {
@@ -56,31 +57,35 @@ export default function ReviewCarousel({ reviews }: ReviewCarouselProps) {
       >
         {[...reviews, ...reviews].map((review, index) => (
           <article
-            key={`${review.name}-${review.city}-${index}`}
+            key={`${review.name}-${review.subtitle}-${index}`}
             data-review-card
             className="min-h-[151px] w-[calc((100%-0.5rem)/2)] shrink-0 rounded-lg border border-[#eee8dd] bg-white p-2.5 shadow-sm sm:flex sm:min-h-[148px] sm:w-[calc((100%-2rem)/3)] sm:gap-3 sm:p-4"
           >
             <div className="sm:hidden">
               <div className="flex items-center justify-center gap-2">
                 <Image src={review.image} alt={review.name} width={40} height={40} className="size-10 shrink-0 rounded-full object-cover" />
-                <div className="flex gap-0.5 text-[#f4a30b]" aria-label="Five stars">
-                  {[1, 2, 3, 4, 5].map((star) => <Star key={star} size={11} className="fill-current" aria-hidden="true" />)}
+                <div className="flex gap-0.5 text-[#f4a30b]" aria-label={`${review.rating} out of 5 stars`}>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star key={star} size={11} className={star <= review.rating ? 'fill-current' : 'text-gray-300'} aria-hidden="true" />
+                  ))}
                 </div>
               </div>
               <p className="mt-1.5 line-clamp-3 text-center text-[10px] leading-[1.3] text-[#536359]">&ldquo;{review.quote}&rdquo;</p>
               <p className="mt-2 text-center text-[10px] font-extrabold leading-tight text-[#173b2d]">{review.name}</p>
-              <p className="mt-0.5 text-center text-[9px] font-medium text-[#6a746d]">{review.city}</p>
+              <p className="mt-0.5 text-center text-[9px] font-medium text-[#6a746d]">{review.subtitle}</p>
             </div>
 
             <div className="hidden min-h-0 flex-1 items-start gap-3 text-left sm:flex">
               <Image src={review.image} alt={review.name} width={52} height={52} className="size-12 shrink-0 rounded-full object-cover" />
               <div className="flex min-h-0 flex-1 flex-col">
-                <div className="flex gap-0.5 text-[#f4a30b]" aria-label="Five stars">
-                  {[1, 2, 3, 4, 5].map((star) => <Star key={star} size={13} className="fill-current" aria-hidden="true" />)}
+                <div className="flex gap-0.5 text-[#f4a30b]" aria-label={`${review.rating} out of 5 stars`}>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star key={star} size={13} className={star <= review.rating ? 'fill-current' : 'text-gray-300'} aria-hidden="true" />
+                  ))}
                 </div>
                 <p className="mt-1.5 line-clamp-4 text-[11px] leading-[1.35] text-[#536359] xl:text-[12px]">&ldquo;{review.quote}&rdquo;</p>
                 <p className="mt-auto pt-2 text-[11px] font-extrabold leading-tight text-[#173b2d] xl:text-[12px]">{review.name}</p>
-                <p className="mt-0 text-[10px] font-medium text-[#6a746d]">{review.city}</p>
+                <p className="mt-0 text-[10px] font-medium text-[#6a746d]">{review.subtitle}</p>
               </div>
             </div>
           </article>

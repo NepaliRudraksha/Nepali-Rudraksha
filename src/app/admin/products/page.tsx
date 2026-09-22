@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from '@/components/ImageKitImage';
 import { Product } from '@/data/products';
-import { getProducts, createProduct, updateProduct, deleteProduct, isSupabaseConfigured } from '@/lib/api';
+import { getCategories, getProducts, createProduct, updateProduct, deleteProduct, isSupabaseConfigured, StoreCategory } from '@/lib/api';
 import { PlusCircle, Pencil, Trash2, Search, Filter, ChevronDown, X, Save, Loader2, CheckCircle, AlertCircle, RefreshCw, Upload, Image as ImageIcon, Trash } from 'lucide-react';
 import AdminProductModal from '@/components/AdminProductModal';
 
@@ -13,13 +13,14 @@ const emptyForm: EditableProduct = {
   id: '',
   name: '',
   price: 0,
-  category: 'beads',
+  category: '',
   origin: undefined,
   rating: 5,
   reviewsCount: 0,
   isBestseller: false,
   // New catalog entries should be visible on the homepage immediately.
   isNew: true,
+  isFeatured: false,
   image: '',
   description: '',
   benefits: '',
@@ -30,6 +31,7 @@ type Toast = { type: 'success' | 'error'; message: string };
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<StoreCategory[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [showModal, setShowModal] = useState(false);
@@ -78,8 +80,9 @@ export default function AdminProducts() {
 
   const loadProducts = useCallback(async () => {
     setIsLoading(true);
-    const data = await getProducts();
-    setProducts(data);
+    const [productData, categoryData] = await Promise.all([getProducts(), getCategories()]);
+    setProducts(productData);
+    setCategories(categoryData);
     setIsLoading(false);
   }, []);
 
@@ -94,7 +97,7 @@ export default function AdminProducts() {
   });
 
   const openAddModal = () => {
-    setEditingProduct({ ...emptyForm, id: `product-${Date.now()}` });
+    setEditingProduct({ ...emptyForm, id: `product-${Date.now()}`, category: categories[0]?.id ?? '' });
     setIsEditing(false);
     setShowModal(true);
   };
@@ -110,7 +113,7 @@ export default function AdminProducts() {
   };
 
   const handleSave = async () => {
-    if (!editingProduct.name || !editingProduct.id) return;
+    if (!editingProduct.name || !editingProduct.id || !editingProduct.category) return;
     setIsSaving(true);
 
     const productToSave: Product = {
@@ -233,9 +236,9 @@ export default function AdminProducts() {
             className="outline-none text-sm bg-transparent"
           >
             <option value="all">All Categories</option>
-            <option value="beads">Beads</option>
-            <option value="mala">Malas</option>
-            <option value="special">Special</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>{category.name}</option>
+            ))}
           </select>
           <ChevronDown size={14} className="text-gray-400" />
         </div>
@@ -284,7 +287,7 @@ export default function AdminProducts() {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="capitalize text-gray-600">{product.category}</span>
+                      <span className="text-gray-600">{categories.find((category) => category.id === product.category)?.name ?? 'Uncategorized'}</span>
                       {product.origin && (
                         <span className="ml-1 text-xs text-gray-400">({product.origin})</span>
                       )}
@@ -372,7 +375,8 @@ export default function AdminProducts() {
       <AdminProductModal
           show={showModal}
           onClose={() => setShowModal(false)}
-          isEditing={isEditing}
+        isEditing={isEditing}
+        categories={categories}
           editingProduct={editingProduct}
           isSaving={isSaving}
           isUploadingImage={isUploadingImage}

@@ -2,12 +2,14 @@
 
 import Image from '@/components/ImageKitImage';
 import { Product } from '@/data/products';
+import { StoreCategory } from '@/lib/api';
 import { Loader2, Save, X, Upload, Image as ImageIcon, Trash } from 'lucide-react';
 
 interface AdminProductModalProps {
   show: boolean;
   onClose: () => void;
   isEditing: boolean;
+  categories: StoreCategory[];
   editingProduct: any;
   isSaving: boolean;
   isUploadingImage: boolean;
@@ -22,6 +24,7 @@ export default function AdminProductModal({
   show,
   onClose,
   isEditing,
+  categories,
   editingProduct,
   isSaving,
   isUploadingImage,
@@ -78,9 +81,13 @@ export default function AdminProductModal({
                 onChange={(e) => onFormChange('category', e.target.value)}
                 className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-accent bg-white"
               >
-                <option value="beads">Beads</option>
-                <option value="mala">Mala</option>
-                <option value="special">Special</option>
+                <option value="">Select a category</option>
+                {editingProduct.category && !categories.some((category) => category.id === editingProduct.category) && (
+                  <option value={editingProduct.category}>Uncategorized</option>
+                )}
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
+                ))}
               </select>
             </div>
             <div>
@@ -218,7 +225,7 @@ export default function AdminProductModal({
               />
             </div>
             <div className="flex items-center gap-6">
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex shrink-0 items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={editingProduct.isBestseller || false}
@@ -227,14 +234,23 @@ export default function AdminProductModal({
                 />
                 <span className="text-sm font-medium text-gray-700">Bestseller</span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex shrink-0 items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={editingProduct.isNew || false}
                   onChange={(e) => onFormChange('isNew', e.target.checked)}
                   className="w-4 h-4 accent-brand-accent"
                 />
-                <span className="text-sm font-medium text-gray-700">New Arrival</span>
+                <span className="whitespace-nowrap text-sm font-medium text-gray-700">New Arrival</span>
+              </label>
+              <label className="flex shrink-0 items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={editingProduct.isFeatured || false}
+                  onChange={(e) => onFormChange('isFeatured', e.target.checked)}
+                  className="w-4 h-4 accent-brand-accent"
+                />
+                <span className="text-sm font-medium text-gray-700">Featured</span>
               </label>
             </div>
           </div>

@@ -2,7 +2,8 @@
 ALTER TABLE products
   ADD COLUMN IF NOT EXISTS description TEXT,
   ADD COLUMN IF NOT EXISTS benefits TEXT[],
-  ADD COLUMN IF NOT EXISTS mukhi INTEGER;
+  ADD COLUMN IF NOT EXISTS mukhi INTEGER,
+  ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT false;
 
 -- Update existing products with descriptions and benefits
 UPDATE products SET 

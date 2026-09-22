@@ -2,11 +2,16 @@ import Image from '@/components/ImageKitImage';
 import Link from 'next/link';
 import { BadgeCheck, Brain, Check, CreditCard, Heart, Mountain, ShieldCheck, Sparkles, Truck } from 'lucide-react';
 import ReviewCarousel from '@/components/ReviewCarousel';
-import TestimonialCarousel from '@/components/TestimonialCarousel';
 import { MotionHeroWrapper, MotionHeroContent, MotionSection } from '@/components/animations/MotionWrappers';
-import SpiritualProductCard from '@/components/SpiritualProductCard';
+import SpiritualProductCard, { SpiritualProduct } from '@/components/SpiritualProductCard';
 import InstagramMarquee from '@/components/InstagramMarquee';
-import { getSettings } from '@/lib/api';
+import { getCategories, getHomepageReviews, getSettings, getFeaturedProducts, parseHomepageInstagramImages } from '@/lib/api';
+
+const testimonialAvatars = [
+  '/images/what_our_customer/ChatGPT%20Image%20Sep%2019%2C%202026%2C%2012_36_11%20AM.png',
+  '/images/what_our_customer/ChatGPT%20Image%20Sep%2019%2C%202026%2C%2012_38_35%20AM.png',
+  '/images/what_our_customer/ChatGPT%20Image%20Sep%2019%2C%202026%2C%2012_37_41%20AM.png',
+];
 
 function CategoryCard({ name, description, img, href, index }: { name: string; description: string; img: string; href: string; index: number }) {
   return (
@@ -32,81 +37,38 @@ function CategoryCard({ name, description, img, href, index }: { name: string; d
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const settings = await getSettings();
-  let homepageCategories = [];
-  try {
-    if (settings.homepage_categories) {
-      homepageCategories = JSON.parse(settings.homepage_categories);
-    }
-  } catch (e) {
-    console.error('Failed to parse homepage categories', e);
-  }
+  const [settings, featuredProductsData, categories, approvedReviews] = await Promise.all([
+    getSettings(),
+    getFeaturedProducts(),
+    getCategories(),
+    getHomepageReviews(),
+  ]);
 
-  let homepageInstagram = [];
-  try {
-    if (settings.homepage_instagram) {
-      homepageInstagram = JSON.parse(settings.homepage_instagram);
-    }
-  } catch (e) {
-    console.error('Failed to parse homepage instagram', e);
-  }
-  const featuredProducts = [
-    {
-      id: 'dhan-yog-bracelet',
-      name: 'Dhan Yog Bracelet',
-      detail: '(Tiger Eye & Rudraksha)',
-      price: 2599,
-      originalPrice: 2999,
-      reviewsCount: 1,
-      rating: 4,
-      badge: '13%',
-      image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg',
-    },
-    {
-      id: 'one-mukhi-pendant',
-      name: '1 Mukhi Rudraksha Pendant',
-      detail: '(With Silver Capping)',
-      price: 19999,
-      originalPrice: 23999,
-      reviewsCount: 76,
-      rating: 5,
-      badge: '17%',
-      image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.52%20PM.jpeg',
-    },
-    {
-      id: 'two-mukhi',
-      name: '2 Mukhi Rudraksha',
-      detail: '(Nepal Origin)',
-      price: 14999,
-      originalPrice: 17999,
-      reviewsCount: 58,
-      rating: 4,
-      badge: '17%',
-      image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.53%20PMd.jpeg',
-    },
-    {
-      id: 'gaurishankar',
-      name: 'Gaurishankar Rudraksha',
-      detail: '(2 Beads Naturally Joined)',
-      price: 24999,
-      originalPrice: 29999,
-      reviewsCount: 41,
-      rating: 5,
-      badge: '17%',
-      image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.56%20PM.jpeg',
-    },
-    {
-      id: 'seven-mukhi-mala',
-      name: '7 Mukhi Rudraksha Mala',
-      detail: '(108 Certified Beads)',
-      price: 2499,
-      originalPrice: 2999,
-      reviewsCount: 53,
-      rating: 4,
-      badge: '17%',
-      image: '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.57%20PM.jpeg',
-    },
-  ];
+  // Transform Product[] to SpiritualProduct[] for the SpiritualProductCard component
+  const featuredProducts: SpiritualProduct[] = featuredProductsData.map((p) => ({
+    id: p.id,
+    name: p.name,
+    detail: p.mukhi ? `${p.mukhi} Mukhi` : undefined,
+    price: p.price,
+    reviewsCount: p.reviewsCount,
+    rating: p.rating,
+    badges: [
+      p.isBestseller ? 'Bestseller' : null,
+      p.isNew ? 'New Arrival' : null,
+    ].filter((badge): badge is string => Boolean(badge)),
+    image: p.image || '/images/handpicked_for_spiritual/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg',
+    category: p.category,
+  }));
+
+  const homepageInstagram = parseHomepageInstagramImages(settings.homepage_instagram)
+    .map((image) => image.url);
+  const homepageReviews = approvedReviews.map((review, index) => ({
+    name: review.name,
+    subtitle: review.productName,
+    quote: review.comment,
+    image: testimonialAvatars[index % testimonialAvatars.length],
+    rating: review.rating,
+  }));
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -183,14 +145,8 @@ export default async function Home() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:gap-3">
-          {[
-            { name: 'Rudraksha Beads', description: 'Sacred Origin', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.42%20PM.jpeg', href: '/shop?category=beads' },
-            { name: 'Rudraksha Malas', description: 'For Meditation', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.43%20PM.jpeg', href: '/shop?category=mala' },
-            { name: 'Pendants', description: 'Divine Energy', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.44%20PM.jpeg', href: '/shop?category=special' },
-            { name: 'Gift Sets', description: 'Meaningful Gifting', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.51%20PM.jpeg', href: '/shop?category=special' },
-            { name: 'Spiritual Essentials', description: 'For a Balanced Life', img: '/images/shop_by_category/WhatsApp%20Image%202026-09-18%20at%205.15.53%20PM.jpeg', href: '/shop?category=special' },
-          ].map((cat, i) => (
-            <CategoryCard key={cat.name} name={cat.name} description={cat.description} img={cat.img} href={cat.href} index={i} />
+          {categories.map((category, index) => (
+            <CategoryCard key={category.id} name={category.name} description={category.description} img={category.image} href={category.href} index={index} />
           ))}
         </div>
         </div>
@@ -352,14 +308,7 @@ export default async function Home() {
             </div>
 
             <ReviewCarousel
-              reviews={[
-                { name: 'Rahul Sharma', city: 'New Delhi', quote: 'Excellent quality and authentic Rudraksha. I feel more positive each day.', image: '/images/what_our_customer/ChatGPT%20Image%20Sep%2019%2C%202026%2C%2012_36_11%20AM.png' },
-                { name: 'Priya Verma', city: 'Bangalore', quote: 'Beautiful mala, packed with care and delivered quickly.', image: '/images/what_our_customer/ChatGPT%20Image%20Sep%2019%2C%202026%2C%2012_38_35%20AM.png' },
-                { name: 'Amit Khan', city: 'Mumbai', quote: 'Genuine products with a lab certificate. Highly recommended.', image: '/images/what_our_customer/ChatGPT%20Image%20Sep%2019%2C%202026%2C%2012_37_41%20AM.png' },
-                { name: 'Ananya Mehta', city: 'Pune', quote: 'A beautiful, genuine bead for my daily prayer.', image: '/images/what_our_customer/ChatGPT%20Image%20Sep%2019%2C%202026%2C%2012_38_35%20AM.png' },
-                { name: 'Vikram Singh', city: 'Jaipur', quote: 'Thoughtful guidance and a premium mala, beautifully packed.', image: '/images/what_our_customer/ChatGPT%20Image%20Sep%2019%2C%202026%2C%2012_36_11%20AM.png' },
-                { name: 'Neha Verma', city: 'Chandigarh', quote: 'The authenticity certificate gave me complete confidence.', image: '/images/what_our_customer/ChatGPT%20Image%20Sep%2019%2C%202026%2C%2012_38_35%20AM.png' },
-              ]}
+              reviews={homepageReviews}
             />
 
             <section className="mt-12 border-y border-[#eee8dd] py-8 sm:mt-14 sm:py-10">
@@ -371,7 +320,7 @@ export default async function Home() {
                 <Link href="/" className="border-b border-[#85523b] pb-1.5 text-[11px] font-bold text-[#70462f] sm:text-[12px]">Follow Us</Link>
           </div>
 <div className="mt-6">
-                <InstagramMarquee />
+                <InstagramMarquee images={homepageInstagram} />
               </div>
             </section>
           </div>
@@ -485,25 +434,6 @@ export default async function Home() {
             </div>
           </div>
         </div>
-      </MotionSection>
-
-      {/* 7. Testimonials */}
-      <MotionSection className="hidden">
-        <div className="text-center mb-12">
-          <p className="text-brand-muted text-xs tracking-[0.2em] uppercase font-bold mb-2">What Our Customers Say</p>
-          <h2 className="text-3xl font-serif font-bold text-brand-primary">Testimonials</h2>
-        </div>
-        <TestimonialCarousel
-          reviews={[
-            { name: 'Rahul Sharma', location: 'Delhi', rating: 5, text: 'I have been wearing the 5 Mukhi Rudraksha for 6 months. My stress levels have reduced dramatically and I feel more peaceful than ever. Highly authentic beads!', product: '5 Mukhi Rudraksha' },
-            { name: 'Priya Patel', location: 'Mumbai', rating: 5, text: 'Ordered the Gaurishankar Rudraksha as a wedding anniversary gift. The quality is exceptional and it came beautifully packaged with the lab certificate. Very happy!', product: 'Gaurishankar Rudraksha' },
-            { name: 'Suresh Kumar', location: 'Bangalore', rating: 5, text: 'The 7 Mukhi Rudraksha has been a game changer for my business. Things have been looking up ever since I started wearing it. Truly a divine bead!', product: '7 Mukhi Rudraksha' },
-            { name: 'Ananya Mehta', location: 'Pune', rating: 5, text: 'My 4 Mukhi Rudraksha arrived quickly and the certification gave me complete confidence. It is beautiful, genuine, and has become part of my daily prayer.', product: '4 Mukhi Rudraksha' },
-            { name: 'Vikram Singh', location: 'Jaipur', rating: 5, text: 'Excellent guidance before purchase and a very premium mala. The beads are perfectly selected and the packaging made it feel truly special.', product: '5 Mukhi Rudraksha Mala' },
-            { name: 'Neha Verma', location: 'Chandigarh', rating: 5, text: 'I bought this as a gift for my mother and she loved it. The authenticity certificate and thoughtful presentation were both outstanding.', product: 'Gauri Shankar Rudraksha' },
-            { name: 'Arjun Nair', location: 'Kochi', rating: 5, text: 'The whole experience was seamless—from choosing the right bead to delivery. The quality is exactly as described and I would happily recommend it.', product: '7 Mukhi Rudraksha' },
-          ]}
-        />
       </MotionSection>
 
     </div>
