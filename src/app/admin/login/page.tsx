@@ -8,7 +8,7 @@ import { ShieldCheck, Lock, Mail, Eye, EyeOff, ArrowRight, Loader2, ArrowLeft, C
 
 function AdminLoginForm() {
   const router = useRouter();
-  const { signIn, demoLogin } = useAuth();
+  const { signIn } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,18 +27,13 @@ function AdminLoginForm() {
       setIsSubmitting(false);
     } else {
       // Check role
-      if (res.role !== 'admin' && !email.includes('admin')) {
+      if (res.role !== 'admin') {
         setErrorMsg('Access Denied: This account does not possess administrator credentials.');
         setIsSubmitting(false);
         return;
       }
       router.push('/admin');
     }
-  };
-
-  const handleAdminDemo = () => {
-    demoLogin('admin');
-    router.push('/admin');
   };
 
   return (
@@ -126,19 +121,6 @@ function AdminLoginForm() {
           )}
         </button>
       </form>
-
-      {/* Admin Demo Button (only on private /admin/login page) */}
-      <div className="mt-8 pt-6 border-t border-brand-border text-center">
-        <p className="text-[11px] text-brand-muted mb-2 font-medium">Quick Admin Testing Access</p>
-        <button
-          type="button"
-          onClick={handleAdminDemo}
-          className="w-full py-2.5 px-4 rounded-xl border border-brand-accent/50 bg-brand-primary text-brand-accent text-xs font-semibold hover:bg-opacity-95 transition-all shadow-sm flex items-center justify-center space-x-2"
-        >
-          <ShieldCheck size={16} />
-          <span>Instant Admin Demo Login</span>
-        </button>
-      </div>
 
       <div className="mt-6 text-center">
         <Link

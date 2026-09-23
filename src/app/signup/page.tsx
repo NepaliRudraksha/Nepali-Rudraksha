@@ -173,7 +173,7 @@ function SignupForm() {
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+91 98765 43210"
+                  placeholder="+91 9142960749"
                   className="w-full pl-10 pr-4 py-3 bg-brand-bg rounded-xl border border-brand-border focus:border-brand-accent focus:ring-1 focus:ring-brand-accent outline-none text-sm transition-colors text-brand-text"
                 />
               </div>

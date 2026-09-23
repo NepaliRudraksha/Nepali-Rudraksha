@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import { ClientHeaderWrapper, ClientFooterWrapper } from "@/components/layout/ClientLayoutWrappers";
 import MaintenanceGuard from "@/components/MaintenanceGuard";
 import { Providers } from "@/components/Providers";
+import FloatingWhatsAppButton from "@/components/FloatingWhatsAppButton";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -52,6 +53,7 @@ export default function RootLayout({
             <ClientFooterWrapper>
               <Footer />
             </ClientFooterWrapper>
+            <FloatingWhatsAppButton />
           </MaintenanceGuard>
         </Providers>
       </body>

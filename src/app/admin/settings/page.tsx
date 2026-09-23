@@ -6,8 +6,8 @@ import { Save, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 const defaultSettings: SiteSettings = {
   store_name: 'Nepali Rudraksha',
-  store_email: 'info@nepalirudraksha.com',
-  store_phone: '+91 98765 43210',
+  store_email: 'nepalirudraksha21@gmail.com',
+  store_phone: '+91 9142960749',
   store_address: 'Kathmandu, Nepal',
   currency: 'INR',
   tax_rate: '0',

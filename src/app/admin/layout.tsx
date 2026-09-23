@@ -5,14 +5,14 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, Package, ShoppingBag, Settings, LogOut, 
-  ShieldCheck, ShieldAlert, Lock, ArrowLeft, Loader2, ArrowRight, Users, CircleAlert, Star, Mail, Home
+  ShieldAlert, Lock, ArrowLeft, Loader2, ArrowRight, Users, CircleAlert, Star, Mail, Home
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isLoading, signOut, signIn, demoLogin } = useAuth();
+  const { user, isLoading, signOut, signIn } = useAuth();
 
   const [adminEmail, setAdminEmail] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
@@ -49,7 +49,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       if (res.error) {
         setAuthError(res.error);
         setIsAuthenticating(false);
-      } else if (res.role !== 'admin' && !adminEmail.includes('admin')) {
+      } else if (res.role !== 'admin') {
         setAuthError('Access Denied: Account lacks administrator permissions.');
         setIsAuthenticating(false);
       } else {
@@ -129,19 +129,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </button>
           </form>
 
-          {/* Quick Admin Test Login Button */}
-          <div className="mt-6 pt-6 border-t border-brand-border text-center">
-            <p className="text-[11px] text-brand-muted mb-2">Need quick testing access?</p>
-            <button
-              type="button"
-              onClick={() => demoLogin('admin')}
-              className="w-full py-2.5 px-4 rounded-xl border border-brand-accent/50 bg-brand-light text-brand-primary text-xs font-bold hover:bg-brand-bg transition-colors flex items-center justify-center space-x-2"
-            >
-              <ShieldCheck size={16} className="text-brand-accent" />
-              <span>Instant 1-Click Admin Access</span>
-            </button>
-          </div>
-
           <div className="mt-6 text-center">
             <Link
               href="/"
@@ -157,7 +144,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   // 3. Logged in as Customer (Not Admin): Show Access Denied screen
-  if (user.role !== 'admin' && !user.email.includes('admin')) {
+  if (user.role !== 'admin') {
     return (
       <div className="min-h-screen bg-brand-bg flex items-center justify-center p-4">
         <div className="w-full max-w-lg bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-brand-border text-center">

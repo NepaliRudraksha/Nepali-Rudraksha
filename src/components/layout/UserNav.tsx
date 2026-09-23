@@ -45,7 +45,7 @@ export default function UserNav() {
     ? user.email.slice(0, 2).toUpperCase()
     : 'NR';
 
-  const isAdmin = user?.role === 'admin' || user?.email.includes('admin');
+  const isAdmin = user?.role === 'admin';
 
   const dropdownContent = (
     <div 

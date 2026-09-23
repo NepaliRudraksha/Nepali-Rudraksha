@@ -47,7 +47,7 @@ CREATE POLICY "Allow updating order status" ON orders
 
 -- Seed with some sample orders
 INSERT INTO orders (id, customer_name, email, phone, city, state, product_description, amount, status, created_at) VALUES
-('NR-2026-0091', 'Rahul Sharma', 'rahul@example.com', '+91 98765 43210', 'Delhi', 'Delhi', '5 Mukhi Rudraksha (x2)', 1000, 'delivered', now() - interval '2 days'),
+('NR-2026-0091', 'Rahul Sharma', 'rahul@example.com', '+91 9142960749', 'Delhi', 'Delhi', '5 Mukhi Rudraksha (x2)', 1000, 'delivered', now() - interval '2 days'),
 ('NR-2026-0090', 'Priya Patel', 'priya@example.com', '+91 87654 32109', 'Mumbai', 'Maharashtra', 'Gaurishankar Ganesh Rudraksha', 25000, 'shipped', now() - interval '1 day'),
 ('NR-2026-0089', 'Suresh Kumar', 'suresh@example.com', '+91 76543 21098', 'Bangalore', 'Karnataka', '7 Mukhi Rudraksha', 500, 'processing', now() - interval '1 day'),
 ('NR-2026-0088', 'Anita Gupta', 'anita@example.com', '+91 65432 10987', 'Kolkata', 'West Bengal', '2 Mukhi Rudraksha (Nepali)', 15000, 'pending', now()),

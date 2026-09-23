@@ -200,6 +200,53 @@
     animation: bounce-in 0.5s ease-out forwards;
   }
 
+  @keyframes whatsapp-float-pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.07);
+    }
+  }
+
+  .whatsapp-float {
+    animation: whatsapp-float-pulse 2.2s ease-in-out infinite;
+  }
+
+  .whatsapp-float:hover {
+    animation: none;
+    transform: scale(1.1);
+  }
+
+  .whatsapp-float::before {
+    position: absolute;
+    inset: -6px;
+    z-index: 0;
+    border: 2px solid rgba(37, 211, 102, 0.55);
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+    animation: whatsapp-float-ring 2.2s ease-out infinite;
+  }
+
+  @keyframes whatsapp-float-ring {
+    0% {
+      opacity: 0.75;
+      transform: scale(0.82);
+    }
+    75%, 100% {
+      opacity: 0;
+      transform: scale(1.28);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .whatsapp-float,
+    .whatsapp-float::before {
+      animation: none;
+    }
+  }
+
   .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
   .stagger-children > *:nth-child(2) { animation-delay: 75ms; }
   .stagger-children > *:nth-child(3) { animation-delay: 150ms; }

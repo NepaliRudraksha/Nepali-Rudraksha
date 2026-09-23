@@ -416,8 +416,8 @@ export async function createOrder(order: {
 
 const defaultSettings: SiteSettings = {
   store_name: 'Nepali Rudraksha',
-  store_email: 'info@nepalirudraksha.com',
-  store_phone: '+91 98765 43210',
+  store_email: 'nepalirudraksha21@gmail.com',
+  store_phone: '+91 9142960749',
   store_address: 'Kathmandu, Nepal',
   currency: 'INR',
   tax_rate: '0',
@@ -532,7 +532,12 @@ export async function getSettings(): Promise<SiteSettings> {
     const settings = { ...defaultSettings };
     for (const row of (data as { key: string; value: string }[]) ?? []) {
       if (row.key in settings) {
-        (settings as Record<string, string>)[row.key] = row.value;
+        (settings as Record<string, string>)[row.key] =
+          row.key === 'store_email' && row.value === 'info@nepalirudraksha.com'
+            ? defaultSettings.store_email
+            : row.key === 'store_phone' && row.value === '+91 98765 43210'
+              ? defaultSettings.store_phone
+            : row.value;
       }
     }
     return settings;

@@ -75,7 +75,7 @@ END $$;
 -- Seed default initial admin and customer profiles
 INSERT INTO profiles (id, email, full_name, phone, address, city, state, pincode, role) VALUES
 ('demo-admin-001', 'admin@nepalirudraksha.com', 'Temple Administrator', '+91 98765 00000', 'Headquarters, Nepali Rudraksha Trust', 'Haridwar', 'Uttarakhand', '249401', 'admin'),
-('demo-cust-108', 'bhakt@nepalirudraksha.com', 'Aarav Sharma', '+91 98765 43210', 'Flat 402, Kailash Heights, Temple Road', 'Varanasi', 'Uttar Pradesh', '221001', 'customer')
+('demo-cust-108', 'bhakt@nepalirudraksha.com', 'Aarav Sharma', '+91 9142960749', 'Flat 402, Kailash Heights, Temple Road', 'Varanasi', 'Uttar Pradesh', '221001', 'customer')
 ON CONFLICT (id) DO UPDATE
 SET role = EXCLUDED.role,
     full_name = EXCLUDED.full_name;

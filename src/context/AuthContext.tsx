@@ -23,35 +23,33 @@ interface AuthContextType {
   signUp: (email: string, password: string, metadata?: { fullName?: string; phone?: string }) => Promise<{ error: string | null; needsEmailConfirmation?: boolean }>;
   signOut: () => Promise<void>;
   updateProfile: (profile: Partial<AuthUser>) => Promise<{ error: string | null }>;
-  demoLogin: (role?: 'customer' | 'admin') => void;
+  demoLogin: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const DEMO_USERS: Record<'customer' | 'admin', AuthUser> = {
-  customer: {
-    id: 'demo-cust-108',
-    email: 'bhakt@nepalirudraksha.com',
-    fullName: 'Aarav Sharma',
-    phone: '+91 98765 43210',
-    address: 'Flat 402, Kailash Heights, Temple Road',
-    city: 'Varanasi',
-    state: 'Uttar Pradesh',
-    pincode: '221001',
-    role: 'customer',
-  },
-  admin: {
-    id: 'demo-admin-001',
-    email: 'admin@nepalirudraksha.com',
-    fullName: 'Temple Administrator',
-    phone: '+91 98765 00000',
-    address: 'Headquarters, Nepali Rudraksha Trust',
-    city: 'Haridwar',
-    state: 'Uttarakhand',
-    pincode: '249401',
-    role: 'admin',
-  },
+const DEMO_CUSTOMER: AuthUser = {
+  id: 'demo-cust-108',
+  email: 'bhakt@nepalirudraksha.com',
+  fullName: 'Aarav Sharma',
+  phone: '+91 9142960749',
+  address: 'Flat 402, Kailash Heights, Temple Road',
+  city: 'Varanasi',
+  state: 'Uttar Pradesh',
+  pincode: '221001',
+  role: 'customer',
 };
+
+function isDemoCustomer(value: unknown): value is AuthUser {
+  if (typeof value !== 'object' || value === null) return false;
+
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.id === 'string' &&
+    typeof candidate.email === 'string' &&
+    candidate.role === 'customer'
+  );
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -66,12 +64,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const savedDemo = typeof window !== 'undefined' ? localStorage.getItem('nr_demo_user') : null;
       if (savedDemo) {
         try {
-          const parsed = JSON.parse(savedDemo);
-          if (mounted) {
+          const parsed: unknown = JSON.parse(savedDemo);
+          if (isDemoCustomer(parsed) && mounted) {
             setUser(parsed);
             setIsLoading(false);
             return;
           }
+          localStorage.removeItem('nr_demo_user');
         } catch {
           localStorage.removeItem('nr_demo_user');
         }
@@ -98,7 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             city: dbProfile?.city || meta.city || '',
             state: dbProfile?.state || meta.state || '',
             pincode: dbProfile?.pincode || meta.pincode || '',
-            role: dbProfile?.role || meta.role || (session.user.email?.includes('admin') ? 'admin' : 'customer'),
+            role: dbProfile?.role === 'admin' ? 'admin' : 'customer',
           };
 
           // If not in profiles table yet, sync it
@@ -140,7 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               city: dbProfile?.city || meta.city || '',
               state: dbProfile?.state || meta.state || '',
               pincode: dbProfile?.pincode || meta.pincode || '',
-              role: dbProfile?.role || meta.role || (session.user.email?.includes('admin') ? 'admin' : 'customer'),
+              role: dbProfile?.role === 'admin' ? 'admin' : 'customer',
             };
 
             setUser(resolvedUser);
@@ -169,34 +168,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = async (email: string, password: string): Promise<{ error: string | null; role?: 'customer' | 'admin' }> => {
     setIsLoading(true);
 
-    // Demo accounts have no Supabase access token. Keep them available only
-    // when the app is running without a configured backend; otherwise, product
-    // writes would correctly be rejected by Supabase RLS as anonymous requests.
-    if (!isSupabaseConfigured() && (email === 'admin@nepalirudraksha.com' || email === 'admin')) {
-      demoLogin('admin');
-      setIsLoading(false);
-      return { error: null, role: 'admin' };
-    }
-    if (!isSupabaseConfigured() && (email === 'bhakt@nepalirudraksha.com' || email === 'demo@example.com')) {
-      demoLogin('customer');
-      setIsLoading(false);
-      return { error: null, role: 'customer' };
-    }
-
     if (!isSupabaseConfigured()) {
-      const role: 'customer' | 'admin' = email.includes('admin') ? 'admin' : 'customer';
-      const mockUser: AuthUser = {
-        id: `user-${Date.now()}`,
-        email,
-        fullName: email.split('@')[0],
-        role,
-      };
-      setUser(mockUser);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('nr_demo_user', JSON.stringify(mockUser));
-      }
       setIsLoading(false);
-      return { error: null, role };
+      return { error: 'Authentication is unavailable because Supabase is not configured.' };
     }
 
     try {
@@ -214,7 +188,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const meta = data.user.user_metadata || {};
         // Retrieve profile from Supabase profiles table
         const dbProfile = await getUserProfile(data.user.id);
-        const resolvedRole: 'customer' | 'admin' = dbProfile?.role || meta.role || (email.includes('admin') ? 'admin' : 'customer');
+        const resolvedRole: 'customer' | 'admin' = dbProfile?.role === 'admin' ? 'admin' : 'customer';
 
         const authUser: AuthUser = {
           id: data.user.id,
@@ -399,11 +373,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error: null };
   };
 
-  const demoLogin = (role: 'customer' | 'admin' = 'customer') => {
-    const demo = DEMO_USERS[role];
-    setUser(demo);
+  const demoLogin = () => {
+    setUser(DEMO_CUSTOMER);
     if (typeof window !== 'undefined') {
-      localStorage.setItem('nr_demo_user', JSON.stringify(demo));
+      localStorage.setItem('nr_demo_user', JSON.stringify(DEMO_CUSTOMER));
     }
   };
 

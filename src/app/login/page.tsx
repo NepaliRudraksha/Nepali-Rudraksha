@@ -11,7 +11,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/account';
 
-  const { signIn, demoLogin } = useAuth();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -35,14 +35,6 @@ function LoginForm() {
         router.push(redirect);
       }, 700);
     }
-  };
-
-  const handleDemoSignIn = (role: 'customer' | 'admin') => {
-    demoLogin(role);
-    setSuccessMsg(`Welcome! Logged in as ${role === 'admin' ? 'Administrator' : 'Sacred Seeker'}. Redirecting...`);
-    setTimeout(() => {
-      router.push(role === 'admin' ? '/admin' : redirect);
-    }, 500);
   };
 
   return (

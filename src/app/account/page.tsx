@@ -154,7 +154,7 @@ function AccountDashboard() {
               Testing or Reviewing the Platform?
             </p>
             <button
-              onClick={() => demoLogin('customer')}
+              onClick={demoLogin}
               className="text-xs py-2 px-4 rounded-lg bg-brand-bg hover:bg-brand-light border border-brand-border text-brand-secondary font-semibold transition-colors"
             >
               ⚡ Instant 1-Click Customer Demo Login
@@ -199,7 +199,7 @@ function AccountDashboard() {
   const initials = user.fullName
     ? user.fullName.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase()
     : 'NR';
-  const isAdmin = user.role === 'admin' || user.email.includes('admin');
+  const isAdmin = user.role === 'admin';
 
   return (
     <div className="w-full max-w-7xl mx-auto py-12 px-4 md:px-10 lg:px-20">
@@ -592,7 +592,7 @@ function AccountDashboard() {
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-accent"
-                        placeholder="+91 98765 43210"
+                        placeholder="+91 9142960749"
                       />
                     </div>
 
